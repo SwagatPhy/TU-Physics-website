@@ -1,6 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
+// Hero tagline/mission below use content-notes/home.md's "current
+// default" options. Four more tagline variants and three more mission
+// blurb variants are drafted there — swap in a different one, or wire
+// several up for A/B testing, once the department picks a direction.
+
 const statTiles = [
   { value: '[PLACEHOLDER XX]', label: 'Faculty Members' },
   { value: '[PLACEHOLDER XX]', label: 'PhD Research Scholars' },
@@ -26,10 +31,16 @@ const highlightCards = [
   },
 ];
 
+// Notice strip: one sample per category, so the feed reads like a real
+// notice board rather than three near-identical rows. Swap for the
+// department's actual latest notices once available.
 const notices = [
-  { title: '[PLACEHOLDER] M.Sc. Physics admission notice for [session]', date: '[PLACEHOLDER Month, Year]' },
-  { title: '[PLACEHOLDER] PhD entrance test schedule announced', date: '[PLACEHOLDER Month, Year]' },
-  { title: '[PLACEHOLDER] Departmental seminar series resumes', date: '[PLACEHOLDER Month, Year]' },
+  { category: 'Admissions', title: '[PLACEHOLDER] M.Sc. Physics admission notice for [session]', date: '[PLACEHOLDER Month, Year]' },
+  { category: 'Exam', title: '[PLACEHOLDER] PhD entrance test schedule announced', date: '[PLACEHOLDER Month, Year]' },
+  { category: 'Event', title: '[PLACEHOLDER] Departmental seminar series resumes', date: '[PLACEHOLDER Month, Year]' },
+  { category: 'Result', title: '[PLACEHOLDER] M.Sc. Physics semester result declared', date: '[PLACEHOLDER Month, Year]' },
+  { category: 'Recruitment', title: '[PLACEHOLDER] Walk-in interview for project JRF position', date: '[PLACEHOLDER Month, Year]' },
+  { category: 'General', title: '[PLACEHOLDER] Department office hours revised for [semester]', date: '[PLACEHOLDER Month, Year]' },
 ];
 ---
 
@@ -38,8 +49,8 @@ const notices = [
     <div class="container">
       <h1>Department of Physics, Tezpur University</h1>
       <p class="lede">
-        [PLACEHOLDER &mdash; tagline] &ldquo;Teaching and Research
-        Excellence in Physics.&rdquo;
+        [PLACEHOLDER &mdash; tagline, pending department sign-off]
+        &ldquo;Teaching and Research Excellence in Physics.&rdquo;
       </p>
       <p class="lede">
         The Department of Physics at Tezpur University is committed to
@@ -90,7 +101,7 @@ const notices = [
       <h2>Notices</h2>
       <ul>
         {notices.map((n) => (
-          <li>{n.title} &mdash; {n.date}</li>
+          <li><strong>[{n.category}]</strong> {n.title} &mdash; {n.date}</li>
         ))}
       </ul>
       <p><a href="/notices">View all notices &amp; events &rarr;</a></p>

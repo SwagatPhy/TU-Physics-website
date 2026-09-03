@@ -1,11 +1,19 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const facilityPlaceholders = [
-  { name: '[Lab/Facility 1 — TODO]', desc: 'Placeholder facility description.' },
-  { name: '[Lab/Facility 2 — TODO]', desc: 'Placeholder facility description.' },
-  { name: '[Lab/Facility 3 — TODO]', desc: 'Placeholder facility description.' },
-  { name: '[Central instrumentation / library access — TODO]', desc: 'Placeholder facility description.' },
+const teachingLabs = [
+  { name: '[PLACEHOLDER] General Physics Laboratory', desc: 'Used for undergraduate laboratory courses covering [PLACEHOLDER topics].' },
+  { name: '[PLACEHOLDER] Electronics Laboratory', desc: 'Supports coursework in [PLACEHOLDER topics] for [PLACEHOLDER program level].' },
+];
+
+const researchLabs = [
+  { name: '[PLACEHOLDER Lab Name]', area: '[PLACEHOLDER — links to Research page]', faculty: '[PLACEHOLDER name]', equipment: '[PLACEHOLDER — e.g. spectrometer, deposition system]' },
+  { name: '[PLACEHOLDER Lab Name]', area: '[PLACEHOLDER — links to Research page]', faculty: '[PLACEHOLDER name]', equipment: '[PLACEHOLDER equipment]' },
+];
+
+const sharedFacilities = [
+  { name: '[PLACEHOLDER] Departmental Library / Reading Room', desc: '[PLACEHOLDER description]' },
+  { name: '[PLACEHOLDER] Computing Facility', desc: '[PLACEHOLDER description]' },
 ];
 ---
 
@@ -13,17 +21,53 @@ const facilityPlaceholders = [
   <section class="hero">
     <div class="container">
       <h1>Facilities &amp; Laboratories</h1>
-      <p class="lede">Placeholder listing of teaching and research labs, equipment, and shared facilities.</p>
+      <p class="lede">
+        The Department of Physics, Tezpur University maintains a range of
+        teaching and research laboratories supporting its UG, PG, and PhD
+        programs.
+      </p>
     </div>
   </section>
 
   <section>
     <div class="container">
       <div class="placeholder-note">
-        {/* TODO: content agent to fill — real lab names, equipment lists, photos, safety/usage info */}
+        Lab names, faculty in charge, and equipment lists below are
+        [PLACEHOLDER] pending confirmation from the department.
       </div>
+      <h2>Teaching Labs</h2>
       <div class="card-grid">
-        {facilityPlaceholders.map((f) => (
+        {teachingLabs.map((lab) => (
+          <div class="card">
+            <h3>{lab.name}</h3>
+            <p>{lab.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Research Labs</h2>
+      <div class="card-grid">
+        {researchLabs.map((lab) => (
+          <div class="card">
+            <h3>{lab.name}</h3>
+            <p><strong>Research area:</strong> {lab.area}</p>
+            <p><strong>Faculty in charge:</strong> {lab.faculty}</p>
+            <p><strong>Major equipment:</strong> {lab.equipment}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Shared Facilities</h2>
+      <div class="card-grid">
+        {sharedFacilities.map((f) => (
           <div class="card">
             <h3>{f.name}</h3>
             <p>{f.desc}</p>

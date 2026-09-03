@@ -1,13 +1,36 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-// Structural placeholders — a teaching department typically runs UG, PG,
-// and PhD programs. Replace with the real program list once confirmed.
-const programPlaceholders = [
-  { name: '[B.Sc. Physics — TODO]', level: 'Undergraduate', desc: 'Placeholder program description.' },
-  { name: '[M.Sc. Physics — TODO]', level: 'Postgraduate', desc: 'Placeholder program description.' },
-  { name: '[Ph.D. Physics — TODO]', level: 'Doctoral', desc: 'Placeholder program description.' },
-  { name: '[Integrated/Other program — TODO]', level: '[Level — TODO]', desc: 'Placeholder program description.' },
+const programs = [
+  {
+    name: 'M.Sc. Physics',
+    level: 'Postgraduate',
+    duration: '[PLACEHOLDER — e.g. 2 years, 4 semesters]',
+    eligibility: '[PLACEHOLDER — e.g. B.Sc. with Physics as a major/honours subject, minimum XX% marks]',
+    admission: '[PLACEHOLDER — entrance test conducted by Tezpur University, held annually in Month]',
+    seats: '[PLACEHOLDER number]',
+  },
+  {
+    name: 'Ph.D. in Physics',
+    level: 'Doctoral',
+    duration: '[PLACEHOLDER — e.g. minimum 3 years, maximum 6]',
+    eligibility: '[PLACEHOLDER — e.g. M.Sc. in Physics or allied subject with qualifying NET/GATE/JEST or university entrance test score]',
+    admission: '[PLACEHOLDER — written test + interview, held [frequency]]',
+    seats: '[PLACEHOLDER — funding: fellowship amount/source, if applicable]',
+  },
+  {
+    name: 'B.Sc. Physics',
+    level: 'Undergraduate',
+    duration: '[PLACEHOLDER — e.g. 3 years]',
+    eligibility: '[PLACEHOLDER eligibility]',
+    admission: '[PLACEHOLDER admission process]',
+    seats: '[PLACEHOLDER number]',
+  },
+];
+
+const courses = [
+  { code: '[PLACEHOLDER CODE]', title: '[PLACEHOLDER Course Title]', program: '[PLACEHOLDER]', semester: '[PLACEHOLDER]' },
+  { code: '[PLACEHOLDER CODE]', title: '[PLACEHOLDER Course Title]', program: '[PLACEHOLDER]', semester: '[PLACEHOLDER]' },
 ];
 ---
 
@@ -15,21 +38,31 @@ const programPlaceholders = [
   <section class="hero">
     <div class="container">
       <h1>Academics &amp; Courses</h1>
-      <p class="lede">Placeholder programs list &mdash; replace with real UG/PG/PhD offerings, admissions info, and course catalog.</p>
+      <p class="lede">
+        The Department of Physics, Tezpur University offers a three-year
+        B.Sc. (Physics as a subject, within the university's UG programs),
+        a two-year M.Sc. in Physics, and a Ph.D. program in Physics,
+        admitting students through [PLACEHOLDER &mdash; entrance test name]
+        followed by [PLACEHOLDER &mdash; interview/counseling process].
+      </p>
     </div>
   </section>
 
   <section>
     <div class="container">
       <div class="placeholder-note">
-        {/* TODO: content agent to fill — real programs, admissions criteria (e.g. entrance exam/eligibility), deadlines, seat intake, syllabus links */}
+        Program details below carry [PLACEHOLDER] figures for eligibility,
+        seats, dates, and fees pending confirmation from the department.
       </div>
       <div class="card-grid">
-        {programPlaceholders.map((p) => (
+        {programs.map((p) => (
           <div class="card">
             <h3>{p.name}</h3>
             <p>{p.level}</p>
-            <p>{p.desc}</p>
+            <p><strong>Duration:</strong> {p.duration}</p>
+            <p><strong>Eligibility:</strong> {p.eligibility}</p>
+            <p><strong>Admission:</strong> {p.admission}</p>
+            <p><strong>Seats:</strong> {p.seats}</p>
           </div>
         ))}
       </div>
@@ -39,10 +72,10 @@ const programPlaceholders = [
   <section>
     <div class="container">
       <h2>Admissions</h2>
-      {/* TODO: content agent to fill — real admission process, entrance exam details, important dates, application links */}
       <p>
-        [Placeholder admissions overview &mdash; entrance exam / eligibility
-        criteria / application process / important dates &mdash; TODO]
+        Applications open [PLACEHOLDER month] each year via the
+        [PLACEHOLDER &mdash; link to Tezpur University admissions portal].
+        Fee structure: [PLACEHOLDER &mdash; link to official fee page].
       </p>
     </div>
   </section>
@@ -50,7 +83,6 @@ const programPlaceholders = [
   <section>
     <div class="container">
       <h2>Course Catalog</h2>
-      {/* TODO: content agent to fill — real course table per program/semester */}
       <table class="simple-table">
         <thead>
           <tr>
@@ -61,18 +93,14 @@ const programPlaceholders = [
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>[TODO]</td>
-            <td>[Course title — TODO]</td>
-            <td>[TODO]</td>
-            <td>[TODO]</td>
-          </tr>
-          <tr>
-            <td>[TODO]</td>
-            <td>[Course title — TODO]</td>
-            <td>[TODO]</td>
-            <td>[TODO]</td>
-          </tr>
+          {courses.map((c) => (
+            <tr>
+              <td>{c.code}</td>
+              <td>{c.title}</td>
+              <td>{c.program}</td>
+              <td>{c.semester}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

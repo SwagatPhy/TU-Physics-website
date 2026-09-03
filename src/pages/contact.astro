@@ -1,37 +1,69 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const departmentContacts = [
+  { office: '[PLACEHOLDER Head of Department]', email: '[PLACEHOLDER hod.physics@tezu.ac.in]', phone: '[PLACEHOLDER phone]' },
+  { office: '[PLACEHOLDER Admissions Coordinator]', email: '[PLACEHOLDER admissions.physics@tezu.ac.in]', phone: '[PLACEHOLDER phone]' },
+  { office: '[PLACEHOLDER Office Superintendent]', email: '[PLACEHOLDER office.physics@tezu.ac.in]', phone: '[PLACEHOLDER phone]' },
+];
 ---
 
 <BaseLayout title="Contact">
   <section class="hero">
     <div class="container">
       <h1>Contact</h1>
-      <p class="lede">Placeholder contact details and a non-functional form stub &mdash; wire up real address, map, and a backend/service before launch.</p>
+      <p class="lede">
+        Reach the Department of Physics, Tezpur University &mdash; address,
+        general contact info, and department-specific contacts below.
+      </p>
     </div>
   </section>
 
   <section>
     <div class="container">
       <div class="placeholder-note">
-        {/* TODO: content agent to fill — real address, phone, email, office hours, map embed */}
+        Address, phone, and contact details below carry [PLACEHOLDER]
+        values pending confirmation from the department. The form below is
+        a non-functional stub &mdash; a backend/service must be wired up
+        before launch.
       </div>
 
       <h2>Address</h2>
       <p>
         Department of Physics<br />
-        Tezpur University<br />
-        Napaam, Tezpur, Assam<br />
-        [PIN — TODO]
+        [PLACEHOLDER — Building/Block name]<br />
+        Tezpur University, Napaam, Tezpur<br />
+        [PLACEHOLDER PIN Code], Assam, India
       </p>
 
       <h2>Email &amp; Phone</h2>
       <p>
-        Email: [TODO@tezu.ac.in]<br />
-        Phone: [TODO]
+        Email: [PLACEHOLDER — physics@tezu.ac.in]<br />
+        Phone: [PLACEHOLDER +91-XXXX-XXXXXX]
       </p>
 
+      <h2>Department Contacts</h2>
+      <table class="simple-table">
+        <thead>
+          <tr>
+            <th>Office</th>
+            <th>Email</th>
+            <th>Phone</th>
+          </tr>
+        </thead>
+        <tbody>
+          {departmentContacts.map((c) => (
+            <tr>
+              <td>{c.office}</td>
+              <td>{c.email}</td>
+              <td>{c.phone}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
       <h2>Get in touch</h2>
-      {/* TODO: this form has no backend wired up — needs a form-handling
+      {/* This form has no backend wired up — needs a form-handling
           service (e.g. server endpoint, Formspree, or similar) before launch */}
       <form>
         <p>
@@ -46,7 +78,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <label for="message">Message</label><br />
           <textarea id="message" name="message" rows="4" disabled placeholder="Form not yet wired up"></textarea>
         </p>
-        <button type="button" disabled>Submit (disabled — TODO)</button>
+        <button type="button" disabled>Submit (disabled — backend pending)</button>
       </form>
     </div>
   </section>

@@ -1,10 +1,18 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const noticePlaceholders = [
-  { date: '20XX-XX-XX', title: '[Notice/event title 1 — TODO]' },
-  { date: '20XX-XX-XX', title: '[Notice/event title 2 — TODO]' },
-  { date: '20XX-XX-XX', title: '[Notice/event title 3 — TODO]' },
+const notices = [
+  { date: '[PLACEHOLDER Month DD, YYYY]', title: '[PLACEHOLDER] M.Sc. Physics Semester Exam Schedule' },
+  { date: '[PLACEHOLDER Month DD, YYYY]', title: '[PLACEHOLDER] PhD Entrance Test Result Notification' },
+];
+
+const events = [
+  {
+    title: '[PLACEHOLDER Departmental Seminar Series]: "[PLACEHOLDER talk title]"',
+    speaker: '[PLACEHOLDER Name], [PLACEHOLDER affiliation]',
+    when: '[PLACEHOLDER Day, Date, Time]',
+    venue: '[PLACEHOLDER — Room / Building / virtual link]',
+  },
 ];
 ---
 
@@ -12,15 +20,20 @@ const noticePlaceholders = [
   <section class="hero">
     <div class="container">
       <h1>Notices &amp; Events</h1>
-      <p class="lede">Placeholder notices/events feed &mdash; e.g. seminars, exam schedules, admission notices, colloquia.</p>
+      <p class="lede">
+        Departmental notices &mdash; admissions, exam schedules, results
+        &mdash; and upcoming seminars, colloquia, and workshops.
+      </p>
     </div>
   </section>
 
   <section>
     <div class="container">
       <div class="placeholder-note">
-        {/* TODO: content agent to fill — real notices/events, likely with dates, PDFs, and an archive; consider a content collection once real data flows in */}
+        Notices and events below are [PLACEHOLDER] pending real content
+        from the department's notice archive and seminar calendar.
       </div>
+      <h2>Notices</h2>
       <table class="simple-table">
         <thead>
           <tr>
@@ -29,7 +42,7 @@ const noticePlaceholders = [
           </tr>
         </thead>
         <tbody>
-          {noticePlaceholders.map((n) => (
+          {notices.map((n) => (
             <tr>
               <td>{n.date}</td>
               <td>{n.title}</td>
@@ -37,6 +50,22 @@ const noticePlaceholders = [
           ))}
         </tbody>
       </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Upcoming Events</h2>
+      <div class="card-grid">
+        {events.map((e) => (
+          <div class="card">
+            <h3>{e.title}</h3>
+            <p><strong>Speaker:</strong> {e.speaker}</p>
+            <p><strong>When:</strong> {e.when}</p>
+            <p><strong>Venue:</strong> {e.venue}</p>
+          </div>
+        ))}
+      </div>
     </div>
   </section>
 </BaseLayout>

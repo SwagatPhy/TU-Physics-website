@@ -1,11 +1,14 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const researchAreaPlaceholders = [
-  { title: '[Research Area 1 — TODO]', body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
-  { title: '[Research Area 2 — TODO]', body: 'Sed do eiusmod tempor incididunt ut labore et dolore magna.' },
-  { title: '[Research Area 3 — TODO]', body: 'Ut enim ad minim veniam, quis nostrud exercitation.' },
-  { title: '[Research Area 4 — TODO]', body: 'Duis aute irure dolor in reprehenderit in voluptate.' },
+// Area names below are generic examples of common Indian physics-department
+// research groupings — NOT a claim about what this department actually
+// researches. Replace with the department's real, confirmed groups.
+const researchAreas = [
+  { title: '[PLACEHOLDER] Condensed Matter Physics', body: 'Studies the physical properties of materials, including [PLACEHOLDER sub-topics], using both theoretical modeling and experimental techniques. Faculty: [PLACEHOLDER names]' },
+  { title: '[PLACEHOLDER] Nuclear &amp; Particle Physics', body: 'Investigates [PLACEHOLDER sub-topics] using [PLACEHOLDER methods/facilities]. Faculty: [PLACEHOLDER names]' },
+  { title: '[PLACEHOLDER] Optics &amp; Photonics', body: 'Focuses on [PLACEHOLDER sub-topics] with applications in [PLACEHOLDER application area]. Faculty: [PLACEHOLDER names]' },
+  { title: '[PLACEHOLDER] Materials Science', body: 'Explores synthesis and characterization of [PLACEHOLDER material types] for [PLACEHOLDER applications]. Faculty: [PLACEHOLDER names]' },
 ];
 ---
 
@@ -13,21 +16,29 @@ const researchAreaPlaceholders = [
   <section class="hero">
     <div class="container">
       <h1>Research</h1>
-      <p class="lede">Placeholder overview of research groups/areas &mdash; no real scientific claims yet.</p>
+      <p class="lede">
+        Research in the Department of Physics, Tezpur University spans
+        several areas of theoretical and experimental physics. Faculty and
+        research scholars actively publish in peer-reviewed journals and
+        undertake sponsored research projects supported by national
+        funding agencies.
+      </p>
     </div>
   </section>
 
   <section>
     <div class="container">
       <div class="placeholder-note">
-        {/* TODO: content agent to fill — real research groups, project descriptions, instrumentation, facilities */}
-        Do not treat the text below as factual research claims. Structural placeholders only.
+        Area names and descriptions below are generic examples of common
+        Indian physics-department research groupings &mdash; NOT a claim
+        about what this department actually researches. Replace with the
+        department's real, confirmed groups.
       </div>
       <div class="card-grid">
-        {researchAreaPlaceholders.map((area) => (
+        {researchAreas.map((area) => (
           <div class="card">
-            <h3>{area.title}</h3>
-            <p>{area.body}</p>
+            <h3 set:html={area.title} />
+            <p set:html={area.body} />
           </div>
         ))}
       </div>

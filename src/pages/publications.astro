@@ -1,11 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-// Structural placeholder only — no real publication data.
+// Structural placeholders only — no real papers, authors, or journals
+// should be inferred from these entries.
 const publicationPlaceholders = [
-  { year: '20XX', citation: '[Author list — TODO], "[Paper title — TODO]," [Journal — TODO].' },
-  { year: '20XX', citation: '[Author list — TODO], "[Paper title — TODO]," [Journal — TODO].' },
-  { year: '20XX', citation: '[Author list — TODO], "[Paper title — TODO]," [Journal — TODO].' },
+  { year: '20XX', citation: '[PLACEHOLDER Author1, Author2, Author3], "[PLACEHOLDER Paper Title — e.g. On the properties of X]," [PLACEHOLDER Journal Name], Vol. XX, pp. XXX–XXX. [PLACEHOLDER DOI/arXiv link]' },
+  { year: '20XX', citation: '[PLACEHOLDER Author1, Author2], "[PLACEHOLDER Paper Title]," [PLACEHOLDER Journal Name]. [PLACEHOLDER DOI/arXiv link]' },
+  { year: '20XX', citation: '[PLACEHOLDER Author1, Author2, Author3], "[PLACEHOLDER Paper Title]," [PLACEHOLDER Journal Name], Vol. XX, pp. XXX–XXX. [PLACEHOLDER DOI/arXiv link]' },
 ];
 ---
 
@@ -13,14 +14,21 @@ const publicationPlaceholders = [
   <section class="hero">
     <div class="container">
       <h1>Publications</h1>
-      <p class="lede">Placeholder list &mdash; to be replaced with a real, sourced publication record (e.g. via ADS/ORCID feed or manual list).</p>
+      <p class="lede">
+        Faculty and research scholars of the Department of Physics, Tezpur
+        University publish in peer-reviewed national and international
+        journals. Below is a selection of recent publications; a full list
+        is available via [PLACEHOLDER &mdash; link to faculty profiles or
+        repository].
+      </p>
     </div>
   </section>
 
   <section>
     <div class="container">
       <div class="placeholder-note">
-        {/* TODO: content agent to fill — real publication list, likely sourced from ADS/ORCID; consider pagination or filtering by year/author once real data exists */}
+        These are structural placeholders only &mdash; no real papers,
+        authors, or journals should be inferred from them.
       </div>
       <ul>
         {publicationPlaceholders.map((pub) => (

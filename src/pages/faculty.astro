@@ -1,14 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-// Placeholder faculty roster structure. Do NOT treat names/fields below as
-// real people — they are structural stand-ins for the notes/content agent
-// to replace with the actual roster.
+// Structural placeholders only — no real people. Replace with the actual
+// roster once the department confirms names, titles, and research areas.
 const facultyPlaceholders = [
-  { name: '[Faculty Name 1 — TODO]', title: 'Professor', area: '[Research area — TODO]' },
-  { name: '[Faculty Name 2 — TODO]', title: 'Associate Professor', area: '[Research area — TODO]' },
-  { name: '[Faculty Name 3 — TODO]', title: 'Assistant Professor', area: '[Research area — TODO]' },
-  { name: '[Faculty Name 4 — TODO]', title: 'Emeritus Professor', area: '[Research area — TODO]' },
+  { name: '[PLACEHOLDER NAME], Ph.D.', title: 'Professor', area: '[PLACEHOLDER — e.g. Condensed Matter Physics]' },
+  { name: '[PLACEHOLDER NAME], Ph.D.', title: 'Associate Professor', area: '[PLACEHOLDER research area]' },
+  { name: '[PLACEHOLDER NAME], Ph.D.', title: 'Assistant Professor', area: '[PLACEHOLDER research area]' },
+  { name: '[PLACEHOLDER NAME], Ph.D.', title: 'Emeritus Professor', area: '[PLACEHOLDER research area]' },
 ];
 ---
 
@@ -16,22 +15,27 @@ const facultyPlaceholders = [
   <section class="hero">
     <div class="container">
       <h1>Faculty</h1>
-      <p class="lede">Placeholder roster &mdash; replace with the real faculty list, photos, and profile links.</p>
+      <p class="lede">
+        Directory of the Department of Physics faculty. No real names
+        below &mdash; structural placeholders pending the confirmed
+        roster, photos, and profile links.
+      </p>
     </div>
   </section>
 
   <section>
     <div class="container">
       <div class="placeholder-note">
-        {/* TODO: content agent to fill — real faculty roster, photos, bios, contact/profile links */}
-        No real names below. Structural placeholders only.
+        No real names below. Structural placeholders only, pending the
+        department's confirmed roster, headshots, bios, and contact
+        details.
       </div>
       <div class="card-grid">
         {facultyPlaceholders.map((f) => (
           <div class="card">
             <h3>{f.name}</h3>
             <p>{f.title}</p>
-            <p>{f.area}</p>
+            <p>Research interests: {f.area}</p>
           </div>
         ))}
       </div>

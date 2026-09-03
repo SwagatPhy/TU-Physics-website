@@ -19,13 +19,25 @@
 
 > [PLACEHOLDER — intro] Faculty and research scholars of the Department of Physics, Tezpur University publish in peer-reviewed national and international journals. Below is a selection of recent publications; a full list is available via [PLACEHOLDER — link to faculty profiles or repository].
 
-**Sample publication entries:**
+**Sample publication entries** — six varied entries spanning subfields/venues/author-counts, so the list renders realistically instead of two near-identical rows. All authors, titles, journals, and figures are structural placeholders only — no real papers should be inferred.
 
-> [PLACEHOLDER Author1, Author2, Author3] (20XX). "[PLACEHOLDER Paper Title — e.g. On the properties of X]." *[PLACEHOLDER Journal Name]*, Vol. XX, pp. XXX–XXX. [PLACEHOLDER DOI/arXiv link]
+> **[PLACEHOLDER Author A]**, Author B, Author C (20XX). "[PLACEHOLDER Paper Title — e.g. Structural and optical properties of thin-film X]." *[PLACEHOLDER Journal Name]*, Vol. XX, pp. XXX–XXX. [PLACEHOLDER DOI]
 
-> [PLACEHOLDER Author1, Author2] (20XX). "[PLACEHOLDER Paper Title]." *[PLACEHOLDER Journal Name]*. [PLACEHOLDER DOI/arXiv link]
+> Author D, **[PLACEHOLDER Author A]** (20XX). "[PLACEHOLDER Paper Title — e.g. A theoretical study of Y under high-pressure conditions]." *[PLACEHOLDER Journal Name]*, Vol. XX(X), Article XXXXXX. [PLACEHOLDER DOI]
 
-*(These are structural placeholders only — no real papers, authors, or journals should be inferred from them.)*
+> **[PLACEHOLDER Author A]**, Author E, Author F, Author G (20XX). "[PLACEHOLDER Paper Title — e.g. Measurement of Z cross-section at collider energies]." *[PLACEHOLDER Journal Name]*, Vol. XX, pp. XXX–XXX. [PLACEHOLDER arXiv link]
+
+> **[PLACEHOLDER Author B]** (20XX). "[PLACEHOLDER Paper Title — single-author theory note]." *[PLACEHOLDER Journal Name]*, Vol. XX, pp. XXX–XXX. [PLACEHOLDER DOI]
+
+> **[PLACEHOLDER Author C]**, Author H (20XX). "[PLACEHOLDER Paper Title — e.g. A review of recent advances in W]." *[PLACEHOLDER Journal Name] (Review)*, Vol. XX, pp. XXX–XXX. [PLACEHOLDER DOI]
+
+> **[PLACEHOLDER Author A]**, **[PLACEHOLDER Author B]**, Author I (20XX). "[PLACEHOLDER Paper Title — collaborative cross-group paper]." *[PLACEHOLDER Journal Name]*, Vol. XX, pp. XXX–XXX. [PLACEHOLDER DOI]
+
+**Featured publication (optional spotlight block, for a "highlighted research" callout on the page):**
+
+> 🔬 **Featured:** "[PLACEHOLDER Paper Title]" — [PLACEHOLDER Author(s)], published in *[PLACEHOLDER Journal Name]* (20XX). [PLACEHOLDER one-sentence plain-language summary of why this result matters — e.g. "This work provides the first experimental evidence for X, with implications for Y."]
+
+*(Bold marks the department-affiliated author per entry, per the outline's "department authors highlighted" spec — swap in real bolding once real author lists exist.)*
 
 ## Open questions for user
 

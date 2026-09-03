@@ -40,9 +40,26 @@
 > **Funding:** [PLACEHOLDER — fellowship amount/source, if applicable]
 > **How to apply:** [PLACEHOLDER — link to admissions portal]
 
-**Sample course catalog entry:**
+> ### [PLACEHOLDER] B.Sc. Physics (Honours)
+> **Duration:** [PLACEHOLDER — e.g. 3 years, 6 semesters]
+> **Eligibility:** [PLACEHOLDER — e.g. 10+2 with Physics, Chemistry, Mathematics, minimum XX% marks]
+> **Admission process:** [PLACEHOLDER — merit-based / entrance-based, per university UG admission policy]
+> **Seats:** [PLACEHOLDER number]
+> **Fees:** [PLACEHOLDER — link to official fee structure]
+> **How to apply:** [PLACEHOLDER — link to Tezpur University UG admissions portal]
 
-> [PLACEHOLDER CODE] — [PLACEHOLDER Course Title] ([PLACEHOLDER credits] credits)
+**Sample course catalog entries** (four, spanning levels, instead of one):
+
+> [PLACEHOLDER CODE] — [PLACEHOLDER Course Title, e.g. "Classical Mechanics"] ([PLACEHOLDER credits] credits) · UG, Semester [PLACEHOLDER]
+> [PLACEHOLDER — one-line description]
+
+> [PLACEHOLDER CODE] — [PLACEHOLDER Course Title, e.g. "Quantum Mechanics II"] ([PLACEHOLDER credits] credits) · PG, Semester [PLACEHOLDER]
+> [PLACEHOLDER — one-line description]
+
+> [PLACEHOLDER CODE] — [PLACEHOLDER Course Title, e.g. "Statistical Mechanics"] ([PLACEHOLDER credits] credits) · PG, Semester [PLACEHOLDER]
+> [PLACEHOLDER — one-line description]
+
+> [PLACEHOLDER CODE] — [PLACEHOLDER Course Title, e.g. "Research Methodology & Scientific Writing"] ([PLACEHOLDER credits] credits) · PhD coursework
 > [PLACEHOLDER — one-line description]
 
 ## Open questions for user

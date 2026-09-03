@@ -35,7 +35,25 @@
 > [PLACEHOLDER description] Explores synthesis and characterization of [PLACEHOLDER material types] for [PLACEHOLDER applications].
 > Faculty: [PLACEHOLDER names]
 
+> ### [PLACEHOLDER] Astrophysics & Space Physics
+> [PLACEHOLDER description] Studies [PLACEHOLDER sub-topics — e.g. stellar/galactic phenomena, space weather] through [PLACEHOLDER methods — observation/simulation/data analysis].
+> Faculty: [PLACEHOLDER names]
+
+> ### [PLACEHOLDER] Theoretical & Mathematical Physics
+> [PLACEHOLDER description] Works on [PLACEHOLDER sub-topics] using analytical and computational methods, often in collaboration with the department's experimental groups.
+> Faculty: [PLACEHOLDER names]
+
 *(These area names are generic examples of common Indian physics-department research groupings — NOT a claim about what Tezpur University's Department of Physics actually researches. Replace with the department's real groups.)*
+
+**Sample funded-project entries** (for the optional "Funded Projects" section):
+
+> **[PLACEHOLDER Project Title]** — [PLACEHOLDER PI name], funded by [PLACEHOLDER agency — e.g. DST-SERB], [PLACEHOLDER duration/amount].
+
+> **[PLACEHOLDER Project Title]** — [PLACEHOLDER PI name], funded by [PLACEHOLDER agency — e.g. UGC], [PLACEHOLDER duration/amount].
+
+**Student-opportunities blurb options** (pick one — all [PLACEHOLDER]):
+1. Undergraduate and postgraduate students can join a research group for project work, dissertations, or summer research under faculty supervision — reach out to a group's faculty contact directly to discuss opportunities.
+2. Curious what research looks like day to day? Most groups take on project students each semester. Browse the areas above and email the faculty contact with your interests.
 
 ## Open questions for user
 

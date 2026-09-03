@@ -28,6 +28,16 @@
 | [PLACEHOLDER Admissions Coordinator] | [PLACEHOLDER admissions.physics@tezu.ac.in] | [PLACEHOLDER phone] |
 | [PLACEHOLDER Office Superintendent] | [PLACEHOLDER office.physics@tezu.ac.in] | [PLACEHOLDER phone] |
 
+**Directions / how-to-reach placeholder** (for the "getting here" section):
+
+> **By air:** Nearest airport is [PLACEHOLDER — Tezpur Airport (Salonibari) / Guwahati's LGBI, whichever is standard], approximately [PLACEHOLDER distance/time] from campus.
+> **By rail:** Nearest railway station is [PLACEHOLDER — Rangapara North / Tezpur], approximately [PLACEHOLDER distance/time] from campus.
+> **On campus:** The department is located in [PLACEHOLDER — building/block], [PLACEHOLDER — brief landmark, e.g. "near the central library"].
+
+**Contact-form intro microcopy options** (pick one, if a form is built — all [PLACEHOLDER]):
+1. "Have a question for the department? Send us a note and we'll route it to the right person."
+2. "General enquiries only — for admissions-specific questions, please use the Academics page contacts above."
+
 ## Open questions for user
 
 - Need: exact department building/block name and room number on the Tezpur University campus.

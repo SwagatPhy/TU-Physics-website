@@ -18,7 +18,7 @@
 
 > [PLACEHOLDER — intro] The Department of Physics, Tezpur University maintains a range of teaching and research laboratories supporting its UG, PG, and PhD programs.
 
-**Sample teaching lab entries:**
+**Sample teaching lab entries** (four instead of two, for a fuller grid):
 
 > ### [PLACEHOLDER] General Physics Laboratory
 > [PLACEHOLDER description] Used for undergraduate laboratory courses covering [PLACEHOLDER topics].
@@ -26,12 +26,30 @@
 > ### [PLACEHOLDER] Electronics Laboratory
 > [PLACEHOLDER description] Supports coursework in [PLACEHOLDER topics] for [PLACEHOLDER program level].
 
-**Sample research lab entries:**
+> ### [PLACEHOLDER] Advanced Physics Laboratory
+> [PLACEHOLDER description] Postgraduate-level experiments in [PLACEHOLDER topics — e.g. modern optics, solid-state physics], typically for M.Sc. students.
 
-> ### [PLACEHOLDER Lab Name]
+> ### [PLACEHOLDER] Computational Physics Lab
+> [PLACEHOLDER description] Teaching lab for numerical methods and simulation coursework, equipped with [PLACEHOLDER — workstations/software].
+
+**Sample research lab entries** (three, spanning different equipment/scale, instead of one):
+
+> ### [PLACEHOLDER Lab Name 1]
 > Research area: [PLACEHOLDER — links to Research page]
 > Faculty in charge: [PLACEHOLDER name]
-> Major equipment: [PLACEHOLDER — e.g. spectrometer, deposition system]
+> Major equipment: [PLACEHOLDER — e.g. thin-film deposition system, X-ray diffractometer]
+> [PLACEHOLDER description]
+
+> ### [PLACEHOLDER Lab Name 2]
+> Research area: [PLACEHOLDER — links to Research page]
+> Faculty in charge: [PLACEHOLDER name]
+> Major equipment: [PLACEHOLDER — e.g. optical spectroscopy setup, laser sources]
+> [PLACEHOLDER description]
+
+> ### [PLACEHOLDER Lab Name 3]
+> Research area: [PLACEHOLDER — links to Research page]
+> Faculty in charge: [PLACEHOLDER name]
+> Major equipment: [PLACEHOLDER — e.g. computing cluster for simulations, no specialized hardware — theory group]
 > [PLACEHOLDER description]
 
 **Shared facilities placeholder:**

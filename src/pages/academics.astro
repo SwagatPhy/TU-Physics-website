@@ -19,18 +19,22 @@ const programs = [
     seats: '[PLACEHOLDER — funding: fellowship amount/source, if applicable]',
   },
   {
-    name: 'B.Sc. Physics',
+    name: 'B.Sc. Physics (Honours)',
     level: 'Undergraduate',
-    duration: '[PLACEHOLDER — e.g. 3 years]',
-    eligibility: '[PLACEHOLDER eligibility]',
-    admission: '[PLACEHOLDER admission process]',
+    duration: '[PLACEHOLDER — e.g. 3 years, 6 semesters]',
+    eligibility: '[PLACEHOLDER — e.g. 10+2 with Physics, Chemistry, Mathematics, minimum XX% marks]',
+    admission: '[PLACEHOLDER — merit-based / entrance-based, per university UG admission policy]',
     seats: '[PLACEHOLDER number]',
   },
 ];
 
+// Four course-catalog entries spanning UG/PG/PhD levels, instead of one,
+// so the table isn't misleadingly thin.
 const courses = [
-  { code: '[PLACEHOLDER CODE]', title: '[PLACEHOLDER Course Title]', program: '[PLACEHOLDER]', semester: '[PLACEHOLDER]' },
-  { code: '[PLACEHOLDER CODE]', title: '[PLACEHOLDER Course Title]', program: '[PLACEHOLDER]', semester: '[PLACEHOLDER]' },
+  { code: '[PLACEHOLDER CODE]', title: '[PLACEHOLDER Course Title, e.g. "Classical Mechanics"]', program: 'UG', semester: '[PLACEHOLDER]' },
+  { code: '[PLACEHOLDER CODE]', title: '[PLACEHOLDER Course Title, e.g. "Quantum Mechanics II"]', program: 'PG', semester: '[PLACEHOLDER]' },
+  { code: '[PLACEHOLDER CODE]', title: '[PLACEHOLDER Course Title, e.g. "Statistical Mechanics"]', program: 'PG', semester: '[PLACEHOLDER]' },
+  { code: '[PLACEHOLDER CODE]', title: '[PLACEHOLDER Course Title, e.g. "Research Methodology & Scientific Writing"]', program: 'PhD coursework', semester: '[PLACEHOLDER]' },
 ];
 ---
 

@@ -4,11 +4,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 const teachingLabs = [
   { name: '[PLACEHOLDER] General Physics Laboratory', desc: 'Used for undergraduate laboratory courses covering [PLACEHOLDER topics].' },
   { name: '[PLACEHOLDER] Electronics Laboratory', desc: 'Supports coursework in [PLACEHOLDER topics] for [PLACEHOLDER program level].' },
+  { name: '[PLACEHOLDER] Advanced Physics Laboratory', desc: 'Postgraduate-level experiments in [PLACEHOLDER topics — e.g. modern optics, solid-state physics], typically for M.Sc. students.' },
+  { name: '[PLACEHOLDER] Computational Physics Lab', desc: 'Teaching lab for numerical methods and simulation coursework, equipped with [PLACEHOLDER — workstations/software].' },
 ];
 
+// Three research labs spanning different equipment/scale — an
+// experimental/deposition-style lab, a spectroscopy/optics-style lab,
+// and a theory group with no hardware — for realistic variety.
 const researchLabs = [
-  { name: '[PLACEHOLDER Lab Name]', area: '[PLACEHOLDER — links to Research page]', faculty: '[PLACEHOLDER name]', equipment: '[PLACEHOLDER — e.g. spectrometer, deposition system]' },
-  { name: '[PLACEHOLDER Lab Name]', area: '[PLACEHOLDER — links to Research page]', faculty: '[PLACEHOLDER name]', equipment: '[PLACEHOLDER equipment]' },
+  { name: '[PLACEHOLDER Lab Name 1]', area: '[PLACEHOLDER — links to Research page]', faculty: '[PLACEHOLDER name]', equipment: '[PLACEHOLDER — e.g. thin-film deposition system, X-ray diffractometer]' },
+  { name: '[PLACEHOLDER Lab Name 2]', area: '[PLACEHOLDER — links to Research page]', faculty: '[PLACEHOLDER name]', equipment: '[PLACEHOLDER — e.g. optical spectroscopy setup, laser sources]' },
+  { name: '[PLACEHOLDER Lab Name 3]', area: '[PLACEHOLDER — links to Research page]', faculty: '[PLACEHOLDER name]', equipment: '[PLACEHOLDER — e.g. computing cluster for simulations, no specialized hardware — theory group]' },
 ];
 
 const sharedFacilities = [

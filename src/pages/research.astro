@@ -9,7 +9,19 @@ const researchAreas = [
   { title: '[PLACEHOLDER] Nuclear &amp; Particle Physics', body: 'Investigates [PLACEHOLDER sub-topics] using [PLACEHOLDER methods/facilities]. Faculty: [PLACEHOLDER names]' },
   { title: '[PLACEHOLDER] Optics &amp; Photonics', body: 'Focuses on [PLACEHOLDER sub-topics] with applications in [PLACEHOLDER application area]. Faculty: [PLACEHOLDER names]' },
   { title: '[PLACEHOLDER] Materials Science', body: 'Explores synthesis and characterization of [PLACEHOLDER material types] for [PLACEHOLDER applications]. Faculty: [PLACEHOLDER names]' },
+  { title: '[PLACEHOLDER] Astrophysics &amp; Space Physics', body: 'Studies [PLACEHOLDER sub-topics &mdash; e.g. stellar/galactic phenomena, space weather] through [PLACEHOLDER methods &mdash; observation/simulation/data analysis]. Faculty: [PLACEHOLDER names]' },
+  { title: '[PLACEHOLDER] Theoretical &amp; Mathematical Physics', body: 'Works on [PLACEHOLDER sub-topics] using analytical and computational methods, often in collaboration with the department&rsquo;s experimental groups. Faculty: [PLACEHOLDER names]' },
 ];
+
+const fundedProjects = [
+  { title: '[PLACEHOLDER Project Title]', pi: '[PLACEHOLDER PI name]', agency: '[PLACEHOLDER agency — e.g. DST-SERB]', detail: '[PLACEHOLDER duration/amount]' },
+  { title: '[PLACEHOLDER Project Title]', pi: '[PLACEHOLDER PI name]', agency: '[PLACEHOLDER agency — e.g. UGC]', detail: '[PLACEHOLDER duration/amount]' },
+];
+
+// Current default — a second phrasing (more conversational, "browse and
+// email") is drafted in content-notes/research.md if a friendlier tone
+// fits better once the department weighs in.
+const studentOpportunities = 'Undergraduate and postgraduate students can join a research group for project work, dissertations, or summer research under faculty supervision — reach out to a group’s faculty contact directly to discuss opportunities.';
 ---
 
 <BaseLayout title="Research">
@@ -42,6 +54,24 @@ const researchAreas = [
           </div>
         ))}
       </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Funded Projects</h2>
+      <ul>
+        {fundedProjects.map((project) => (
+          <li><strong>{project.title}</strong> &mdash; {project.pi}, funded by {project.agency}, {project.detail}.</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Student Research Opportunities</h2>
+      <p>{studentOpportunities}</p>
     </div>
   </section>
 </BaseLayout>

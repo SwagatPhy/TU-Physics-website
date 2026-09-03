@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Structural placeholder only — no real publication data.
+const publicationPlaceholders = [
+  { year: '20XX', citation: '[Author list — TODO], "[Paper title — TODO]," [Journal — TODO].' },
+  { year: '20XX', citation: '[Author list — TODO], "[Paper title — TODO]," [Journal — TODO].' },
+  { year: '20XX', citation: '[Author list — TODO], "[Paper title — TODO]," [Journal — TODO].' },
+];
+---
+
+<BaseLayout title="Publications">
+  <section class="hero">
+    <div class="container">
+      <h1>Publications</h1>
+      <p class="lede">Placeholder list &mdash; to be replaced with a real, sourced publication record (e.g. via ADS/ORCID feed or manual list).</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="placeholder-note">
+        {/* TODO: content agent to fill — real publication list, likely sourced from ADS/ORCID; consider pagination or filtering by year/author once real data exists */}
+      </div>
+      <ul>
+        {publicationPlaceholders.map((pub) => (
+          <li>({pub.year}) {pub.citation}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

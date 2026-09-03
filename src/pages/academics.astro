@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Structural placeholders — a teaching department typically runs UG, PG,
+// and PhD programs. Replace with the real program list once confirmed.
+const programPlaceholders = [
+  { name: '[B.Sc. Physics — TODO]', level: 'Undergraduate', desc: 'Placeholder program description.' },
+  { name: '[M.Sc. Physics — TODO]', level: 'Postgraduate', desc: 'Placeholder program description.' },
+  { name: '[Ph.D. Physics — TODO]', level: 'Doctoral', desc: 'Placeholder program description.' },
+  { name: '[Integrated/Other program — TODO]', level: '[Level — TODO]', desc: 'Placeholder program description.' },
+];
+---
+
+<BaseLayout title="Academics">
+  <section class="hero">
+    <div class="container">
+      <h1>Academics &amp; Courses</h1>
+      <p class="lede">Placeholder programs list &mdash; replace with real UG/PG/PhD offerings, admissions info, and course catalog.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="placeholder-note">
+        {/* TODO: content agent to fill — real programs, admissions criteria (e.g. entrance exam/eligibility), deadlines, seat intake, syllabus links */}
+      </div>
+      <div class="card-grid">
+        {programPlaceholders.map((p) => (
+          <div class="card">
+            <h3>{p.name}</h3>
+            <p>{p.level}</p>
+            <p>{p.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Admissions</h2>
+      {/* TODO: content agent to fill — real admission process, entrance exam details, important dates, application links */}
+      <p>
+        [Placeholder admissions overview &mdash; entrance exam / eligibility
+        criteria / application process / important dates &mdash; TODO]
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Course Catalog</h2>
+      {/* TODO: content agent to fill — real course table per program/semester */}
+      <table class="simple-table">
+        <thead>
+          <tr>
+            <th>Course Code</th>
+            <th>Title</th>
+            <th>Program</th>
+            <th>Semester</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>[TODO]</td>
+            <td>[Course title — TODO]</td>
+            <td>[TODO]</td>
+            <td>[TODO]</td>
+          </tr>
+          <tr>
+            <td>[TODO]</td>
+            <td>[Course title — TODO]</td>
+            <td>[TODO]</td>
+            <td>[TODO]</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</BaseLayout>

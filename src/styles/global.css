@@ -1,0 +1,256 @@
+/* ---------------------------------------------------------------------
+   Global stylesheet — placeholder design system.
+   TODO(design): a designer/notes-agent should replace the palette,
+   type scale, and spacing with the university's actual brand guidelines
+   (logo colors, approved fonts, etc.). Everything below is a neutral
+   starter so pages are usable and consistent in the meantime.
+   --------------------------------------------------------------------- */
+
+:root {
+  /* Placeholder brand palette — swap for Tezpur University brand colors */
+  --color-primary: #1a3c6e;
+  --color-primary-dark: #102544;
+  --color-accent: #c98a2c;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f4f6f9;
+  --color-text: #1c1f24;
+  --color-text-muted: #5a6472;
+  --color-border: #dde2e8;
+
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-heading: Georgia, "Times New Roman", serif;
+
+  --max-width: 1120px;
+  --radius: 6px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.6;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  color: var(--color-primary-dark);
+  line-height: 1.25;
+  margin-top: 0;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.site-header {
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.85rem;
+  padding-bottom: 0.85rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--color-primary-dark);
+}
+
+.brand-logo-placeholder {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+nav.main-nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.4rem;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+nav.main-nav a {
+  color: var(--color-text);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+nav.main-nav a[aria-current="page"] {
+  color: var(--color-primary);
+  border-bottom: 2px solid var(--color-accent);
+}
+
+.hero {
+  background: linear-gradient(135deg, var(--color-bg-alt), var(--color-bg));
+  padding: 3.5rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.hero h1 {
+  font-size: 2.2rem;
+  max-width: 40ch;
+}
+
+.hero p.lede {
+  color: var(--color-text-muted);
+  max-width: 60ch;
+  font-size: 1.05rem;
+}
+
+main {
+  min-height: 50vh;
+}
+
+section {
+  padding: 2.5rem 0;
+}
+
+section + section {
+  border-top: 1px solid var(--color-border);
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+}
+
+.card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  background: var(--color-bg);
+}
+
+.card h3 {
+  margin-bottom: 0.4rem;
+  font-size: 1.1rem;
+}
+
+.card p {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
+.button {
+  display: inline-block;
+  background: var(--color-primary);
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.button:hover {
+  background: var(--color-primary-dark);
+  text-decoration: none;
+}
+
+table.simple-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+table.simple-table th,
+table.simple-table td {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.site-footer {
+  background: var(--color-bg-alt);
+  border-top: 1px solid var(--color-border);
+  padding: 2.5rem 0 1.5rem;
+  margin-top: 3rem;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.site-footer .footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.site-footer h4 {
+  color: var(--color-text);
+  font-size: 0.95rem;
+  margin-bottom: 0.6rem;
+}
+
+.site-footer ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.site-footer li {
+  margin-bottom: 0.35rem;
+}
+
+.footer-bottom {
+  border-top: 1px solid var(--color-border);
+  padding-top: 1rem;
+  font-size: 0.8rem;
+}
+
+.placeholder-note {
+  background: #fff8e1;
+  border: 1px dashed #d9b44a;
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  color: #6b5416;
+  margin: 1rem 0;
+}

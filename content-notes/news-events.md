@@ -1,0 +1,39 @@
+# Notices & Events Page
+
+## Recommended outline
+
+### Notices (announcements)
+- List of notices, each with: title, date, category/tag (e.g. "Admissions", "Exam", "Result", "Recruitment", "General"), attached PDF/document (common on Indian university sites — notices are often circulars), full text or download link
+- Archive/filter by year or category
+- Note: university departments typically distinguish between department-level notices and central university notices (which may need to just be linked, not duplicated)
+
+### Events (seminars, colloquia, conferences, workshops, outreach)
+- List with: title, date & time, speaker/organizer (for seminars), venue (room/building or virtual link), abstract/description
+- Past events archive (optional, with photos/reports if available)
+- Recurring seminar series info (e.g. departmental colloquium schedule)
+
+## Placeholder copy
+
+**Sample notices:**
+
+> **[PLACEHOLDER — notice title, e.g. "M.Sc. Physics Semester Exam Schedule"]** — [PLACEHOLDER Month DD, YYYY]
+> [PLACEHOLDER — one-line summary or "Download notice (PDF)" link placeholder.]
+
+> **[PLACEHOLDER — notice title, e.g. "PhD Entrance Test Result Notification"]** — [PLACEHOLDER Month DD, YYYY]
+> [PLACEHOLDER — summary]
+
+**Sample event listing:**
+
+> **[PLACEHOLDER Departmental Seminar Series]: "[PLACEHOLDER talk title]"**
+> Speaker: [PLACEHOLDER Name], [PLACEHOLDER affiliation]
+> Date/time: [PLACEHOLDER Day, Date, Time]
+> Venue: [PLACEHOLDER — Room / Building / virtual link]
+> [PLACEHOLDER — abstract text]
+
+## Open questions for user
+
+- Need: any existing notice archive to migrate (past circulars, admission notices, exam notices).
+- Need: real upcoming events/seminar schedule, or a calendar feed to embed.
+- Need: naming of any regular seminar/colloquium series and who organizes it.
+- Need: whether notices should link to/embed the central Tezpur University notice board, or be maintained independently by the department.
+- Need: who will be responsible for ongoing content updates (determines whether a simple static list suffices or a lightweight CMS/admin panel is warranted).

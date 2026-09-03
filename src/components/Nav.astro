@@ -1,0 +1,33 @@
+---
+// Main site navigation. Active link is highlighted via aria-current,
+// computed from the current URL pathname.
+const navItems = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  { href: '/faculty', label: 'Faculty' },
+  { href: '/research', label: 'Research' },
+  { href: '/academics', label: 'Academics' },
+  { href: '/facilities', label: 'Facilities' },
+  { href: '/publications', label: 'Publications' },
+  { href: '/notices', label: 'Notices' },
+  { href: '/contact', label: 'Contact' },
+];
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<nav class="main-nav" aria-label="Primary">
+  <ul>
+    {navItems.map((item) => {
+      const itemPath = item.href.replace(/\/$/, '') || '/';
+      const isActive = currentPath === itemPath;
+      return (
+        <li>
+          <a href={item.href} aria-current={isActive ? 'page' : undefined}>
+            {item.label}
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+</nav>

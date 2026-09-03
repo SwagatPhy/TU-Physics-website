@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const researchAreaPlaceholders = [
+  { title: '[Research Area 1 — TODO]', body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
+  { title: '[Research Area 2 — TODO]', body: 'Sed do eiusmod tempor incididunt ut labore et dolore magna.' },
+  { title: '[Research Area 3 — TODO]', body: 'Ut enim ad minim veniam, quis nostrud exercitation.' },
+  { title: '[Research Area 4 — TODO]', body: 'Duis aute irure dolor in reprehenderit in voluptate.' },
+];
+---
+
+<BaseLayout title="Research">
+  <section class="hero">
+    <div class="container">
+      <h1>Research</h1>
+      <p class="lede">Placeholder overview of research groups/areas &mdash; no real scientific claims yet.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="placeholder-note">
+        {/* TODO: content agent to fill — real research groups, project descriptions, instrumentation, facilities */}
+        Do not treat the text below as factual research claims. Structural placeholders only.
+      </div>
+      <div class="card-grid">
+        {researchAreaPlaceholders.map((area) => (
+          <div class="card">
+            <h3>{area.title}</h3>
+            <p>{area.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

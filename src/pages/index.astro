@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const highlightCards = [
+  {
+    title: 'Research Highlight 1',
+    body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  },
+  {
+    title: 'Research Highlight 2',
+    body: 'Sed do eiusmod tempor incididunt ut labore et dolore magna.',
+  },
+  {
+    title: 'Research Highlight 3',
+    body: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco.',
+  },
+];
+---
+
+<BaseLayout title="Home">
+  <section class="hero">
+    <div class="container">
+      {/* TODO: content agent to fill — real department tagline, mission statement */}
+      <h1>Department of Physics, Tezpur University</h1>
+      <p class="lede">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Placeholder mission
+        statement / department summary goes here.
+      </p>
+      <a class="button" href="/research">Explore Research</a>
+    </div>
+    <div class="container">
+      <div class="placeholder-note">
+        Placeholder homepage content. Hero copy, highlight cards, and imagery
+        below are lorem ipsum / lorem-adjacent stand-ins pending real content
+        from the notes/content agent.
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Highlights</h2>
+      <div class="card-grid">
+        {highlightCards.map((card) => (
+          <div class="card">
+            <h3>{card.title}</h3>
+            <p>{card.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Announcements</h2>
+      {/* TODO: content agent to fill — real announcements/news feed */}
+      <ul>
+        <li>[Placeholder announcement 1 &mdash; TODO]</li>
+        <li>[Placeholder announcement 2 &mdash; TODO]</li>
+        <li>[Placeholder announcement 3 &mdash; TODO]</li>
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

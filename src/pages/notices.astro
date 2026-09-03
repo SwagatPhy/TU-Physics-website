@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const noticePlaceholders = [
+  { date: '20XX-XX-XX', title: '[Notice/event title 1 — TODO]' },
+  { date: '20XX-XX-XX', title: '[Notice/event title 2 — TODO]' },
+  { date: '20XX-XX-XX', title: '[Notice/event title 3 — TODO]' },
+];
+---
+
+<BaseLayout title="Notices & Events">
+  <section class="hero">
+    <div class="container">
+      <h1>Notices &amp; Events</h1>
+      <p class="lede">Placeholder notices/events feed &mdash; e.g. seminars, exam schedules, admission notices, colloquia.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="placeholder-note">
+        {/* TODO: content agent to fill — real notices/events, likely with dates, PDFs, and an archive; consider a content collection once real data flows in */}
+      </div>
+      <table class="simple-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Notice</th>
+          </tr>
+        </thead>
+        <tbody>
+          {noticePlaceholders.map((n) => (
+            <tr>
+              <td>{n.date}</td>
+              <td>{n.title}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const facilityPlaceholders = [
+  { name: '[Lab/Facility 1 — TODO]', desc: 'Placeholder facility description.' },
+  { name: '[Lab/Facility 2 — TODO]', desc: 'Placeholder facility description.' },
+  { name: '[Lab/Facility 3 — TODO]', desc: 'Placeholder facility description.' },
+  { name: '[Central instrumentation / library access — TODO]', desc: 'Placeholder facility description.' },
+];
+---
+
+<BaseLayout title="Facilities">
+  <section class="hero">
+    <div class="container">
+      <h1>Facilities &amp; Laboratories</h1>
+      <p class="lede">Placeholder listing of teaching and research labs, equipment, and shared facilities.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="placeholder-note">
+        {/* TODO: content agent to fill — real lab names, equipment lists, photos, safety/usage info */}
+      </div>
+      <div class="card-grid">
+        {facilityPlaceholders.map((f) => (
+          <div class="card">
+            <h3>{f.name}</h3>
+            <p>{f.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Contact">
+  <section class="hero">
+    <div class="container">
+      <h1>Contact</h1>
+      <p class="lede">Placeholder contact details and a non-functional form stub &mdash; wire up real address, map, and a backend/service before launch.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="placeholder-note">
+        {/* TODO: content agent to fill — real address, phone, email, office hours, map embed */}
+      </div>
+
+      <h2>Address</h2>
+      <p>
+        Department of Physics<br />
+        Tezpur University<br />
+        Napaam, Tezpur, Assam<br />
+        [PIN — TODO]
+      </p>
+
+      <h2>Email &amp; Phone</h2>
+      <p>
+        Email: [TODO@tezu.ac.in]<br />
+        Phone: [TODO]
+      </p>
+
+      <h2>Get in touch</h2>
+      {/* TODO: this form has no backend wired up — needs a form-handling
+          service (e.g. server endpoint, Formspree, or similar) before launch */}
+      <form>
+        <p>
+          <label for="name">Name</label><br />
+          <input id="name" name="name" type="text" disabled placeholder="Form not yet wired up" />
+        </p>
+        <p>
+          <label for="email">Email</label><br />
+          <input id="email" name="email" type="email" disabled placeholder="Form not yet wired up" />
+        </p>
+        <p>
+          <label for="message">Message</label><br />
+          <textarea id="message" name="message" rows="4" disabled placeholder="Form not yet wired up"></textarea>
+        </p>
+        <button type="button" disabled>Submit (disabled — TODO)</button>
+      </form>
+    </div>
+  </section>
+</BaseLayout>

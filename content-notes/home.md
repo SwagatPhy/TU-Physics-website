@@ -18,10 +18,19 @@
 ## Placeholder copy
 
 > [PLACEHOLDER] Department of Physics, Tezpur University
->
-> [PLACEHOLDER — tagline] "Teaching and Research Excellence in Physics."
->
-> [PLACEHOLDER — mission blurb] The Department of Physics at Tezpur University is committed to quality undergraduate and postgraduate education and active research across theoretical and experimental physics. Our faculty and scholars work across areas such as [PLACEHOLDER research areas], contributing to both academic training and the advancement of physics research in the region.
+
+**Tagline options** (pick one for the hero, or rotate them — all [PLACEHOLDER], pending department sign-off):
+1. "Teaching and Research Excellence in Physics." — *(safe, formal default)*
+2. "Where Curiosity Meets Rigor." — *(brand-forward, works well as a standalone hero line)*
+3. "Understanding Matter, Energy, and Everything Between." — *(discipline-flavored, slightly playful)*
+4. "From the Classroom to the Frontier of Physics." — *(bridges teaching + research, good above the programs preview)*
+5. "Physics, Grounded in Assam. Reaching Outward." — *(regional-identity angle, strong if the department wants to lean into its Northeast India context)*
+
+**Mission blurb options** (pick one — all [PLACEHOLDER], pending department sign-off):
+1. *(Descriptive, current default)* The Department of Physics at Tezpur University is committed to quality undergraduate and postgraduate education and active research across theoretical and experimental physics. Our faculty and scholars work across areas such as [PLACEHOLDER research areas], contributing to both academic training and the advancement of physics research in the region.
+2. *(Shorter, punchier — good as a hero subhead directly under a tagline)* We train physicists and pursue physics — from first-year mechanics to frontier research in [PLACEHOLDER research areas]. One department, both halves of the discipline.
+3. *(Regional-identity angle, pairs with tagline #5)* Since [PLACEHOLDER YEAR], the Department of Physics has built a home for rigorous physics education and research in Northeast India, training students who go on to academia, industry, and public service while contributing original work in [PLACEHOLDER research areas].
+4. *(Student/admissions-facing — good if Home doubles as an entry point for prospective students)* Whether you're starting a B.Sc./M.Sc. or pursuing a Ph.D., the Department of Physics offers small-cohort teaching, active research labs, and faculty working at the edge of [PLACEHOLDER research areas].
 
 **Highlight stats (placeholder numbers — DO NOT USE without verification):**
 - [PLACEHOLDER] XX Faculty Members
@@ -29,10 +38,13 @@
 - [PLACEHOLDER] Department established in 19XX
 - [PLACEHOLDER] X Research Groups / Labs
 
-**Notice/announcement placeholders:**
-- [PLACEHOLDER — headline] "M.Sc. Physics admission notice for [session]" — [Month, Year]
-- [PLACEHOLDER — headline] "PhD entrance test schedule announced" — [Month, Year]
-- [PLACEHOLDER — headline] "Departmental seminar series resumes" — [Month, Year]
+**Notice/announcement placeholders** (mix of categories, for a realistic-looking strip — swap for real notices):
+- [Admissions] [PLACEHOLDER — headline] "M.Sc. Physics admission notice for [session]" — [Month, Year]
+- [Exam] [PLACEHOLDER — headline] "PhD entrance test schedule announced" — [Month, Year]
+- [Event] [PLACEHOLDER — headline] "Departmental seminar series resumes" — [Month, Year]
+- [Result] [PLACEHOLDER — headline] "M.Sc. Physics semester result declared" — [Month, Year]
+- [Recruitment] [PLACEHOLDER — headline] "Walk-in interview for project JRF position" — [Month, Year]
+- [General] [PLACEHOLDER — headline] "Department office hours revised for [semester]" — [Month, Year]
 
 ## Open questions for user
 

@@ -14,21 +14,44 @@
 
 ## Placeholder copy
 
-**Sample notices:**
+**Sample notices** — six entries across categories, so the notice board reads like a real feed instead of two repeated items:
 
-> **[PLACEHOLDER — notice title, e.g. "M.Sc. Physics Semester Exam Schedule"]** — [PLACEHOLDER Month DD, YYYY]
+> **[Exam]** [PLACEHOLDER — "M.Sc. Physics Semester Exam Schedule"] — [PLACEHOLDER Month DD, YYYY]
 > [PLACEHOLDER — one-line summary or "Download notice (PDF)" link placeholder.]
 
-> **[PLACEHOLDER — notice title, e.g. "PhD Entrance Test Result Notification"]** — [PLACEHOLDER Month DD, YYYY]
+> **[Result]** [PLACEHOLDER — "PhD Entrance Test Result Notification"] — [PLACEHOLDER Month DD, YYYY]
 > [PLACEHOLDER — summary]
 
-**Sample event listing:**
+> **[Admissions]** [PLACEHOLDER — "M.Sc. Physics Admission Notice, [Session]"] — [PLACEHOLDER Month DD, YYYY]
+> [PLACEHOLDER — summary, "Download notice (PDF)" link placeholder.]
+
+> **[Recruitment]** [PLACEHOLDER — "Walk-in Interview for Junior Research Fellow (Project: [PLACEHOLDER])"] — [PLACEHOLDER Month DD, YYYY]
+> [PLACEHOLDER — summary of eligibility/qualifications and reporting date.]
+
+> **[Scholarship]** [PLACEHOLDER — "Call for Applications: Institute Research Fellowship"] — [PLACEHOLDER Month DD, YYYY]
+> [PLACEHOLDER — summary, application deadline.]
+
+> **[General]** [PLACEHOLDER — "Department Office Hours Revised for [Semester]"] — [PLACEHOLDER Month DD, YYYY]
+> [PLACEHOLDER — summary.]
+
+**Sample event listings** — three formats (seminar, workshop, recurring colloquium) since events on a department page rarely all look the same:
 
 > **[PLACEHOLDER Departmental Seminar Series]: "[PLACEHOLDER talk title]"**
 > Speaker: [PLACEHOLDER Name], [PLACEHOLDER affiliation]
 > Date/time: [PLACEHOLDER Day, Date, Time]
 > Venue: [PLACEHOLDER — Room / Building / virtual link]
 > [PLACEHOLDER — abstract text]
+
+> **[PLACEHOLDER Workshop]: "[PLACEHOLDER workshop title, e.g. Hands-on Python for Data Analysis in Physics]"**
+> Organizers: [PLACEHOLDER Name(s)/lab]
+> Dates: [PLACEHOLDER Date range]
+> Venue: [PLACEHOLDER — Room / Building]
+> [PLACEHOLDER — who it's for (UG/PG/PhD), registration link/deadline.]
+
+> **[PLACEHOLDER Colloquium Series] — Recurring**
+> Frequency: [PLACEHOLDER — e.g. Every second Friday, 4:00 PM]
+> Venue: [PLACEHOLDER — Room / Building, standing venue]
+> [PLACEHOLDER — one-line description, e.g. "Open departmental talks by invited speakers and senior scholars on current research."] Link to full schedule/archive.
 
 ## Open questions for user
 

@@ -1,110 +1,553 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
 
-// Hero tagline/mission below use content-notes/home.md's "current
-// default" options. Four more tagline variants and three more mission
-// blurb variants are drafted there — swap in a different one, or wire
-// several up for A/B testing, once the department picks a direction.
+const research = await getCollection('research');
+const newsEvents = await getCollection('newsEvents');
 
-const statTiles = [
-  { value: '[PLACEHOLDER XX]', label: 'Faculty Members' },
-  { value: '[PLACEHOLDER XX]', label: 'PhD Research Scholars' },
-  { value: '[PLACEHOLDER 19XX]', label: 'Department Established' },
-  { value: '[PLACEHOLDER X]', label: 'Research Groups / Labs' },
-];
+const news = newsEvents
+	.filter(item => item.data.type === 'news' && !item.data.draft)
+	.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+	.slice(0, 3);
 
-const highlightCards = [
-  {
-    title: 'Programs',
-    body: 'B.Sc., M.Sc., and PhD programs in Physics, from foundational coursework to advanced research supervision.',
-    href: '/academics',
-  },
-  {
-    title: 'Research',
-    body: 'Faculty and scholars working across [PLACEHOLDER research areas], publishing in peer-reviewed journals and undertaking sponsored projects.',
-    href: '/research',
-  },
-  {
-    title: 'Facilities',
-    body: 'Teaching and research laboratories, computing facilities, and shared instrumentation supporting UG, PG, and PhD work.',
-    href: '/facilities',
-  },
-];
+const events = newsEvents
+	.filter(item => item.data.type === 'event' && !item.data.draft)
+	.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+	.slice(0, 3);
 
-// Notice strip: one sample per category, so the feed reads like a real
-// notice board rather than three near-identical rows. Swap for the
-// department's actual latest notices once available.
-const notices = [
-  { category: 'Admissions', title: '[PLACEHOLDER] M.Sc. Physics admission notice for [session]', date: '[PLACEHOLDER Month, Year]' },
-  { category: 'Exam', title: '[PLACEHOLDER] PhD entrance test schedule announced', date: '[PLACEHOLDER Month, Year]' },
-  { category: 'Event', title: '[PLACEHOLDER] Departmental seminar series resumes', date: '[PLACEHOLDER Month, Year]' },
-  { category: 'Result', title: '[PLACEHOLDER] M.Sc. Physics semester result declared', date: '[PLACEHOLDER Month, Year]' },
-  { category: 'Recruitment', title: '[PLACEHOLDER] Walk-in interview for project JRF position', date: '[PLACEHOLDER Month, Year]' },
-  { category: 'General', title: '[PLACEHOLDER] Department office hours revised for [semester]', date: '[PLACEHOLDER Month, Year]' },
-];
+const researchPreview = research.slice(0, 3);
 ---
 
-<BaseLayout title="Home">
-  <section class="hero">
-    <div class="container">
-      <h1>Department of Physics, Tezpur University</h1>
-      <p class="lede">
-        [PLACEHOLDER &mdash; tagline, pending department sign-off]
-        &ldquo;Teaching and Research Excellence in Physics.&rdquo;
-      </p>
-      <p class="lede">
-        The Department of Physics at Tezpur University is committed to
-        quality undergraduate and postgraduate education and active
-        research across theoretical and experimental physics. Our faculty
-        and scholars work across areas such as [PLACEHOLDER research
-        areas], contributing to both academic training and the advancement
-        of physics research in the region.
-      </p>
-      <a class="button" href="/academics">Explore Programs</a>
-      <a class="button" href="/faculty">Meet the Faculty</a>
-    </div>
-  </section>
+<Layout title="Home" description="Official website of the Department of Physics, Tezpur University.">
+	<section class="hero-gradient">
+		<div class="hero-content">
+			<h1>Department of Physics</h1>
+			<p class="hero-tagline">Where Curiosity Meets Rigor</p>
+			<p class="hero-subtitle">
+				We advance the frontiers of physics through research and teaching, preparing students
+				to think rigorously about the natural world.
+			</p>
+			<div class="hero-ctas">
+				<a href="/research" class="cta-button primary">Explore Research</a>
+				<a href="/admissions" class="cta-button secondary">Admissions</a>
+			</div>
+		</div>
+	</section>
 
-  <section>
-    <div class="container">
-      <div class="card-grid">
-        {statTiles.map((stat) => (
-          <div class="card">
-            <h3>{stat.value}</h3>
-            <p>{stat.label}</p>
-          </div>
-        ))}
-      </div>
-      <div class="placeholder-note">
-        Stat tiles above are structural placeholders &mdash; real figures
-        pending confirmation from the department.
-      </div>
-    </div>
-  </section>
+	<section class="section highlights">
+		<div class="container">
+			<div class="highlights-grid">
+				<div class="highlight-card">
+					<div class="highlight-number">20+</div>
+					<div class="highlight-label">Faculty Members</div>
+				</div>
+				<div class="highlight-card">
+					<div class="highlight-number">6</div>
+					<div class="highlight-label">Research Areas</div>
+				</div>
+				<div class="highlight-card">
+					<div class="highlight-number">1980</div>
+					<div class="highlight-label">Established Since</div>
+				</div>
+				<div class="highlight-card">
+					<div class="highlight-number">500+</div>
+					<div class="highlight-label">Active Students</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
-  <section>
-    <div class="container">
-      <h2>Explore the Department</h2>
-      <div class="card-grid">
-        {highlightCards.map((card) => (
-          <a class="card" href={card.href}>
-            <h3>{card.title}</h3>
-            <p>{card.body}</p>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
+	<section class="section mission">
+		<div class="container">
+			<h2>Our Mission</h2>
+			<p class="mission-text">
+				The Department of Physics at Tezpur University is committed to excellence in both
+				undergraduate and postgraduate education and active research across theoretical and
+				experimental physics. Our faculty and scholars work across areas including condensed
+				matter physics, quantum optics, nuclear and particle physics, and materials science,
+				contributing to academic training and advancing physics research in the region.
+			</p>
+		</div>
+	</section>
 
-  <section>
-    <div class="container">
-      <h2>Notices</h2>
-      <ul>
-        {notices.map((n) => (
-          <li><strong>[{n.category}]</strong> {n.title} &mdash; {n.date}</li>
-        ))}
-      </ul>
-      <p><a href="/notices">View all notices &amp; events &rarr;</a></p>
-    </div>
-  </section>
-</BaseLayout>
+	<section class="section programs">
+		<div class="container">
+			<h2>Academic Programs</h2>
+			<div class="programs-grid">
+				<div class="program-card">
+					<h3>Undergraduate</h3>
+					<p class="program-degree">B.Sc. Physics</p>
+					<p>Three-year rigorous program combining theoretical foundations with laboratory practice.</p>
+					<a href="/academics" class="program-link">Learn More →</a>
+				</div>
+				<div class="program-card">
+					<h3>Postgraduate</h3>
+					<p class="program-degree">M.Sc. Physics</p>
+					<p>Advanced coursework in specialized research areas with thesis research component.</p>
+					<a href="/academics" class="program-link">Learn More →</a>
+				</div>
+				<div class="program-card">
+					<h3>Doctorate</h3>
+					<p class="program-degree">Ph.D. Physics</p>
+					<p>Pursue cutting-edge research under faculty supervision across all research areas.</p>
+					<a href="/admissions" class="program-link">Learn More →</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section research-preview">
+		<div class="container">
+			<h2>Research Areas</h2>
+			<p class="section-subtitle">We conduct research across multiple areas of physics</p>
+			<div class="card-grid">
+				{researchPreview.map(item => (
+					<a href={`/research/${item.id}`} class="card">
+						<h3 class="card-title">{item.data.specialization}</h3>
+						<p class="card-summary">{item.data.description}</p>
+					</a>
+				))}
+			</div>
+			<div class="view-all">
+				<a href="/research" class="view-all-link">View All Research Areas →</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="section news-events">
+		<div class="container">
+			<div class="news-events-grid">
+				<div class="news-column">
+					<h2>Latest News</h2>
+					<div class="news-list">
+						{news.length > 0 ? (
+							news.map(item => (
+								<article class="news-item">
+									<div class="news-date">
+										{item.data.date.toLocaleDateString('en-US', {
+											month: 'short',
+											day: 'numeric',
+											year: 'numeric'
+										})}
+									</div>
+									<h3>{item.data.title}</h3>
+									<p>{item.data.summary}</p>
+									<a href={`/news-events/${item.id}`} class="read-more">Read More →</a>
+								</article>
+							))
+						) : (
+							<p class="no-items">No news items at the moment.</p>
+						)}
+					</div>
+				</div>
+
+				<div class="events-column">
+					<h2>Upcoming Events</h2>
+					<div class="events-list">
+						{events.length > 0 ? (
+							events.map(item => (
+								<article class="event-item">
+									<div class="event-date-badge">
+										<div class="event-day">{item.data.date.getDate()}</div>
+										<div class="event-month">{item.data.date.toLocaleDateString('en-US', { month: 'short' })}</div>
+									</div>
+									<div class="event-content">
+										<h3>{item.data.title}</h3>
+										<p class="event-location">{item.data.location || 'TU Campus'}</p>
+										<p>{item.data.summary}</p>
+										<a href={`/news-events/${item.id}`} class="read-more">Details →</a>
+									</div>
+								</article>
+							))
+						) : (
+							<p class="no-items">No upcoming events at the moment.</p>
+						)}
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section admissions-cta">
+		<div class="container">
+			<div class="cta-card">
+				<h2>Ready to Join Us?</h2>
+				<p>Explore our admissions process and start your physics journey with us.</p>
+				<a href="/admissions" class="cta-button primary">View Admissions</a>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.hero-gradient {
+		background: linear-gradient(135deg, #1e3a5f 0%, #2d5a8c 50%, #3a6fa3 100%);
+		color: white;
+		padding-block: 6rem 4rem;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.hero-gradient::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background:
+			radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+			radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+		pointer-events: none;
+	}
+
+	.hero-content {
+		position: relative;
+		z-index: 1;
+		max-width: 52rem;
+	}
+
+	.hero-gradient h1 {
+		font-size: clamp(2.5rem, 5vw, 3.5rem);
+		margin-bottom: 0.5rem;
+		color: white;
+	}
+
+	.hero-tagline {
+		font-size: 1.25rem;
+		font-weight: 300;
+		color: rgba(255, 255, 255, 0.9);
+		margin-bottom: 1rem;
+	}
+
+	.hero-subtitle {
+		font-size: 1.1rem;
+		line-height: 1.7;
+		color: rgba(255, 255, 255, 0.85);
+		margin-bottom: 2rem;
+	}
+
+	.hero-ctas {
+		display: flex;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.cta-button {
+		display: inline-block;
+		padding: 0.85rem 2rem;
+		border-radius: 0.375rem;
+		font-weight: 500;
+		text-decoration: none;
+		transition: all 0.2s ease;
+		cursor: pointer;
+		border: none;
+		font-size: 0.95rem;
+	}
+
+	.cta-button.primary {
+		background: white;
+		color: #1e3a5f;
+	}
+
+	.cta-button.primary:hover {
+		background: rgba(255, 255, 255, 0.9);
+		transform: translateY(-2px);
+		box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+	}
+
+	.cta-button.secondary {
+		background: rgba(255, 255, 255, 0.15);
+		color: white;
+		border: 1px solid rgba(255, 255, 255, 0.3);
+	}
+
+	.cta-button.secondary:hover {
+		background: rgba(255, 255, 255, 0.25);
+		border-color: rgba(255, 255, 255, 0.5);
+	}
+
+	.highlights {
+		background: var(--color-surface);
+	}
+
+	.highlights-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+		gap: 2rem;
+	}
+
+	.highlight-card {
+		text-align: center;
+		padding: 2rem 1.5rem;
+	}
+
+	.highlight-number {
+		font-size: 2.5rem;
+		font-weight: 700;
+		color: var(--color-accent);
+		line-height: 1;
+		margin-bottom: 0.5rem;
+	}
+
+	.highlight-label {
+		color: var(--color-text-muted);
+		font-size: 0.95rem;
+	}
+
+	.mission {
+		background: white;
+	}
+
+	.mission h2 {
+		margin-bottom: 1.5rem;
+	}
+
+	.mission-text {
+		font-size: 1.05rem;
+		line-height: 1.8;
+		max-width: 48rem;
+		color: var(--color-text);
+	}
+
+	.programs {
+		background: var(--color-surface);
+	}
+
+	.programs h2 {
+		margin-bottom: 2rem;
+	}
+
+	.programs-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+		gap: 2rem;
+	}
+
+	.program-card {
+		background: white;
+		padding: 2rem;
+		border-radius: 0.5rem;
+		border: 1px solid var(--color-border);
+		transition: all 0.2s ease;
+	}
+
+	.program-card:hover {
+		border-color: var(--color-accent);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+	}
+
+	.program-card h3 {
+		margin-top: 0;
+	}
+
+	.program-degree {
+		color: var(--color-accent);
+		font-weight: 600;
+		font-size: 0.9rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.program-card p {
+		font-size: 0.95rem;
+	}
+
+	.program-link {
+		color: var(--color-accent);
+		text-decoration: none;
+		font-weight: 500;
+		font-size: 0.9rem;
+		display: inline-block;
+		margin-top: 1rem;
+	}
+
+	.program-link:hover {
+		text-decoration: underline;
+	}
+
+	.research-preview {
+		background: white;
+	}
+
+	.research-preview h2 {
+		margin-bottom: 0.5rem;
+	}
+
+	.section-subtitle {
+		color: var(--color-text-muted);
+		margin-bottom: 2rem;
+		font-size: 1rem;
+	}
+
+	.research-preview .card {
+		cursor: pointer;
+	}
+
+	.research-preview .card:hover {
+		border-color: var(--color-accent);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	}
+
+	.view-all {
+		text-align: center;
+		margin-top: 2rem;
+	}
+
+	.view-all-link {
+		color: var(--color-accent);
+		text-decoration: none;
+		font-weight: 500;
+	}
+
+	.view-all-link:hover {
+		text-decoration: underline;
+	}
+
+	.news-events {
+		background: var(--color-surface);
+	}
+
+	.news-events-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 3rem;
+	}
+
+	@media (max-width: 48rem) {
+		.news-events-grid {
+			grid-template-columns: 1fr;
+			gap: 2rem;
+		}
+	}
+
+	.news-column h2,
+	.events-column h2 {
+		margin-bottom: 1.5rem;
+	}
+
+	.news-list,
+	.events-list {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	.news-item {
+		padding-bottom: 1.5rem;
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.news-item:last-child {
+		border-bottom: none;
+		padding-bottom: 0;
+	}
+
+	.news-date {
+		font-size: 0.8rem;
+		color: var(--color-accent);
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.03em;
+		margin-bottom: 0.5rem;
+	}
+
+	.news-item h3 {
+		margin: 0.5rem 0;
+		font-size: 1.1rem;
+	}
+
+	.news-item p {
+		font-size: 0.95rem;
+		margin-bottom: 0.75rem;
+	}
+
+	.event-item {
+		display: flex;
+		gap: 1.25rem;
+		padding-bottom: 1.5rem;
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.event-item:last-child {
+		border-bottom: none;
+		padding-bottom: 0;
+	}
+
+	.event-date-badge {
+		background: white;
+		border: 2px solid var(--color-accent);
+		border-radius: 0.375rem;
+		padding: 0.5rem 0.75rem;
+		text-align: center;
+		min-width: 4rem;
+		flex-shrink: 0;
+	}
+
+	.event-day {
+		font-size: 1.3rem;
+		font-weight: 700;
+		color: var(--color-accent);
+		line-height: 1;
+	}
+
+	.event-month {
+		font-size: 0.75rem;
+		color: var(--color-text-muted);
+		font-weight: 600;
+		text-transform: uppercase;
+		margin-top: 0.25rem;
+	}
+
+	.event-content h3 {
+		margin: 0 0 0.35rem;
+		font-size: 1rem;
+	}
+
+	.event-location {
+		font-size: 0.85rem;
+		color: var(--color-text-muted);
+		margin: 0 0 0.5rem;
+	}
+
+	.event-content p {
+		font-size: 0.9rem;
+		margin-bottom: 0.75rem;
+	}
+
+	.read-more {
+		color: var(--color-accent);
+		text-decoration: none;
+		font-size: 0.9rem;
+		font-weight: 500;
+	}
+
+	.read-more:hover {
+		text-decoration: underline;
+	}
+
+	.no-items {
+		color: var(--color-text-muted);
+		font-style: italic;
+	}
+
+	.admissions-cta {
+		background: linear-gradient(135deg, #1e3a5f 0%, #2d5a8c 100%);
+		color: white;
+	}
+
+	.cta-card {
+		text-align: center;
+		padding: 3rem 2rem;
+	}
+
+	.cta-card h2 {
+		color: white;
+		margin-bottom: 1rem;
+	}
+
+	.cta-card p {
+		color: rgba(255, 255, 255, 0.85);
+		margin-bottom: 2rem;
+		font-size: 1.05rem;
+	}
+</style>

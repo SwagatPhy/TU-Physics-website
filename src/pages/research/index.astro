@@ -1,0 +1,33 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro'
+
+const levels = (await getCollection('research')).sort((a,b) => a.data.specialization.localeCompare(b.data.specialization));
+---
+
+<Layout title="research" description="Current research going on in the Department of Physics.">
+    <header class="page-header">
+        <div>
+            <h1>Research</h1>
+            <p>
+                Research in the Department of Physics spans several areas of theoretical and experimental physics. Faculty and research scholars actively publish in peer-reviewed journals and undertake sponsored research projects.
+            </p>
+        </div>
+    </header>
+
+    <section class="research-areas">
+        <div class="card-grid">
+            {levels.map(item => (
+                <article class="card">
+                    <h3 class="card-title">
+                        <a href={`/research/${item.id}`} style="text-decoration: none; color: inherit;">
+                            {item.data.specialization}
+                        </a>
+                    </h3>
+                    <p class="card-summary"><strong>Faculty:</strong> {item.data.faculty}</p>
+                    <p class="card-summary">{item.data.description}</p>
+                </article>
+            ))}
+        </div>
+    </section>
+</Layout>

@@ -1,0 +1,40 @@
+---
+import {getCollection, render} from 'astro:content';
+import Layout from '../../layouts/Layout.astro'
+
+// getStaticPaths creates one page for each research entry
+// Transforms each entry into {id: entry.id, props: entry data}
+export async function getStaticPaths() {
+    const topics = await getCollection('research');
+    return topics.map((topics) => ({
+        params: {id: topics.id},
+        props: {topics},
+    }));
+}
+
+// Extract frontmatter data and render markdown content
+const {topics} = Astro.props;
+const { specialization, faculty, description, contact, email} = topics.data;
+const { Content } = await render(topics);
+---
+
+<Layout title={specialization} description={description}>
+    <header class="detail-header">
+        <h1>{specialization}</h1>
+        <p>{description}</p>
+    </header>
+
+    <section class="detail-body">
+        <div class="research-details">
+            <p><strong>Faculty Lead:</strong> {faculty}</p>
+            <p><strong>Contact:</strong> {contact}</p>
+            <p><strong>Email:</strong> <a href={`mailto:${email}`}>{email}</a></p>
+        </div>
+
+        <article class="research-content">
+            <Content />
+        </article>
+
+        <a href="/research" class="back-link">← Back to Research</a>
+    </section>
+</Layout>

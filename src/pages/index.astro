@@ -59,7 +59,7 @@ const researchPreview = research.slice(0, 3);
 
 	<section class="section mission">
 		<div class="container">
-			<h2>Our Mission</h2>
+            <!--<h2> </h2>-->
 			<p class="mission-text">
 				The Department of Physics at Tezpur University is committed to excellence in both
 				undergraduate and postgraduate education and active research across theoretical and
@@ -70,23 +70,57 @@ const researchPreview = research.slice(0, 3);
 		</div>
 	</section>
 
+
+    <section class="section programs">
+        <div class="container">
+            <h2>Teaching and Resesarch</h2>
+            <div class="programs-grid">
+                <div class='program-card'>
+                    <h3>Research</h3>
+                    <a href="/research" class="program-link">Learn More →</a>
+
+                </div>
+                <!--Change the class from program-card to something different, a smaller one-->
+                <div class='program-card'>
+                    <h3>Admission</h3>
+                    <div class='program-card'>
+                        <p>Undergraduate Degree</p>
+                    </div>
+                    <div class='program-card'>
+                        <p>Postgraduate Degree</p>
+                    </div>
+                    <div class='program-card'>
+                        <p>Doctoral Degree</p>
+                    </div>
+                    <a href="/admissions" class="program-link">Learn More →</a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
 	<section class="section programs">
 		<div class="container">
 			<h2>Academic Programs</h2>
 			<div class="programs-grid">
-				<div class="program-card">
+				<div class="program-tile">
 					<h3>Undergraduate</h3>
 					<p class="program-degree">B.Sc. Physics</p>
 					<p>Three-year rigorous program combining theoretical foundations with laboratory practice.</p>
 					<a href="/academics" class="program-link">Learn More →</a>
 				</div>
-				<div class="program-card">
+				<div class="program-tile">
 					<h3>Postgraduate</h3>
 					<p class="program-degree">M.Sc. Physics</p>
 					<p>Advanced coursework in specialized research areas with thesis research component.</p>
 					<a href="/academics" class="program-link">Learn More →</a>
 				</div>
-				<div class="program-card">
+				<div class="program-tile">
 					<h3>Doctorate</h3>
 					<p class="program-degree">Ph.D. Physics</p>
 					<p>Pursue cutting-edge research under faculty supervision across all research areas.</p>
@@ -320,8 +354,8 @@ const researchPreview = research.slice(0, 3);
 
 	.programs-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-		gap: 2rem;
+		grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+		gap: 1.5rem;
 	}
 
 	.program-card {
@@ -341,11 +375,37 @@ const researchPreview = research.slice(0, 3);
 		margin-top: 0;
 	}
 
+	.program-tile {
+		background: white;
+		padding: 1.25rem;
+		border-radius: 0.375rem;
+		border: 1px solid var(--color-border);
+		transition: all 0.2s ease;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.program-tile:hover {
+		border-color: var(--color-accent);
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+		transform: translateY(-2px);
+	}
+
+	.program-tile h3 {
+		margin: 0 0 0.5rem 0;
+		font-size: 1rem;
+	}
+
+	.program-tile p {
+		font-size: 0.9rem;
+		margin: 0.35rem 0;
+	}
+
 	.program-degree {
 		color: var(--color-accent);
 		font-weight: 600;
-		font-size: 0.9rem;
-		margin-bottom: 0.5rem;
+		font-size: 0.85rem;
+		margin-bottom: 0.35rem;
 	}
 
 	.program-card p {

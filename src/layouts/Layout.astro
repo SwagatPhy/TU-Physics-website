@@ -1,0 +1,53 @@
+---
+import '../styles/global.css';
+
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const { title, description = 'Department of Physics.' } = Astro.props;
+
+const navLinks = [
+	{ href: '/about', label: 'About' },
+	{ href: '/people', label: 'People' },
+	{ href: '/academics', label: 'Academics' },
+	{ href: '/admissions', label: 'Admissions' },
+	{ href: '/research', label: 'Research' },
+	{ href: '/news-events', label: 'News & Events' },
+	{ href: '/contact', label: 'Contact' },
+];
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content={description} />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title} | Department of Physics</title>
+	</head>
+	<body>
+		<header class="site-header">
+			<div class="container">
+				<a class="site-title" href="/">Department of Physics</a>
+				<nav class="site-nav" aria-label="Primary">
+					{navLinks.map((link) => <a href={link.href}>{link.label}</a>)}
+				</nav>
+			</div>
+		</header>
+
+		<main>
+			<slot />
+		</main>
+
+		<footer class="site-footer">
+			<div class="container">
+				<p>&copy; {new Date().getFullYear()} Department of Physics. All rights reserved.</p>
+				<p><a href="/contact">Contact us</a></p>
+			</div>
+		</footer>
+	</body>
+</html>

@@ -18,6 +18,8 @@ const events = newsEvents
 const researchPreview = research.slice(0, 3);
 ---
 
+<!--First div is for the contents / links to about us/ the second division is for the image section (either make it slideshow)-->
+
 <Layout title="Home" description="Official website of the Department of Physics, Tezpur University.">
 	<section class="hero-gradient">
 		<div class="hero-content">
@@ -31,7 +33,14 @@ const researchPreview = research.slice(0, 3);
 				<a href="/research" class="cta-button primary">Explore Research</a>
 				<a href="/admissions" class="cta-button secondary">Admissions</a>
 			</div>
+            <a href="/about" class="cta-button secondary">Learn more ➡️</a>
 		</div>
+
+        <div>
+            <img src="/Dept-photos/dept_pho1.jpeg" alt="Department-photo1" class="hero-image">
+        </div>
+
+
 	</section>
 
 	<section class="section highlights">
@@ -77,6 +86,10 @@ const researchPreview = research.slice(0, 3);
             <div class="programs-grid">
                 <div class='program-card'>
                     <h3>Research</h3>
+                        <div>
+                        <img src="/Dept-photos/dept_pho1.jpeg" alt="Departmental photo1">
+
+                        </div>
                     <a href="/research" class="program-link">Learn More →</a>
 
                 </div>
@@ -130,23 +143,6 @@ const researchPreview = research.slice(0, 3);
 		</div>
 	</section>
 
-	<section class="section research-preview">
-		<div class="container">
-			<h2>Research Areas</h2>
-			<p class="section-subtitle">We conduct research across multiple areas of physics</p>
-			<div class="card-grid">
-				{researchPreview.map(item => (
-					<a href={`/research/${item.id}`} class="card">
-						<h3 class="card-title">{item.data.specialization}</h3>
-						<p class="card-summary">{item.data.description}</p>
-					</a>
-				))}
-			</div>
-			<div class="view-all">
-				<a href="/research" class="view-all-link">View All Research Areas →</a>
-			</div>
-		</div>
-	</section>
 
 	<section class="section news-events">
 		<div class="container">
@@ -213,14 +209,31 @@ const researchPreview = research.slice(0, 3);
 	</section>
 </Layout>
 
-<style>
-	.hero-gradient {
+
+
+<!--.hero-gradient {
 		background: linear-gradient(135deg, #1e3a5f 0%, #2d5a8c 50%, #3a6fa3 100%);
 		color: white;
 		padding-block: 6rem 4rem;
 		position: relative;
 		overflow: hidden;
+}
+
+	.hero-content {
+		position: relative;
+		z-index: 1;
+		max-width: 52rem;
 	}
+
+    .hero-image {
+        padding-block: 6rem 4rem;
+        position: right;
+    }
+
+-->
+
+<style>
+
 
 	.hero-gradient::before {
 		content: '';
@@ -235,17 +248,38 @@ const researchPreview = research.slice(0, 3);
 		pointer-events: none;
 	}
 
-	.hero-content {
-		position: relative;
-		z-index: 1;
-		max-width: 52rem;
-	}
+    .hero-gradient {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        padding-block: 4rem;
+        background: linear-gradient(125deg, #1e3a5f 0%, #2d5a8c 50%, #3a6fa3 100%);
+        color: white;
+
+
+    }
+
+    .hero-content {
+        flex: 1;
+        max-width: 52rem;
+    }
+
+    .hero-image {
+        flex: 1;
+        width: 80%;
+        height: auto;
+        border-radius: 2.5rem;
+        object-fit: cover;
+    }
+
 
 	.hero-gradient h1 {
 		font-size: clamp(2.5rem, 5vw, 3.5rem);
 		margin-bottom: 0.5rem;
 		color: white;
 	}
+
+
 
 	.hero-tagline {
 		font-size: 1.25rem;

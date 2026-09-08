@@ -1,0 +1,53 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+const courses = (await getCollection('courses')).sort((a, b) => a.data.code.localeCompare(b.data.code));
+---
+
+<Layout title="Academics" description="Course structure, and rules and regulations for the Department of Physics.">
+	<header class="page-header">
+		<div class="container">
+			<h1>Academics</h1>
+			<p>
+				Everything about how study in the department is structured — the course catalog, and
+				the academic rules and regulations that govern it. For admission requirements, see{' '}
+				<a href="/admissions">Admissions</a>.
+			</p>
+        We add the details here.
+      <p>
+      </p>
+		</div>
+	</header>
+
+	<section class="section">
+		<div class="container">
+			<h2>Rules &amp; regulations</h2>
+			<p>Grading, attendance, academic integrity, and progression requirements.</p>
+			<a class="back-link" href="/academics/rules">Read the rules &amp; regulations &rarr;</a>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="container">
+			<h2>Course structure</h2>
+			<p>Courses offered by the department, undergraduate and postgraduate.</p>
+			<ul class="card-grid">
+				{
+					courses.map((course) => (
+						<li>
+							<a class="card" href={`/academics/courses/${course.id}`}>
+								<span class="card-eyebrow">
+									{course.data.code} &middot; {course.data.credits} credits
+								</span>
+								<h3 class="card-title">{course.data.title}</h3>
+								<p class="card-summary">{course.data.description}</p>
+                <p class="card-faculty"><b>{course.data.faculty}</b></p>
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+	</section>
+</Layout>

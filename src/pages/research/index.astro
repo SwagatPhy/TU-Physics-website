@@ -18,15 +18,13 @@ const levels = (await getCollection('research')).sort((a,b) => a.data.specializa
     <section class="research-areas">
         <div class="card-grid">
             {levels.map(item => (
-                <article class="card">
-                    <h3 class="card-title">
-                        <a href={`/research/${item.id}`} style="text-decoration: none; color: inherit;">
-                            {item.data.specialization}
-                        </a>
-                    </h3>
+                <a href={`/research/${item.id}`} style="text-decoration: none; color: inherit;">
+                    <article class="card">
+                    <h3 class="card-title">{item.data.specialization}</h3>
                     <p class="card-summary"><strong>Faculty:</strong> {item.data.faculty}</p>
                     <p class="card-summary">{item.data.description}</p>
-                </article>
+                    </article>
+                </a>
             ))}
         </div>
     </section>

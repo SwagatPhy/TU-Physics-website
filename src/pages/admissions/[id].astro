@@ -1,0 +1,54 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+	const levels = await getCollection('admissions');
+	return levels.map((level) => ({
+		params: { id: level.id },
+		props: { level },
+	}));
+}
+
+const { level } = Astro.props;
+const { title, tagline, duration, eligibility, howToApply, applicationDeadline, contactEmail } =
+	level.data;
+const { Content } = await render(level);
+---
+
+<Layout title={title} description={tagline}>
+	<header class="detail-header">
+		<div class="container">
+			<div class="detail-meta">
+				<span class="badge">{duration}</span>
+			</div>
+			<h1>{title}</h1>
+			<p>{tagline}</p>
+		</div>
+	</header>
+
+	<div class="container">
+		<div class="detail-body">
+			<Content />
+
+			<h2>Eligibility</h2>
+			<ul>
+				{eligibility.map((item) => <li>{item}</li>)}
+			</ul>
+<!--COmment: maps all the items in the eligibility to item, and howtoapply below to step and loops-->
+
+			<h2>How to apply</h2>
+			<ul>
+				{howToApply.map((step) => <li>{step}</li>)}
+			</ul>
+
+			<h2>Application deadline</h2>
+			<p>{applicationDeadline}</p>
+
+			<h2>Contact</h2>
+			<p><a href={`mailto:${contactEmail}`}>{contactEmail}</a></p>
+
+			<a class="back-link" href="/admissions">&larr; All admissions</a>
+		</div>
+	</div>
+</Layout>

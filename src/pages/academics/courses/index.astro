@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+
+const courses = (await getCollection('courses')).sort((a, b) => a.data.code.localeCompare(b.data.code));
+---
+
+<Layout title="Courses" description="Course catalog for the Department of Physics.">
+	<header class="page-header">
+		<div class="container">
+			<h1>Courses</h1>
+			<p>The department's course catalog, undergraduate and postgraduate.</p>
+		</div>
+	</header>
+
+	<section class="section">
+		<div class="container">
+			<ul class="card-grid">
+				{
+					courses.map((course) => (
+						<li>
+							<a class="card" href={`/academics/courses/${course.id}`}>
+								<span class="card-eyebrow">
+									{course.data.code} &middot; {course.data.credits} credits
+								</span>
+								<h3 class="card-title">{course.data.title}</h3>
+								<p class="card-summary">{course.data.description}</p>
+							</a>
+						</li>
+					))
+				}
+			</ul>
+			<a class="back-link" href="/academics">&larr; Academics</a>
+		</div>
+	</section>
+</Layout>

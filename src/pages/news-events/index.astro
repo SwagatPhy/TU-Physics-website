@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { formatDate } from '../../lib/date';
+
+const items = (await getCollection('newsEvents', ({ data }) => import.meta.env.DEV || !data.draft)).sort(
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+---
+
+<Layout title="News & Events" description="Department news and upcoming events.">
+	<header class="page-header">
+		<div class="container">
+			<h1>News &amp; Events</h1>
+			<p>Department announcements, colloquia, and open days, newest first.</p>
+		</div>
+	</header>
+
+	<section class="section">
+		<div class="container">
+			<ul class="card-grid">
+				{
+					items.map((item) => (
+						<li>
+							<a class="card" href={`/news-events/${item.id}`}>
+								<span class="card-eyebrow">
+									{item.data.type === 'event' ? 'Event' : 'News'} &middot; {formatDate(item.data.date)}
+									{item.data.location ? ` · ${item.data.location}` : ''}
+								</span>
+								<h3 class="card-title">{item.data.title}</h3>
+								<p class="card-summary">{item.data.summary}</p>
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+	</section>
+</Layout>

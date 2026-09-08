@@ -1,0 +1,38 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { formatDate } from '../../lib/date';
+
+export async function getStaticPaths() {
+	const items = await getCollection('newsEvents', ({ data }) => import.meta.env.DEV || !data.draft);
+	return items.map((item) => ({
+		params: { id: item.id },
+		props: { item },
+	}));
+}
+
+const { item } = Astro.props;
+const { type, title, date, summary, location } = item.data;
+const { Content } = await render(item);
+---
+
+<Layout title={title} description={summary}>
+	<header class="detail-header">
+		<div class="container">
+			<div class="detail-meta">
+				<span class="badge">{type === 'event' ? 'Event' : 'News'}</span>
+				<span>{formatDate(date)}</span>
+				{location && <span>&middot; {location}</span>}
+			</div>
+			<h1>{title}</h1>
+			<p>{summary}</p>
+		</div>
+	</header>
+
+	<div class="container">
+		<div class="detail-body">
+			<Content />
+			<a class="back-link" href="/news-events">&larr; All news &amp; events</a>
+		</div>
+	</div>
+</Layout>

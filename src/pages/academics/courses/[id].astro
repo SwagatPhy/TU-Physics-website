@@ -1,0 +1,37 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+	const courses = await getCollection('courses');
+	return courses.map((course) => ({
+		params: { id: course.id },
+		props: { course },
+	}));
+}
+
+const { course } = Astro.props;
+const { title, code, credits, level, description } = course.data;
+const { Content } = await render(course);
+---
+
+<Layout title={`${code}: ${title}`} description={description}>
+	<header class="detail-header">
+		<div class="container">
+			<div class="detail-meta">
+				<span class="badge">{code}</span>
+				<span class="badge">{credits} credits</span>
+				<span class="badge">{level === 'undergraduate' ? 'Undergraduate' : 'Postgraduate'}</span>
+			</div>
+			<h1>{title}</h1>
+			<p>{description}</p>
+		</div>
+	</header>
+
+	<div class="container">
+		<div class="detail-body">
+			<Content />
+			<a class="back-link" href="/academics/courses">&larr; All courses</a>
+		</div>
+	</div>
+</Layout>

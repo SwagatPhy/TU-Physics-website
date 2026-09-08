@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+const levels = (await getCollection('admissions')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Layout title="Admissions" description="Undergraduate, postgraduate, and doctoral admissions for the Department of Physics.">
+	<header class="page-header">
+		<div class="container">
+			<h1>Admissions</h1>
+			<p>
+				Undergraduate, postgraduate, and doctoral admissions to the Department of Physics.
+				Select a program below for eligibility, application steps, and deadlines.
+			</p>
+		</div>
+	</header>
+
+	<section class="section">
+		<div class="container">
+			<ul class="card-grid">
+				{
+					levels.map((level) => (
+						<li>
+							<a class="card" href={`/admissions/${level.id}`}>
+								<span class="card-eyebrow">{level.data.duration}</span>
+								<h3 class="card-title">{level.data.title}</h3>
+								<p class="card-summary">{level.data.tagline}</p>
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+	</section>
+</Layout>

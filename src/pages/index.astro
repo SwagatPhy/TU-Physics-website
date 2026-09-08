@@ -267,11 +267,22 @@ const researchPreview = research.slice(0, 3);
     .hero-image {
         flex: 1;
         width: 80%;
-        height: auto;
+        min-height: 400px;
         border-radius: 2.5rem;
         object-fit: cover;
     }
 
+    @media (max-width: 48rem) {
+        .hero-gradient {
+            flex-direction: column;
+            padding-block: 2rem;
+        }
+        .hero-image {
+            width: 100%;
+            height: auto;
+            max-height: 300px;
+        }
+    }
 
 	.hero-gradient h1 {
 		font-size: clamp(2.5rem, 5vw, 3.5rem);

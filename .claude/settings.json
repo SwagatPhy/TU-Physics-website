@@ -12,5 +12,18 @@
       "Monitor"
     ],
     "defaultMode": "default"
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "Planning-manager",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"systemMessage\": \"📢 Planning-manager TU message received\"}'"
+          }
+        ]
+      }
+    ]
   }
 }

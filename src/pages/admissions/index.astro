@@ -10,14 +10,39 @@ const levels = (await getCollection('admissions')).sort((a, b) => a.data.order -
 		<div class="container">
 			<h1>Admissions</h1>
 			<p>
-				Undergraduate, postgraduate, and doctoral admissions to the Department of Physics.
-				Select a program below for eligibility, application steps, and deadlines.
+				Admissions to the Department of Physics for undergraduate, postgraduate, and doctoral students.
+				Select your applicant category below.
 			</p>
 		</div>
 	</header>
 
-	<section class="section">
+	<!-- Applicant Category Navigation -->
+	<section class="section admissions-categories">
 		<div class="container">
+			<h2>Select Your Applicant Category</h2>
+			<ul class="card-grid">
+				<li>
+					<a class="card" href="/admissions/national">
+						<span class="card-eyebrow">Indian Nationals</span>
+						<h3 class="card-title">National Admissions</h3>
+						<p class="card-summary">Information for students from India applying to our programs.</p>
+					</a>
+				</li>
+				<li>
+					<a class="card" href="/admissions/international">
+						<span class="card-eyebrow">International Students</span>
+						<h3 class="card-title">International Admissions</h3>
+						<p class="card-summary">Information for international students from around the world.</p>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</section>
+
+	<!-- Program Levels -->
+	<section class="section program-levels">
+		<div class="container">
+			<h2>Explore Programs by Level</h2>
 			<ul class="card-grid">
 				{
 					levels.map((level) => (

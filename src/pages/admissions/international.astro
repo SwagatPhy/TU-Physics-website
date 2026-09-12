@@ -1,0 +1,128 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="International Admissions" description="Admissions information for international students at the Department of Physics.">
+	<header class="page-header">
+		<div class="container">
+			<h1>International Admissions</h1>
+			<p>Information and guidelines for international students applying to the Department of Physics.</p>
+		</div>
+	</header>
+
+	<!-- Admissions Type Navigation -->
+	<nav class="admissions-nav">
+		<div class="container">
+			<ul class="nav-tabs">
+				<li>
+					<a href="/admissions/national" class="nav-tab">National</a>
+				</li>
+				<li>
+					<a href="/admissions/international" class="nav-tab active">International</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
+	<section class="section">
+		<div class="container">
+			<!-- Eligibility Section -->
+			<section class="admissions-section">
+				<h2>Eligibility Criteria</h2>
+				<div class="content-placeholder">
+					[Eligibility requirements for international applicants will be provided by Notes-manager]
+				</div>
+			</section>
+
+			<!-- Visa & Documentation -->
+			<section class="admissions-section">
+				<h2>Visa & Documentation Requirements</h2>
+				<div class="content-placeholder">
+					[Visa requirements and documentation guidelines will be provided by Notes-manager]
+				</div>
+			</section>
+
+			<!-- Application Process -->
+			<section class="admissions-section">
+				<h2>Application Process</h2>
+				<div class="content-placeholder">
+					[Step-by-step application instructions for international students will be provided by Notes-manager]
+				</div>
+			</section>
+
+			<!-- Important Dates -->
+			<section class="admissions-section">
+				<h2>Important Dates & Deadlines</h2>
+				<div class="content-placeholder">
+					[Application timeline and deadlines will be provided by Notes-manager]
+				</div>
+			</section>
+
+			<!-- Contact & Support -->
+			<section class="admissions-section">
+				<h2>Contact & Support</h2>
+				<div class="content-placeholder">
+					[Contact information and international student support will be provided by Notes-manager]
+				</div>
+			</section>
+		</div>
+	</section>
+
+	<style>
+		.admissions-nav {
+			border-bottom: 1px solid var(--color-border);
+			background: var(--color-bg-alt, #fafafa);
+		}
+
+		.nav-tabs {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			gap: 1rem;
+		}
+
+		.nav-tab {
+			display: block;
+			padding: 1rem 1.5rem;
+			text-decoration: none;
+			color: var(--color-text-muted);
+			border-bottom: 2px solid transparent;
+			transition: all 0.2s ease;
+			font-weight: 500;
+		}
+
+		.nav-tab:hover {
+			color: var(--color-text);
+		}
+
+		.nav-tab.active {
+			color: var(--color-accent);
+			border-bottom-color: var(--color-accent);
+		}
+
+		.admissions-section {
+			margin-bottom: 2.5rem;
+		}
+
+		.admissions-section h2 {
+			font-size: 1.4rem;
+			margin-bottom: 1rem;
+			color: var(--color-text);
+		}
+
+		.content-placeholder {
+			padding: 2rem;
+			background: var(--color-bg-alt, #fafafa);
+			border: 1px dashed var(--color-border);
+			border-radius: 0.5rem;
+			color: var(--color-text-muted);
+			text-align: center;
+			font-style: italic;
+			min-height: 5rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	</style>
+</Layout>

@@ -26,286 +26,435 @@ import Layout from '../../layouts/Layout.astro';
 
 	<section class="section">
 		<div class="container">
-			<!-- Eligibility Section -->
-			<section class="admissions-section">
-				<h2>Eligibility Requirements</h2>
+			<h2>Select Your Program</h2>
 
-				<div class="program-group">
-					<h3>B.Sc. Physics (Honours)</h3>
-					<ul>
-						<li><span class="placeholder">[PLACEHOLDER]</span> Secondary education equivalent to 10+2 (High School Diploma or equivalent)</li>
-						<li><span class="placeholder">[PLACEHOLDER]</span> Minimum XXX% marks / GPA</li>
-						<li><span class="placeholder">[PLACEHOLDER]</span> English language proficiency proof (if applicable)</li>
-					</ul>
+			<!-- Program Tabs -->
+			<div class="program-tabs">
+				<div class="tabs-nav">
+					<button class="tab-button active" data-tab="bsc">
+						<span class="tab-label">B.Sc</span>
+						<span class="tab-subtitle">Bachelor of Science</span>
+					</button>
+					<button class="tab-button" data-tab="msc">
+						<span class="tab-label">M.Sc</span>
+						<span class="tab-subtitle">Master of Science</span>
+					</button>
+					<button class="tab-button" data-tab="integrated-bscmsc">
+						<span class="tab-label">Integrated B.Sc-M.Sc</span>
+						<span class="tab-subtitle">5-Year Program</span>
+					</button>
+					<button class="tab-button" data-tab="integrated-bscbed">
+						<span class="tab-label">Integrated B.Sc-B.Ed</span>
+						<span class="tab-subtitle">5-Year Program</span>
+					</button>
 				</div>
 
-				<div class="program-group">
-					<h3>M.Sc. Physics</h3>
-					<ul>
-						<li><span class="placeholder">[PLACEHOLDER]</span> Bachelor's degree in Physics or related subject from a recognized university</li>
-						<li><span class="placeholder">[PLACEHOLDER]</span> Minimum XXX% marks / cumulative GPA</li>
-						<li><span class="placeholder">[PLACEHOLDER]</span> English language proficiency proof</li>
-					</ul>
-				</div>
-
-				<div class="program-group">
-					<h3>Ph.D. in Physics</h3>
-					<ul>
-						<li><span class="placeholder">[PLACEHOLDER]</span> Master's degree in Physics or allied field</li>
-						<li><span class="placeholder">[PLACEHOLDER]</span> Qualifying examination score (GATE, GRE, JEST, or equivalent) if required</li>
-						<li><span class="placeholder">[PLACEHOLDER]</span> English language proficiency score (TOEFL/IELTS/equivalent)</li>
-						<li><span class="placeholder">[PLACEHOLDER]</span> Statement of Purpose / Research Proposal in your area of interest</li>
-					</ul>
-				</div>
-			</section>
-
-			<!-- Language Requirements -->
-			<section class="admissions-section">
-				<h2>Language Requirements</h2>
-				<p><strong>English Proficiency (if education was not in English):</strong></p>
-				<ul>
-					<li><span class="placeholder">[PLACEHOLDER]</span> TOEFL score: XXX or higher</li>
-					<li><span class="placeholder">[PLACEHOLDER]</span> IELTS score: X.X or higher</li>
-					<li><span class="placeholder">[PLACEHOLDER]</span> Duolingo English Test: XXX or higher</li>
-					<li><span class="placeholder">[PLACEHOLDER]</span> Cambridge English Proficiency (CPE): Grade C or above</li>
-					<li><span class="placeholder">[PLACEHOLDER]</span> Equivalency test accepted; consult admissions office for alternatives</li>
-				</ul>
-				<p class="note"><strong>Proof Required:</strong> Original test score report or official transcript</p>
-			</section>
-
-			<!-- Visa & Immigration -->
-			<section class="admissions-section">
-				<h2>Visa & Immigration Requirements</h2>
-
-				<div class="doc-group">
-					<h3>Student Visa (India)</h3>
-					<ul>
-						<li><span class="placeholder">[PLACEHOLDER]</span> International student must obtain a Student Visa (Category D) for studies exceeding 6 months</li>
-						<li><span class="placeholder">[PLACEHOLDER]</span> Tezpur University will provide an Admission Letter, which is required for visa application at an Indian mission/consulate</li>
-						<li><span class="placeholder">[PLACEHOLDER]</span> Processing time: typically 2–4 weeks after admission letter is issued</li>
-						<li><strong>Student Visa Information:</strong> <span class="placeholder">[PLACEHOLDER link to Ministry of External Affairs / Indian mission website]</span></li>
-					</ul>
-				</div>
-
-				<div class="doc-group">
-					<h3>Residence in India</h3>
-					<ul>
-						<li><span class="placeholder">[PLACEHOLDER]</span> International student must register with the Foreigner's Regional Registration Office (FRRO) within 14 days of arrival in India</li>
-						<li><span class="placeholder">[PLACEHOLDER]</span> Address of the nearest FRRO: <span class="placeholder">[location/contact]</span> (Tezpur University will provide guidance)</li>
-					</ul>
-				</div>
-
-				<div class="doc-group">
-					<h3>Financial Clearance Certificate</h3>
-					<ul>
-						<li><span class="placeholder">[PLACEHOLDER]</span> May be required for visa application; proof of funds for tuition + living expenses</li>
-						<li><span class="placeholder">[PLACEHOLDER]</span> Typical living expenses in Northeast India: <span class="placeholder">[PLACEHOLDER ₹XXX,XXX per academic year]</span></li>
-					</ul>
-				</div>
-			</section>
-
-			<!-- Application Timeline -->
-			<section class="admissions-section">
-				<h2>Application Process & Timeline</h2>
-				<p class="note">Academic Year <span class="placeholder">[PLACEHOLDER YYYY-YYYY]</span></p>
-
-				<div class="timeline">
-					<div class="timeline-item">
-						<strong>Application Window Opens:</strong>
-						<span class="placeholder">[PLACEHOLDER Month, DD]</span>
+				<!-- B.Sc Tab -->
+				<div class="tab-content active" id="bsc">
+					<div class="program-section">
+						<h3>Program Overview</h3>
+						<ul>
+							<li><strong>Degree Awarded:</strong> B.Sc. Physics (Honours)</li>
+							<li><strong>Duration:</strong> [PLACEHOLDER — 3 years / 6 semesters]</li>
+							<li><strong>International Intake:</strong> [PLACEHOLDER — XX seats]</li>
+						</ul>
 					</div>
-					<div class="timeline-item">
-						<strong>Application Deadline:</strong>
-						<span class="placeholder">[PLACEHOLDER Month, DD]</span> <span class="note">(typically earlier for international students to allow visa processing time)</span>
+
+					<div class="program-section">
+						<h3>International Eligibility</h3>
+						<ul>
+							<li>[PLACEHOLDER — Secondary education equivalent to 10+2 (High School Diploma or equivalent)]</li>
+							<li>[PLACEHOLDER — Minimum XXX% marks / GPA]</li>
+							<li>[PLACEHOLDER — English language proficiency proof (TOEFL/IELTS/equivalent)]</li>
+							<li>[PLACEHOLDER — Degree recognition assessment from Tezpur University]</li>
+						</ul>
 					</div>
-					<div class="timeline-item">
-						<strong>Entrance Exam Date (if applicable):</strong>
-						<span class="placeholder">[PLACEHOLDER Month, DD]</span>
+
+					<div class="program-section">
+						<h3>Visa & Documentation Requirements</h3>
+						<ul>
+							<li><strong>Student Visa (India):</strong> [PLACEHOLDER — Category D for studies exceeding 6 months]</li>
+							<li><strong>Passport:</strong> [PLACEHOLDER — Minimum 6 months validity beyond program end date]</li>
+							<li><strong>Proof of Funds:</strong> [PLACEHOLDER — Evidence of financial support for tuition + living expenses]</li>
+							<li><strong>Medical Fitness:</strong> [PLACEHOLDER — Form 5A / Certified medical report]</li>
+							<li><strong>Police Clearance:</strong> [PLACEHOLDER — May be required by your country]</li>
+							<li><strong>FRRO Registration:</strong> [PLACEHOLDER — Within 14 days of arrival in India]</li>
+						</ul>
 					</div>
-					<div class="timeline-item">
-						<strong>Admission Decision Announced:</strong>
-						<span class="placeholder">[PLACEHOLDER Month, DD]</span>
+
+					<div class="program-section">
+						<h3>Application Process</h3>
+						<ol>
+							<li>Visit <strong>[PLACEHOLDER Tezpur University International Admissions Portal]</strong></li>
+							<li>Select "B.Sc Physics"</li>
+							<li>Complete the international application form with all details</li>
+							<li>Upload required documents (certified copies/translations)</li>
+							<li>Pay application fee: [PLACEHOLDER amount in USD/INR] (non-refundable)</li>
+							<li>Submit and retain confirmation receipt</li>
+							<li>Upon admission, request Admission Letter for visa application</li>
+						</ol>
+						<p><strong>Selection Method:</strong> [PLACEHOLDER — Merit-based / Entrance exam / Mixed]</p>
 					</div>
-					<div class="timeline-item">
-						<strong>Admission Letter Issued:</strong>
-						<span class="placeholder">[PLACEHOLDER Month, DD]</span>
+
+					<div class="program-section">
+						<h3>Timeline & Important Dates</h3>
+						<p><em>Academic Year [PLACEHOLDER YYYY-YYYY]</em></p>
+						<ul>
+							<li><strong>Application Window Opens:</strong> [PLACEHOLDER Month, DD]</li>
+							<li><strong>Application Deadline:</strong> [PLACEHOLDER Month, DD] (typically earlier for international students)</li>
+							<li><strong>Merit List / Exam Results:</strong> [PLACEHOLDER Month, DD]</li>
+							<li><strong>Admission Letter Issued:</strong> [PLACEHOLDER Month, DD]</li>
+							<li><strong>Visa Processing Support:</strong> [PLACEHOLDER — 2–4 weeks after admission letter]</li>
+							<li><strong>Semester Start:</strong> [PLACEHOLDER Month, DD]</li>
+						</ul>
 					</div>
-					<div class="timeline-item">
-						<strong>Semester Start:</strong>
-						<span class="placeholder">[PLACEHOLDER Month, DD]</span>
+
+					<div class="program-section">
+						<h3>Required Documents</h3>
+						<ul>
+							<li>[PLACEHOLDER] Valid passport (certified copy, 6+ months validity)</li>
+							<li>[PLACEHOLDER] Recent passport-sized photograph (4x6 cm, white background)</li>
+							<li>[PLACEHOLDER] Secondary school certificate/marksheet (official, in English or certified translation)</li>
+							<li>[PLACEHOLDER] English language proficiency score (TOEFL/IELTS/Duolingo/Cambridge CPE)</li>
+							<li>[PLACEHOLDER] Medical fitness certificate (Form 5A or certified report)</li>
+							<li>[PLACEHOLDER] Police clearance certificate (if applicable)</li>
+							<li>[PLACEHOLDER] Proof of financial support (bank statements, sponsor letter, scholarship award)</li>
+						</ul>
+					</div>
+
+					<div class="program-section">
+						<h3>Fees & International Student Support</h3>
+						<ul>
+							<li><strong>Tuition Fee (per semester):</strong> [PLACEHOLDER USD $XXXX or ₹XXXX]</li>
+							<li><strong>Estimated Living Expenses (per year):</strong> [PLACEHOLDER ₹XX,XXX – ₹XX,XXX]</li>
+							<li><strong>Hostel Accommodation:</strong> [PLACEHOLDER ₹XX,XXX/month for international students]</li>
+							<li><strong>Merit-based Scholarships:</strong> [PLACEHOLDER details]</li>
+							<li><strong>ITEC/ICCR Scholarships:</strong> [PLACEHOLDER eligible countries]</li>
+						</ul>
+					</div>
+
+					<div class="program-section">
+						<h3>International Student Contact & Support</h3>
+						<ul>
+							<li><strong>International Admissions Coordinator:</strong> [PLACEHOLDER name, email, phone]</li>
+							<li><strong>International Student Support Office:</strong> [PLACEHOLDER email, hours]</li>
+							<li><strong>Visa Support:</strong> [PLACEHOLDER — Tezpur University assists with visa applications]</li>
+							<li><strong>Accommodation:</strong> [PLACEHOLDER — Separate hostel facilities for international students]</li>
+						</ul>
 					</div>
 				</div>
-			</section>
 
-			<!-- How to Apply -->
-			<section class="admissions-section">
-				<h2>How to Apply</h2>
-				<ol class="steps">
-					<li>Visit the <strong><span class="placeholder">[PLACEHOLDER Tezpur University International Admissions Portal]</span></strong> or contact admissions office for international application link</li>
-					<li>Create an account and complete the international application form</li>
-					<li>Upload required documents (see checklist below)</li>
-					<li>Pay application fee: <span class="placeholder">[PLACEHOLDER amount in USD/INR]</span> (non-refundable)</li>
-					<li>Submit and retain confirmation receipt</li>
-					<li>Once admitted, request official Admission Letter and other documents for visa application</li>
-				</ol>
+				<!-- M.Sc Tab -->
+				<div class="tab-content" id="msc">
+					<div class="program-section">
+						<h3>Program Overview</h3>
+						<ul>
+							<li><strong>Degree Awarded:</strong> M.Sc. Physics</li>
+							<li><strong>Duration:</strong> [PLACEHOLDER — 2 years / 4 semesters]</li>
+							<li><strong>International Intake:</strong> [PLACEHOLDER — XX seats]</li>
+						</ul>
+					</div>
 
-				<div class="programs-offered">
-					<h3>Programs Offered</h3>
-					<ul>
-						<li>B.Sc. Physics (Honours) — <span class="placeholder">[PLACEHOLDER XX seats available to international students]</span></li>
-						<li>M.Sc. Physics — <span class="placeholder">[PLACEHOLDER XX seats available to international students]</span></li>
-						<li>Ph.D. Physics — Rolling admissions (check website for current intake)</li>
-					</ul>
-				</div>
-			</section>
+					<div class="program-section">
+						<h3>International Eligibility</h3>
+						<ul>
+							<li>[PLACEHOLDER — Bachelor's in Physics or related field from recognized university]</li>
+							<li>[PLACEHOLDER — Minimum XXX% marks / cumulative GPA]</li>
+							<li>[PLACEHOLDER — English language proficiency (TOEFL/IELTS/equivalent)]</li>
+							<li>[PLACEHOLDER — Degree recognition assessment from Tezpur University]</li>
+						</ul>
+					</div>
 
-			<!-- Required Documents -->
-			<section class="admissions-section">
-				<h2>Required Documents</h2>
+					<div class="program-section">
+						<h3>Visa & Documentation Requirements</h3>
+						<ul>
+							<li><strong>Student Visa (India):</strong> [PLACEHOLDER — Category D for studies exceeding 6 months]</li>
+							<li><strong>Passport:</strong> [PLACEHOLDER — Minimum 6 months validity beyond program end date]</li>
+							<li><strong>Proof of Funds:</strong> [PLACEHOLDER — Evidence of financial support for tuition + living expenses]</li>
+							<li><strong>Medical Fitness:</strong> [PLACEHOLDER — Form 5A / Certified medical report]</li>
+							<li><strong>Police Clearance:</strong> [PLACEHOLDER — May be required by your country]</li>
+							<li><strong>FRRO Registration:</strong> [PLACEHOLDER — Within 14 days of arrival in India]</li>
+						</ul>
+					</div>
 
-				<div class="doc-group">
-					<h3>All Programs</h3>
-					<ul>
-						<li><span class="placeholder">[PLACEHOLDER]</span> Valid passport (with at least 6 months validity beyond the expected end date of your program)</li>
-						<li><span class="placeholder">[PLACEHOLDER]</span> Recent passport-sized photograph (4x6 cm, on white background)</li>
-						<li><span class="placeholder">[PLACEHOLDER]</span> Official academic transcript(s) from previous degree(s) in English (certified copies)</li>
-						<li><span class="placeholder">[PLACEHOLDER]</span> Bachelor's / Master's degree certificate (official copy, translated to English if needed)</li>
-						<li><span class="placeholder">[PLACEHOLDER]</span> English language proficiency test score (TOEFL, IELTS, or equivalent) if education was not in English</li>
-					</ul>
-				</div>
+					<div class="program-section">
+						<h3>Application Process</h3>
+						<ol>
+							<li>Visit <strong>[PLACEHOLDER Tezpur University International Admissions Portal]</strong></li>
+							<li>Select "M.Sc Physics"</li>
+							<li>Fill in academic and professional details</li>
+							<li>Upload required documents (certified copies/translations)</li>
+							<li>Pay application fee: [PLACEHOLDER amount in USD/INR] (non-refundable)</li>
+							<li>Submit and retain confirmation receipt</li>
+							<li>Upon admission, request Admission Letter for visa application</li>
+						</ol>
+						<p><strong>Selection Method:</strong> [PLACEHOLDER — Entrance exam (date: XX/XX/YYYY) followed by merit list]</p>
+					</div>
 
-				<div class="doc-group">
-					<h3>M.Sc. / Ph.D.</h3>
-					<ul>
-						<li><span class="placeholder">[PLACEHOLDER]</span> Statement of Purpose (SOP) — 500–750 words explaining your academic interests and research goals</li>
-						<li><span class="placeholder">[PLACEHOLDER]</span> Two letters of recommendation from academic advisors or professors</li>
-						<li><span class="placeholder">[PLACEHOLDER]</span> Research Proposal (for PhD applicants) — <span class="placeholder">[PLACEHOLDER X–X pages, outlining your intended research area]</span></li>
-					</ul>
-				</div>
+					<div class="program-section">
+						<h3>Timeline & Important Dates</h3>
+						<p><em>Academic Year [PLACEHOLDER YYYY-YYYY]</em></p>
+						<ul>
+							<li><strong>Application Window Opens:</strong> [PLACEHOLDER Month, DD]</li>
+							<li><strong>Application Deadline:</strong> [PLACEHOLDER Month, DD] (typically earlier for international students)</li>
+							<li><strong>Entrance Exam Date:</strong> [PLACEHOLDER Month, DD]</li>
+							<li><strong>Result Announcement:</strong> [PLACEHOLDER Month, DD]</li>
+							<li><strong>Admission Letter Issued:</strong> [PLACEHOLDER Month, DD]</li>
+							<li><strong>Semester Start:</strong> [PLACEHOLDER Month, DD]</li>
+						</ul>
+					</div>
 
-				<div class="doc-group">
-					<h3>Financial / Visa Documentation</h3>
-					<ul>
-						<li><span class="placeholder">[PLACEHOLDER]</span> Proof of financial support (bank statement, sponsor letter, scholarship award letter) covering tuition fees and estimated living expenses for the entire program duration</li>
-						<li><span class="placeholder">[PLACEHOLDER]</span> Medical fitness certificate (Form 5A / Medical report) — from a Tezpur University approved panel or certified doctor</li>
-						<li><span class="placeholder">[PLACEHOLDER]</span> Police clearance certificate (if required by your country's regulations for studying abroad)</li>
-					</ul>
-					<p class="note"><strong>Note:</strong> All documents must be original or certified copies. Photocopies may not be accepted.</p>
-				</div>
-			</section>
+					<div class="program-section">
+						<h3>Required Documents</h3>
+						<ul>
+							<li>[PLACEHOLDER] Valid passport (certified copy, 6+ months validity)</li>
+							<li>[PLACEHOLDER] Passport-sized photograph (4x6 cm, white background)</li>
+							<li>[PLACEHOLDER] Bachelor's degree certificate (official copy, in English or certified translation)</li>
+							<li>[PLACEHOLDER] Academic transcripts for all semesters (official, certified)</li>
+							<li>[PLACEHOLDER] English language proficiency score (TOEFL/IELTS/equivalent)</li>
+							<li>[PLACEHOLDER] Statement of Purpose (500–750 words)</li>
+							<li>[PLACEHOLDER] Two letters of recommendation from academic advisors/professors</li>
+							<li>[PLACEHOLDER] Medical fitness certificate (Form 5A or certified report)</li>
+							<li>[PLACEHOLDER] Police clearance certificate (if applicable)</li>
+							<li>[PLACEHOLDER] Proof of financial support (bank statements, sponsor letter, scholarship award)</li>
+						</ul>
+					</div>
 
-			<!-- Fees & Scholarships -->
-			<section class="admissions-section">
-				<h2>Fees & Scholarships</h2>
+					<div class="program-section">
+						<h3>Fees & International Student Support</h3>
+						<ul>
+							<li><strong>Tuition Fee (per semester):</strong> [PLACEHOLDER USD $XXXX or ₹XXXX]</li>
+							<li><strong>Estimated Living Expenses (per year):</strong> [PLACEHOLDER ₹XX,XXX – ₹XX,XXX]</li>
+							<li><strong>Hostel Accommodation:</strong> [PLACEHOLDER ₹XX,XXX/month for international students]</li>
+							<li><strong>UGC National Scholarship:</strong> [PLACEHOLDER eligibility/amount]</li>
+							<li><strong>Merit-based Institutional Scholarships:</strong> [PLACEHOLDER details]</li>
+							<li><strong>Research Assistantships:</strong> [PLACEHOLDER details]</li>
+						</ul>
+					</div>
 
-				<div class="fees-group">
-					<h3>Tuition Fees (per semester, international students)</h3>
-					<ul>
-						<li>B.Sc. Physics: <span class="placeholder">[PLACEHOLDER USD $XXXX or ₹XXXX]</span></li>
-						<li>M.Sc. Physics: <span class="placeholder">[PLACEHOLDER USD $XXXX or ₹XXXX]</span></li>
-						<li>Ph.D. Physics: <span class="placeholder">[PLACEHOLDER USD $XXXX or ₹XXXX, with possible fellowship/waiver]</span></li>
-					</ul>
-				</div>
-
-				<div class="fees-group">
-					<h3>Estimated Living Expenses (per academic year, Northeast India)</h3>
-					<ul>
-						<li>Hostel accommodation: <span class="placeholder">[PLACEHOLDER ₹XX,XXX – ₹XX,XXX]</span></li>
-						<li>Food & daily expenses: <span class="placeholder">[PLACEHOLDER ₹XX,XXX – ₹XX,XXX]</span></li>
-						<li>Books & materials: <span class="placeholder">[PLACEHOLDER ₹X,XXX – ₹XX,XXX]</span></li>
-						<li><strong>Total:</strong> <span class="placeholder">[PLACEHOLDER ₹XX,XXX – ₹XX,XXX per year]</span></li>
-					</ul>
-				</div>
-
-				<div class="scholarships-group">
-					<h3>Scholarships & Financial Aid Available</h3>
-					<ul>
-						<li><strong>ITEC (Indian Technical & Economic Cooperation) Scholarship:</strong> <span class="placeholder">[PLACEHOLDER eligible countries, monthly stipend, tuition waiver]</span></li>
-						<li><strong>ICCR Scholarship:</strong> <span class="placeholder">[PLACEHOLDER for students from specific countries]</span></li>
-						<li><strong>MHRD Scholarship:</strong> <span class="placeholder">[PLACEHOLDER limited scholarships for SAARC nationals]</span></li>
-						<li><strong>Institute Merit Scholarships:</strong> <span class="placeholder">[PLACEHOLDER partial/full tuition waivers for exceptional international students]</span></li>
-						<li><strong>PhD Fellowships:</strong> <span class="placeholder">[PLACEHOLDER ₹XXXX/month for outstanding PhD candidates]</span></li>
-					</ul>
-					<p class="contact-note">For scholarship inquiries: Contact <span class="placeholder">[PLACEHOLDER international@tezu.ac.in]</span></p>
-				</div>
-			</section>
-
-			<!-- Post-Admission -->
-			<section class="admissions-section">
-				<h2>Post-Admission & Visa Application</h2>
-				<p>Once you receive the Admission Letter:</p>
-				<ol class="steps">
-					<li>Apply for Student Visa at the <strong>Indian mission/consulate in your country</strong></li>
-					<li>Provide the Admission Letter, proof of financial support, and other required visa documents</li>
-					<li>Tezpur University will support your visa application with additional documents if needed</li>
-					<li>Plan to arrive in Tezpur at least <span class="placeholder">[PLACEHOLDER 1 week/2 weeks]</span> before semester starts</li>
-					<li>Register with FRRO within 14 days of arrival</li>
-				</ol>
-				<p class="note"><strong>Visa Processing Support:</strong> Tezpur University's International Office can provide guidance on visa applications and on-arrival formalities.</p>
-			</section>
-
-			<!-- Contact & Support -->
-			<section class="admissions-section">
-				<h2>Contact & Support</h2>
-
-				<div class="contact-box">
-					<h3>International Admissions Coordinator</h3>
-					<ul class="contact-list">
-						<li><strong>Email:</strong> <span class="placeholder">[PLACEHOLDER international.admissions@tezu.ac.in]</span></li>
-						<li><strong>Phone:</strong> <span class="placeholder">[PLACEHOLDER +91-XXXX-XXXXXX (international rates apply)]</span></li>
-						<li><strong>Office:</strong> <span class="placeholder">[PLACEHOLDER Department of Physics, International Office / Main Campus]</span></li>
-						<li><strong>Office Hours:</strong> <span class="placeholder">[PLACEHOLDER Mon–Fri, 10:00 AM – 5:00 PM IST]</span></li>
-					</ul>
+					<div class="program-section">
+						<h3>International Student Contact & Support</h3>
+						<ul>
+							<li><strong>International Admissions Coordinator:</strong> [PLACEHOLDER name, email, phone]</li>
+							<li><strong>International Student Support Office:</strong> [PLACEHOLDER email, hours]</li>
+							<li><strong>Visa Support:</strong> [PLACEHOLDER — Tezpur University assists with visa applications]</li>
+							<li><strong>Faculty Research Contacts:</strong> [PLACEHOLDER — Contact faculty directly for research-focused inquiries]</li>
+						</ul>
+					</div>
 				</div>
 
-				<div class="contact-box">
-					<h3>International Student Support Office</h3>
-					<ul class="contact-list">
-						<li><strong>Email:</strong> <span class="placeholder">[PLACEHOLDER international.students@tezu.ac.in]</span></li>
-						<li>Handles visa queries, accommodation arrangements, student welfare, and cultural integration</li>
-					</ul>
+				<!-- Integrated B.Sc-M.Sc Tab -->
+				<div class="tab-content" id="integrated-bscmsc">
+					<div class="program-section">
+						<h3>Program Overview</h3>
+						<ul>
+							<li><strong>Degree Awarded:</strong> B.Sc. + M.Sc. in Physics (integrated pathway)</li>
+							<li><strong>Duration:</strong> [PLACEHOLDER — 5 years / 10 semesters]</li>
+							<li><strong>International Intake:</strong> [PLACEHOLDER — XX seats]</li>
+							<li><strong>Description:</strong> [PLACEHOLDER — Combined undergraduate and postgraduate program without separate MSc entrance exam]</li>
+						</ul>
+					</div>
+
+					<div class="program-section">
+						<h3>International Eligibility</h3>
+						<ul>
+							<li>[PLACEHOLDER — Secondary education equivalent to 10+2 (High School Diploma or equivalent)]</li>
+							<li>[PLACEHOLDER — Minimum XXX% marks / GPA]</li>
+							<li>[PLACEHOLDER — English language proficiency (TOEFL/IELTS/equivalent)]</li>
+							<li>[PLACEHOLDER — Degree recognition assessment from Tezpur University]</li>
+						</ul>
+					</div>
+
+					<div class="program-section">
+						<h3>Visa & Documentation Requirements</h3>
+						<ul>
+							<li><strong>Student Visa (India):</strong> [PLACEHOLDER — Category D valid for full 5-year duration]</li>
+							<li><strong>Passport:</strong> [PLACEHOLDER — Minimum 6 months validity beyond program end date]</li>
+							<li><strong>Proof of Funds:</strong> [PLACEHOLDER — Evidence for entire 5-year program duration]</li>
+							<li><strong>Medical Fitness:</strong> [PLACEHOLDER — Form 5A / Certified medical report]</li>
+							<li><strong>Police Clearance:</strong> [PLACEHOLDER — May be required by your country]</li>
+							<li><strong>FRRO Registration:</strong> [PLACEHOLDER — Within 14 days of arrival in India]</li>
+						</ul>
+					</div>
+
+					<div class="program-section">
+						<h3>Application Process</h3>
+						<ol>
+							<li>Visit <strong>[PLACEHOLDER Tezpur University International Admissions Portal]</strong></li>
+							<li>Select "Integrated B.Sc-M.Sc Physics"</li>
+							<li>Complete the full international application form</li>
+							<li>Upload required documents (certified copies/translations)</li>
+							<li>Pay application fee: [PLACEHOLDER amount in USD/INR] (non-refundable)</li>
+							<li>Submit and retain confirmation receipt</li>
+							<li>Upon admission, request Admission Letter for visa application</li>
+						</ol>
+						<p><strong>Selection Method:</strong> [PLACEHOLDER — Entrance exam / Merit-based / Mixed]</p>
+					</div>
+
+					<div class="program-section">
+						<h3>Timeline & Important Dates</h3>
+						<p><em>Academic Year [PLACEHOLDER YYYY-YYYY]</em></p>
+						<ul>
+							<li><strong>Application Window Opens:</strong> [PLACEHOLDER Month, DD]</li>
+							<li><strong>Application Deadline:</strong> [PLACEHOLDER Month, DD] (typically earlier for international students)</li>
+							<li><strong>Entrance Exam / Merit List:</strong> [PLACEHOLDER Month, DD]</li>
+							<li><strong>Admission Letter Issued:</strong> [PLACEHOLDER Month, DD]</li>
+							<li><strong>Semester Start:</strong> [PLACEHOLDER Month, DD]</li>
+						</ul>
+					</div>
+
+					<div class="program-section">
+						<h3>Required Documents</h3>
+						<ul>
+							<li>[PLACEHOLDER] Valid passport (certified copy, 6+ months validity)</li>
+							<li>[PLACEHOLDER] Passport-sized photograph (4x6 cm, white background)</li>
+							<li>[PLACEHOLDER] Secondary school certificate/marksheet (official, in English or certified translation)</li>
+							<li>[PLACEHOLDER] English language proficiency score (TOEFL/IELTS/Duolingo/Cambridge CPE)</li>
+							<li>[PLACEHOLDER] Medical fitness certificate (Form 5A or certified report)</li>
+							<li>[PLACEHOLDER] Police clearance certificate (if applicable)</li>
+							<li>[PLACEHOLDER] Proof of financial support for 5-year duration (bank statements, sponsor letter)</li>
+						</ul>
+					</div>
+
+					<div class="program-section">
+						<h3>Fees & International Student Support</h3>
+						<ul>
+							<li><strong>Tuition Fee (per semester):</strong> [PLACEHOLDER USD $XXXX or ₹XXXX]</li>
+							<li><strong>Estimated Total Living Expenses (5 years):</strong> [PLACEHOLDER ₹XX,XXX,XXX]</li>
+							<li><strong>Hostel Accommodation:</strong> [PLACEHOLDER ₹XX,XXX/month for international students]</li>
+							<li><strong>Merit-based Continuation Scholarships:</strong> [PLACEHOLDER details]</li>
+							<li><strong>INSPIRE/DST Scholarships:</strong> [PLACEHOLDER eligibility]</li>
+						</ul>
+					</div>
+
+					<div class="program-section">
+						<h3>Advantages of Integrated Program</h3>
+						<ul>
+							<li>Seamless progression from B.Sc to M.Sc without separate entrance exam</li>
+							<li>[PLACEHOLDER — Additional program-specific benefits]</li>
+							<li>Early exposure to research during undergrad coursework</li>
+							<li>Dedicated mentorship and support for international students</li>
+						</ul>
+					</div>
+
+					<div class="program-section">
+						<h3>International Student Contact & Support</h3>
+						<ul>
+							<li><strong>Integrated Program Coordinator:</strong> [PLACEHOLDER name, email, phone]</li>
+							<li><strong>International Student Support Office:</strong> [PLACEHOLDER email, hours]</li>
+							<li><strong>Visa Support:</strong> [PLACEHOLDER — Long-term visa assistance for 5-year duration]</li>
+							<li><strong>Academic Advisor:</strong> [PLACEHOLDER contact]</li>
+						</ul>
+					</div>
 				</div>
 
-				<div class="contact-box">
-					<h3>Faculty Research Contacts</h3>
-					<p>For research-focused inquiries about specific research groups, contact <span class="placeholder">[PLACEHOLDER department faculty directly via research page]</span></p>
-				</div>
-			</section>
+				<!-- Integrated B.Sc-B.Ed Tab -->
+				<div class="tab-content" id="integrated-bscbed">
+					<div class="program-section">
+						<h3>Program Overview</h3>
+						<ul>
+							<li><strong>Degree Awarded:</strong> B.Sc. + B.Ed. in Physics (integrated teacher-training pathway)</li>
+							<li><strong>Duration:</strong> [PLACEHOLDER — 5 years / 10 semesters]</li>
+							<li><strong>International Intake:</strong> [PLACEHOLDER — XX seats]</li>
+							<li><strong>Description:</strong> [PLACEHOLDER — Combined program for aspiring physics educators]</li>
+						</ul>
+					</div>
 
-			<!-- FAQs -->
-			<section class="admissions-section">
-				<h2>Frequently Asked Questions</h2>
+					<div class="program-section">
+						<h3>International Eligibility</h3>
+						<ul>
+							<li>[PLACEHOLDER — Secondary education equivalent to 10+2 (High School Diploma or equivalent)]</li>
+							<li>[PLACEHOLDER — Minimum XXX% marks / GPA]</li>
+							<li>[PLACEHOLDER — English language proficiency (TOEFL/IELTS/equivalent)]</li>
+							<li>[PLACEHOLDER — Pass teacher-aptitude assessment (if required)]</li>
+							<li>[PLACEHOLDER — Degree recognition assessment from Tezpur University]</li>
+						</ul>
+					</div>
 
-				<div class="faq-item">
-					<strong>Q: How do I know if my degree will be recognized in India?</strong>
-					<p>A: Tezpur University assesses all degrees individually. Submit your official transcript for preliminary evaluation during the application process. If accepted, your degree is recognized for admission purposes.</p>
-				</div>
+					<div class="program-section">
+						<h3>Visa & Documentation Requirements</h3>
+						<ul>
+							<li><strong>Student Visa (India):</strong> [PLACEHOLDER — Category D valid for full 5-year duration]</li>
+							<li><strong>Passport:</strong> [PLACEHOLDER — Minimum 6 months validity beyond program end date]</li>
+							<li><strong>Proof of Funds:</strong> [PLACEHOLDER — Evidence for entire 5-year program duration]</li>
+							<li><strong>Medical Fitness:</strong> [PLACEHOLDER — Form 5A / Certified medical report + health/fitness requirements]</li>
+							<li><strong>Police Clearance:</strong> [PLACEHOLDER — May be required by your country]</li>
+							<li><strong>FRRO Registration:</strong> [PLACEHOLDER — Within 14 days of arrival in India]</li>
+						</ul>
+					</div>
 
-				<div class="faq-item">
-					<strong>Q: Is there hostel accommodation for international students?</strong>
-					<p>A: <span class="placeholder">[PLACEHOLDER Yes / Limited. Tezpur University provides separate hostel facilities for international students. Advance booking is recommended. Costs approx. ₹XXXX/month.]</span></p>
-				</div>
+					<div class="program-section">
+						<h3>Application Process</h3>
+						<ol>
+							<li>Visit <strong>[PLACEHOLDER Tezpur University International Admissions Portal]</strong></li>
+							<li>Select "Integrated B.Sc-B.Ed Physics"</li>
+							<li>Fill in educational and personal details</li>
+							<li>Upload required documents (certified copies/translations)</li>
+							<li>Pay application fee: [PLACEHOLDER amount in USD/INR] (non-refundable)</li>
+							<li>Submit and retain confirmation receipt</li>
+							<li>Upon admission, request Admission Letter for visa application</li>
+						</ol>
+						<p><strong>Selection Method:</strong> [PLACEHOLDER — Entrance exam (written + teaching-aptitude component) / Merit-based]</p>
+					</div>
 
-				<div class="faq-item">
-					<strong>Q: Do I need health insurance?</strong>
-					<p>A: <span class="placeholder">[PLACEHOLDER Yes; international students are required to maintain health insurance. The university can guide you on approved insurance providers.]</span></p>
-				</div>
+					<div class="program-section">
+						<h3>Timeline & Important Dates</h3>
+						<p><em>Academic Year [PLACEHOLDER YYYY-YYYY]</em></p>
+						<ul>
+							<li><strong>Application Window Opens:</strong> [PLACEHOLDER Month, DD]</li>
+							<li><strong>Application Deadline:</strong> [PLACEHOLDER Month, DD] (typically earlier for international students)</li>
+							<li><strong>Entrance Exam Date:</strong> [PLACEHOLDER Month, DD]</li>
+							<li><strong>Result / Merit List Announcement:</strong> [PLACEHOLDER Month, DD]</li>
+							<li><strong>Admission Letter Issued:</strong> [PLACEHOLDER Month, DD]</li>
+							<li><strong>Semester Start:</strong> [PLACEHOLDER Month, DD]</li>
+						</ul>
+					</div>
 
-				<div class="faq-item">
-					<strong>Q: What is the weather like? What should I pack?</strong>
-					<p>A: <span class="placeholder">[PLACEHOLDER Tezpur is in Northeast India (Assam) with a tropical climate. Summers (Apr–Jun) are hot & humid; monsoon (Jun–Sept) is rainy; winters (Oct–Feb) are mild. Dress accordingly and pack for all seasons.]</span></p>
-				</div>
+					<div class="program-section">
+						<h3>Required Documents</h3>
+						<ul>
+							<li>[PLACEHOLDER] Valid passport (certified copy, 6+ months validity)</li>
+							<li>[PLACEHOLDER] Passport-sized photograph (4x6 cm, white background)</li>
+							<li>[PLACEHOLDER] Secondary school certificate/marksheet (official, in English or certified translation)</li>
+							<li>[PLACEHOLDER] English language proficiency score (TOEFL/IELTS/Duolingo/Cambridge CPE)</li>
+							<li>[PLACEHOLDER] Medical fitness certificate (Form 5A or certified report + teaching profession fitness)</li>
+							<li>[PLACEHOLDER] Police clearance certificate (if applicable)</li>
+							<li>[PLACEHOLDER] Proof of financial support for 5-year duration (bank statements, sponsor letter)</li>
+						</ul>
+					</div>
 
-				<div class="faq-item">
-					<strong>Q: Can I work during my studies?</strong>
-					<p>A: <span class="placeholder">[PLACEHOLDER Student Visa regulations permit limited on-campus work. Off-campus employment requires special permission. Check with the International Student Office for current policies.]</span></p>
-				</div>
+					<div class="program-section">
+						<h3>Fees & International Student Support</h3>
+						<ul>
+							<li><strong>Tuition Fee (per semester):</strong> [PLACEHOLDER USD $XXXX or ₹XXXX]</li>
+							<li><strong>Estimated Total Living Expenses (5 years):</strong> [PLACEHOLDER ₹XX,XXX,XXX]</li>
+							<li><strong>Hostel Accommodation:</strong> [PLACEHOLDER ₹XX,XXX/month for international students]</li>
+							<li><strong>Merit-based Scholarships for B.Sc-B.Ed:</strong> [PLACEHOLDER details]</li>
+							<li><strong>Teacher Training Scholarships:</strong> [PLACEHOLDER details]</li>
+						</ul>
+					</div>
 
-				<div class="faq-item">
-					<strong>Q: How do I arrange arrival in Tezpur?</strong>
-					<p>A: <span class="placeholder">[PLACEHOLDER Nearest airports: Guwahati (Indira Gandhi International Airport, ~3.5 hours drive) or Tezpur Airport. The university can assist with airport pickup arrangements. Contact International Office in advance.]</span></p>
+					<div class="program-section">
+						<h3>Career Outcomes for International Graduates</h3>
+						<ul>
+							<li>[PLACEHOLDER — Career pathways for physics educators in India and internationally]</li>
+							<li>Teaching positions in international schools in India</li>
+							<li>Curriculum development and educational research roles</li>
+							<li>[PLACEHOLDER — Other career pathways for physics educators]</li>
+						</ul>
+					</div>
+
+					<div class="program-section">
+						<h3>International Student Contact & Support</h3>
+						<ul>
+							<li><strong>B.Sc-B.Ed Program Coordinator:</strong> [PLACEHOLDER name, email, phone]</li>
+							<li><strong>International Student Support Office:</strong> [PLACEHOLDER email, hours]</li>
+							<li><strong>Visa Support:</strong> [PLACEHOLDER — Long-term visa assistance for 5-year duration]</li>
+							<li><strong>Teaching Practice Supervisor:</strong> [PLACEHOLDER contact]</li>
+						</ul>
+					</div>
 				</div>
-			</section>
+			</div>
 		</div>
 	</section>
 
@@ -342,190 +491,128 @@ import Layout from '../../layouts/Layout.astro';
 			border-bottom-color: var(--color-accent);
 		}
 
-		.admissions-section {
-			margin-bottom: 2.5rem;
+		.program-tabs {
+			margin-top: 2rem;
 		}
 
-		.admissions-section h2 {
-			font-size: 1.4rem;
-			margin-bottom: 1rem;
+		.tabs-nav {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.75rem;
+			margin-bottom: 2rem;
+			border-bottom: 2px solid var(--color-border);
+			padding-bottom: 1rem;
+		}
+
+		.tab-button {
+			padding: 0.75rem 1.25rem;
+			border: none;
+			background: transparent;
+			color: var(--color-text-muted);
+			cursor: pointer;
+			font-size: 0.95rem;
+			font-weight: 500;
+			border-bottom: 3px solid transparent;
+			transition: all 0.2s ease;
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0.25rem;
+		}
+
+		.tab-button:hover {
 			color: var(--color-text);
 		}
 
-		.placeholder {
-			background-color: #fef3cd;
-			padding: 2px 6px;
-			border-radius: 3px;
-			font-style: italic;
-			color: #856404;
+		.tab-button.active {
+			color: var(--color-accent);
+			border-bottom-color: var(--color-accent);
 		}
 
-		.program-group {
+		.tab-label {
+			display: block;
+			font-weight: 600;
+		}
+
+		.tab-subtitle {
+			display: block;
+			font-size: 0.8rem;
+			font-weight: 400;
+			color: var(--color-text-muted);
+		}
+
+		.tab-button.active .tab-subtitle {
+			color: var(--color-accent);
+		}
+
+		.tab-content {
+			display: none;
+		}
+
+		.tab-content.active {
+			display: block;
+		}
+
+		.program-section {
 			margin-bottom: 2rem;
 		}
 
-		.program-group h3 {
-			font-size: 1.1rem;
-			margin-top: 1.5rem;
-			margin-bottom: 0.75rem;
-			color: var(--color-text);
-		}
-
-		.program-group:first-child h3 {
-			margin-top: 0;
-		}
-
-		.program-group ul {
-			margin: 0;
-			padding-left: 1.5rem;
-		}
-
-		.program-group li {
-			margin-bottom: 0.5rem;
-			line-height: 1.6;
-		}
-
-		.timeline {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-			gap: 1rem;
-			margin: 1.5rem 0;
-		}
-
-		.timeline-item {
-			padding: 1rem;
-			background: var(--color-bg-alt, #fafafa);
-			border: 1px solid var(--color-border);
-			border-radius: 0.5rem;
-		}
-
-		.timeline-item strong {
-			display: block;
-			margin-bottom: 0.5rem;
-		}
-
-		.note {
-			font-size: 0.95rem;
-			color: var(--color-text-muted);
-			margin: 1rem 0;
-			display: block;
-		}
-
-		.steps {
-			margin: 1rem 0;
-			padding-left: 1.75rem;
-		}
-
-		.steps li {
-			margin-bottom: 0.75rem;
-			line-height: 1.6;
-		}
-
-		.programs-offered {
-			margin-top: 1.5rem;
-			padding: 1.25rem;
-			background: var(--color-bg-alt, #fafafa);
-			border-radius: 0.5rem;
-		}
-
-		.programs-offered h3 {
-			font-size: 1rem;
-			margin-top: 0;
-			margin-bottom: 0.75rem;
-		}
-
-		.programs-offered ul {
-			margin: 0;
-			padding-left: 1.5rem;
-		}
-
-		.programs-offered li {
-			margin-bottom: 0.5rem;
-		}
-
-		.doc-group {
-			margin-bottom: 1.5rem;
-		}
-
-		.doc-group h3 {
-			font-size: 1rem;
-			margin-bottom: 0.75rem;
-		}
-
-		.doc-group ul {
-			margin: 0;
-			padding-left: 1.5rem;
-		}
-
-		.doc-group li {
-			margin-bottom: 0.5rem;
-			line-height: 1.6;
-		}
-
-		.fees-group,
-		.scholarships-group {
-			margin-bottom: 1.5rem;
-		}
-
-		.fees-group h3,
-		.scholarships-group h3 {
-			font-size: 1.05rem;
-			margin-top: 0;
-			margin-bottom: 0.75rem;
-		}
-
-		.fees-group ul,
-		.scholarships-group ul {
-			margin: 0;
-			padding-left: 1.5rem;
-		}
-
-		.fees-group li,
-		.scholarships-group li {
-			margin-bottom: 0.5rem;
-		}
-
-		.contact-note {
-			margin-top: 1rem;
-			font-size: 0.95rem;
-		}
-
-		.contact-box {
-			padding: 1.5rem;
-			background: var(--color-bg-alt, #fafafa);
-			border: 1px solid var(--color-border);
-			border-radius: 0.5rem;
+		.program-section h3 {
+			font-size: 1.2rem;
 			margin-bottom: 1rem;
-		}
-
-		.contact-box h3 {
-			margin-top: 0;
-			font-size: 1.05rem;
-		}
-
-		.contact-list {
-			list-style: none;
-			margin: 0;
-			padding: 0;
-		}
-
-		.contact-list li {
-			margin-bottom: 0.5rem;
-		}
-
-		.faq-item {
-			margin-bottom: 1.5rem;
-		}
-
-		.faq-item strong {
-			display: block;
-			margin-bottom: 0.5rem;
 			color: var(--color-text);
 		}
 
-		.faq-item p {
-			margin: 0;
+		.program-section ul,
+		.program-section ol {
+			margin: 0.5rem 0;
+			padding-left: 1.5rem;
+		}
+
+		.program-section ul li,
+		.program-section ol li {
+			margin-bottom: 0.5rem;
 			line-height: 1.6;
+		}
+
+		.program-section p {
+			margin: 1rem 0;
+			line-height: 1.6;
+		}
+
+		@media (max-width: 48rem) {
+			.tabs-nav {
+				flex-direction: column;
+				gap: 0.5rem;
+			}
+
+			.tab-button {
+				width: 100%;
+				align-items: center;
+				text-align: center;
+			}
 		}
 	</style>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const tabButtons = document.querySelectorAll('.tab-button');
+
+			tabButtons.forEach(button => {
+				button.addEventListener('click', () => {
+					const tabId = button.getAttribute('data-tab');
+
+					// Remove active class from all buttons and contents
+					tabButtons.forEach(btn => btn.classList.remove('active'));
+					document.querySelectorAll('.tab-content').forEach(content => {
+						content.classList.remove('active');
+					});
+
+					// Add active class to clicked button and corresponding content
+					button.classList.add('active');
+					document.getElementById(tabId).classList.add('active');
+				});
+			});
+		});
+	</script>
 </Layout>

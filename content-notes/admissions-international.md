@@ -1,172 +1,367 @@
 # Admissions — International Students
 
-## Eligibility Requirements
-
-### B.Sc. Physics (Honours)
-- [PLACEHOLDER — Secondary education equivalent to 10+2 (High School Diploma or equivalent)]
-- [PLACEHOLDER — minimum XXX% marks / GPA]
-- [PLACEHOLDER — English language proficiency proof (if applicable)]
-
-### M.Sc. Physics
-- [PLACEHOLDER — Bachelor's degree in Physics or related subject from a recognized university]
-- [PLACEHOLDER — minimum XXX% marks / cumulative GPA]
-- [PLACEHOLDER — English language proficiency proof]
-
-### Ph.D. in Physics
-- [PLACEHOLDER — Master's degree in Physics or allied field]
-- [PLACEHOLDER — qualifying examination score (GATE, GRE, JEST, or equivalent) if required]
-- [PLACEHOLDER — English language proficiency score (TOEFL/IELTS/equivalent)]
-- [PLACEHOLDER — Statement of Purpose / Research Proposal in your area of interest]
-
-## Language Requirements
-
-**English Proficiency (if education was not in English):**
-- [PLACEHOLDER — TOEFL score: XXX or higher]
-- [PLACEHOLDER — IELTS score: X.X or higher]
-- [PLACEHOLDER — Duolingo English Test: XXX or higher]
-- [PLACEHOLDER — Cambridge English Proficiency (CPE): Grade C or above]
-- [PLACEHOLDER — Equivalency test accepted; consult admissions office for alternatives]
-
-**Proof Required:** Original test score report or official transcript
-
-## Visa & Immigration Requirements
-
-### Student Visa (India)
-- [PLACEHOLDER — International student must obtain a Student Visa (Category D) for studies exceeding 6 months]
-- [PLACEHOLDER — Tezpur University will provide an Admission Letter, which is required for visa application at an Indian mission/consulate]
-- [PLACEHOLDER — Processing time: typically 2–4 weeks after admission letter is issued]
-- **Student Visa Information:** [PLACEHOLDER link to Ministry of External Affairs / Indian mission website]
-
-### Residence in India
-- [PLACEHOLDER — International student must register with the Foreigner's Regional Registration Office (FRRO) within 14 days of arrival in India]
-- [PLACEHOLDER — Address of the nearest FRRO: [location/contact] (Tezpur University will provide guidance)]
-
-### Financial Clearance Certificate
-- [PLACEHOLDER — May be required for visa application; proof of funds for tuition + living expenses]
-- [PLACEHOLDER — Typical living expenses in Northeast India: [PLACEHOLDER ₹XXX,XXX per academic year]]
-
-## Application Process & Timeline
-
-### Key Dates (Academic Year [PLACEHOLDER YYYY-YYYY])
-- **Application Window Opens:** [PLACEHOLDER Month, DD]
-- **Application Deadline:** [PLACEHOLDER Month, DD] (typically earlier for international students to allow visa processing time)
-- **Entrance Exam Date (if applicable):** [PLACEHOLDER Month, DD]
-- **Admission Decision Announced:** [PLACEHOLDER Month, DD]
-- **Admission Letter Issued:** [PLACEHOLDER Month, DD]
-- **Semester Start:** [PLACEHOLDER Month, DD]
-
-### How to Apply
-1. Visit the **[PLACEHOLDER Tezpur University International Admissions Portal](link)** or contact admissions office for international application link
-2. Create an account and complete the international application form
-3. Upload required documents (see checklist below)
-4. Pay application fee: [PLACEHOLDER amount in USD/INR] (non-refundable)
-5. Submit and retain confirmation receipt
-6. Once admitted, request official Admission Letter and other documents for visa application
-
-### Programs Offered
-- B.Sc. Physics (Honours) — [PLACEHOLDER XX seats available to international students]
-- M.Sc. Physics — [PLACEHOLDER XX seats available to international students]
-- Ph.D. Physics — Rolling admissions (check website for current intake)
-
-## Required Documents
-
-### All Programs
-- [PLACEHOLDER] Valid passport (with at least 6 months validity beyond the expected end date of your program)
-- [PLACEHOLDER] Recent passport-sized photograph (4x6 cm, on white background)
-- [PLACEHOLDER] Official academic transcript(s) from previous degree(s) in English (certified copies)
-- [PLACEHOLDER] Bachelor's / Master's degree certificate (official copy, translated to English if needed)
-- [PLACEHOLDER] English language proficiency test score (TOEFL, IELTS, or equivalent) if education was not in English
-
-### M.Sc. / Ph.D.
-- [PLACEHOLDER] Statement of Purpose (SOP) — 500–750 words explaining your academic interests and research goals
-- [PLACEHOLDER] Two letters of recommendation from academic advisors or professors
-- [PLACEHOLDER] Research Proposal (for PhD applicants) — [PLACEHOLDER X–X pages, outlining your intended research area]
-
-### Financial / Visa Documentation
-- [PLACEHOLDER] Proof of financial support (bank statement, sponsor letter, scholarship award letter) covering:
-  - Tuition fees
-  - Estimated living expenses for the entire duration of the program
-- [PLACEHOLDER] Medical fitness certificate (Form 5A / Medical report) — from a Tezpur University approved panel or certified doctor
-- [PLACEHOLDER] Police clearance certificate (if required by your country's regulations for studying abroad)
-
-**Note:** All documents must be original or certified copies. Photocopies may not be accepted.
-
-## Fees & Scholarships
-
-### Tuition Fees (per semester, international students)
-- B.Sc. Physics: [PLACEHOLDER USD $XXXX or ₹XXXX]
-- M.Sc. Physics: [PLACEHOLDER USD $XXXX or ₹XXXX]
-- Ph.D. Physics: [PLACEHOLDER USD $XXXX or ₹XXXX, with possible fellowship/waiver]
-
-### Estimated Living Expenses (per academic year, Northeast India)
-- Hostel accommodation: [PLACEHOLDER ₹XX,XXX – ₹XX,XXX]
-- Food & daily expenses: [PLACEHOLDER ₹XX,XXX – ₹XX,XXX]
-- Books & materials: [PLACEHOLDER ₹X,XXX – ₹XX,XXX]
-- **Total:** [PLACEHOLDER ₹XX,XXX – ₹XX,XXX per year]
-
-### Scholarships & Financial Aid Available
-- **ITEC (Indian Technical & Economic Cooperation) Scholarship:** [PLACEHOLDER — eligible countries, monthly stipend, tuition waiver]
-- **ICCR Scholarship:** [PLACEHOLDER — for students from specific countries]
-- **MHRD Scholarship:** [PLACEHOLDER — limited scholarships for SAARC nationals]
-- **Institute Merit Scholarships:** [PLACEHOLDER — partial/full tuition waivers for exceptional international students]
-- **PhD Fellowships:** [PLACEHOLDER ₹XXXX/month for outstanding PhD candidates]
-
-**For scholarship inquiries:** Contact [PLACEHOLDER international@tezu.ac.in]
-
-## Post-Admission / Visa Application
-
-Once you receive the Admission Letter:
-1. Apply for Student Visa at the **Indian mission/consulate in your country**
-2. Provide the Admission Letter, proof of financial support, and other required visa documents
-3. Tezpur University will support your visa application with additional documents if needed
-4. Plan to arrive in Tezpur at least [PLACEHOLDER 1 week/2 weeks] before semester starts
-5. Register with FRRO within 14 days of arrival
-
-**Visa Processing Support:** Tezpur University's International Office can provide guidance on visa applications and on-arrival formalities.
-
-## Contact & Support
-
-**International Admissions Coordinator**
-- Email: [PLACEHOLDER international.admissions@tezu.ac.in]
-- Phone: [PLACEHOLDER +91-XXXX-XXXXXX (international rates apply)]
-- Office: [PLACEHOLDER Department of Physics, International Office / Main Campus]
-- Office Hours: [PLACEHOLDER Mon–Fri, 10:00 AM – 5:00 PM IST]
-
-**International Student Support Office:**
-- Email: [PLACEHOLDER international.students@tezu.ac.in]
-- Handles visa queries, accommodation arrangements, student welfare, and cultural integration
-
-**Faculty Research Contacts:**
-- For research-focused inquiries about specific research groups, contact [PLACEHOLDER department faculty directly via research page]
-
-## Frequently Asked Questions
-
-**Q: How do I know if my degree will be recognized in India?**
-A: Tezpur University assesses all degrees individually. Submit your official transcript for preliminary evaluation during the application process. If accepted, your degree is recognized for admission purposes.
-
-**Q: Is there hostel accommodation for international students?**
-A: [PLACEHOLDER — Yes / Limited. Tezpur University provides separate hostel facilities for international students. Advance booking is recommended. Costs approx. ₹XXXX/month.]
-
-**Q: Do I need health insurance?**
-A: [PLACEHOLDER — Yes; international students are required to maintain health insurance. The university can guide you on approved insurance providers.]
-
-**Q: What is the weather like? What should I pack?**
-A: [PLACEHOLDER — Tezpur is in Northeast India (Assam) with a tropical climate. Summers (Apr–Jun) are hot & humid; monsoon (Jun–Sept) is rainy; winters (Oct–Feb) are mild. Dress accordingly and pack for all seasons.]
-
-**Q: Can I work during my studies?**
-A: [PLACEHOLDER — Student Visa regulations permit limited on-campus work. Off-campus employment requires special permission. Check with the International Student Office for current policies.]
-
-**Q: How do I arrange arrival in Tezpur?**
-A: [PLACEHOLDER — Nearest airports: Guwahati (Indira Gandhi International Airport, ~3.5 hours drive) or Tezpur Airport. The university can assist with airport pickup arrangements. Contact International Office in advance.]
+Choose your program to view specific eligibility, visa requirements, application process, and support information.
 
 ---
 
-## General Resources
+## Bachelor of Science (BSc) Physics
 
-- **Tezpur University Main Website:** [PLACEHOLDER link]
-- **International Office:** [PLACEHOLDER link]
-- **Student Handbook & Regulations:** [PLACEHOLDER link]
-- **Visa Information (Ministry of External Affairs, India):** [PLACEHOLDER link]
-- **Exchange Rates & Payment Methods:** [PLACEHOLDER link to Tezpur University financial services]
+### Program Overview
+- **Degree Awarded:** B.Sc. Physics (Honours)
+- **Duration:** [PLACEHOLDER — 3 years / 6 semesters]
+- **Intake:** [PLACEHOLDER — XX seats for international students]
+
+### International Eligibility Requirements
+- [PLACEHOLDER — Secondary education equivalent to 10+2 (High School Diploma or equivalent)]
+- [PLACEHOLDER — minimum XXX% marks / GPA]
+- [PLACEHOLDER — English language proficiency (TOEFL/IELTS/Duolingo score if education was not in English)]
+
+### Visa & Immigration Requirements
+- **Student Visa (Category D):** Required for studies exceeding 6 months
+- [PLACEHOLDER — Tezpur University provides Admission Letter for visa application at Indian mission/consulate in your country]
+- **Processing timeline:** [PLACEHOLDER — typically 2–4 weeks after admission letter issued]
+- **FRRO Registration:** Must register within 14 days of arrival in India at Foreigner's Regional Registration Office
+- [PLACEHOLDER — Financial clearance certificate may be required; proof of funds for tuition + living expenses]
+
+### Application Process
+1. Visit **[PLACEHOLDER Tezpur University International Admissions Portal](link)**
+2. Select "B.Sc. Physics (International)"
+3. Complete the international application form
+4. Upload required documents (see below)
+5. Pay application fee: [PLACEHOLDER amount in USD/INR]
+6. Submit and save confirmation receipt
+
+**Selection Method:** [PLACEHOLDER — Merit-based / Entrance exam / Mixed]
+
+### Timeline & Key Dates (Academic Year [PLACEHOLDER YYYY-YYYY])
+- **Application Window Opens:** [PLACEHOLDER Month, DD]
+- **Application Deadline:** [PLACEHOLDER Month, DD] (typically earlier than domestic to allow visa processing)
+- **Merit List / Exam Results:** [PLACEHOLDER Month, DD]
+- **Admission Decision:** [PLACEHOLDER Month, DD]
+- **Admission Letter Issued:** [PLACEHOLDER Month, DD]
+- **Semester Start:** [PLACEHOLDER Month, DD]
+
+### Required Documents
+- [PLACEHOLDER] Valid passport (at least 6 months validity beyond end of program)
+- [PLACEHOLDER] Passport-sized photograph (4x6 cm, white background)
+- [PLACEHOLDER] Secondary school certificate (official copy, translated to English if needed)
+- [PLACEHOLDER] Official academic transcript (certified English translation)
+- [PLACEHOLDER] English proficiency test score (TOEFL/IELTS/Duolingo/equivalent) if education was not in English
+- [PLACEHOLDER] Proof of financial support (bank statement, sponsor letter, or scholarship award letter)
+- [PLACEHOLDER] Medical fitness certificate (Form 5A / from approved panel or certified doctor)
+- [PLACEHOLDER] Police clearance certificate (if required by your country's regulations)
+
+### Fees & Scholarships (International)
+- **Tuition Fee (per semester):** [PLACEHOLDER USD $XXXX or ₹XXXX]
+- **Estimated Living Expenses (per year):** [PLACEHOLDER ₹XX,XXX – ₹XX,XXX]
+
+**Scholarships Available:**
+- [PLACEHOLDER — ITEC (eligible countries, monthly stipend, tuition waiver)]
+- [PLACEHOLDER — ICCR Scholarship (for specific countries)]
+- [PLACEHOLDER — MHRD Scholarship (SAARC nationals)]
+- [PLACEHOLDER — Institute merit scholarships (partial/full tuition waivers)]
+
+### Contact & Support
+- **International Admissions Coordinator:** [PLACEHOLDER name, email, phone]
+- **International Student Support Office:** [PLACEHOLDER contact]
+
+---
+
+## Master of Science (MSc) Physics
+
+### Program Overview
+- **Degree Awarded:** M.Sc. Physics
+- **Duration:** [PLACEHOLDER — 2 years / 4 semesters]
+- **Intake:** [PLACEHOLDER — XX seats for international students]
+
+### International Eligibility Requirements
+- [PLACEHOLDER — Bachelor's degree in Physics or related field from recognized university]
+- [PLACEHOLDER — minimum XXX% marks / cumulative GPA]
+- [PLACEHOLDER — English language proficiency test score (TOEFL/IELTS/equivalent) if education was not in English]
+
+### Visa & Immigration Requirements
+- **Student Visa (Category D):** Required for MSc (2 years exceeds 6-month threshold)
+- [PLACEHOLDER — Admission Letter from Tezpur University needed for visa application]
+- **Processing timeline:** [PLACEHOLDER — typically 2–4 weeks]
+- **FRRO Registration:** Within 14 days of arrival
+- [PLACEHOLDER — Financial proof: tuition + living expenses for 2 years]
+
+### Application Process
+1. Visit **[PLACEHOLDER Tezpur University International Admissions Portal](link)**
+2. Select "M.Sc. Physics (International)"
+3. Complete the international application form
+4. Upload required documents
+5. Pay application fee: [PLACEHOLDER amount in USD/INR]
+6. Submit and retain receipt
+
+**Selection Method:** [PLACEHOLDER — Entrance exam (date: XX/XX/YYYY) + merit list / Merit-based]
+
+### Timeline & Key Dates (Academic Year [PLACEHOLDER YYYY-YYYY])
+- **Application Window Opens:** [PLACEHOLDER Month, DD]
+- **Application Deadline:** [PLACEHOLDER Month, DD] (earlier deadline for visa processing)
+- **Entrance Exam Date:** [PLACEHOLDER Month, DD]
+- **Result Announcement:** [PLACEHOLDER Month, DD]
+- **Admission Decision:** [PLACEHOLDER Month, DD]
+- **Admission Letter Issued:** [PLACEHOLDER Month, DD]
+- **Semester Start:** [PLACEHOLDER Month, DD]
+
+### Required Documents
+- [PLACEHOLDER] Valid passport (6+ months validity)
+- [PLACEHOLDER] Passport-sized photograph
+- [PLACEHOLDER] Bachelor's degree certificate (official copy, English translation if needed)
+- [PLACEHOLDER] Academic transcripts/marksheets (all semesters, official copies)
+- [PLACEHOLDER] English proficiency test score (TOEFL/IELTS/equivalent)
+- [PLACEHOLDER] Statement of Purpose (500–750 words)
+- [PLACEHOLDER] Two letters of recommendation from academic advisors
+- [PLACEHOLDER] Proof of financial support (covering 2 years of tuition + living expenses)
+- [PLACEHOLDER] Medical fitness certificate
+- [PLACEHOLDER] Police clearance certificate (if applicable)
+
+### Fees & Scholarships (International)
+- **Tuition Fee (per semester):** [PLACEHOLDER USD $XXXX or ₹XXXX]
+- **Estimated Living Expenses (per year):** [PLACEHOLDER ₹XX,XXX – ₹XX,XXX]
+
+**Scholarships Available:**
+- [PLACEHOLDER — UGC scholarships for international students]
+- [PLACEHOLDER — ITEC/ICCR/MHRD scholarships (country-specific)]
+- [PLACEHOLDER — Merit-based institutional scholarships]
+- [PLACEHOLDER — Assistantships (teaching/research)]
+
+### Contact & Support
+- **International Admissions Coordinator:** [PLACEHOLDER name, email, phone]
+- **Exam Cell (for MSc entrance exam queries):** [PLACEHOLDER contact]
+- **International Student Support Office:** [PLACEHOLDER contact]
+
+---
+
+## Integrated BSc-MSc (5-Year) Physics
+
+### Program Overview
+- **Degree Awarded:** B.Sc. + M.Sc. Physics (integrated pathway for international students)
+- **Duration:** [PLACEHOLDER — 5 years / 10 semesters]
+- **Intake:** [PLACEHOLDER — XX seats for international students]
+
+### International Eligibility Requirements
+- [PLACEHOLDER — Secondary education equivalent to 10+2 or higher]
+- [PLACEHOLDER — minimum XXX% marks / GPA]
+- [PLACEHOLDER — English proficiency test score (TOEFL/IELTS/Duolingo) if education was not in English]
+
+### Visa & Immigration Requirements
+- **Student Visa (Category D):** Required for full 5-year program
+- [PLACEHOLDER — Admission Letter for visa application at Indian mission/consulate]
+- **Processing timeline:** [PLACEHOLDER — typically 2–4 weeks]
+- **FRRO Registration:** Within 14 days of arrival
+- **Financial clearance:** Proof of funds for 5 years (tuition + living expenses)
+- [PLACEHOLDER — Visa may need renewal/extension after 1 year (typically handled by university)]
+
+### Application Process
+1. Visit **[PLACEHOLDER Tezpur University International Admissions Portal](link)**
+2. Select "Integrated B.Sc-M.Sc Physics (International)"
+3. Complete the full application form
+4. Upload required documents
+5. Pay application fee: [PLACEHOLDER amount in USD/INR]
+6. Submit and save receipt
+
+**Selection Method:** [PLACEHOLDER — Entrance exam / Merit-based / Mixed]
+
+### Timeline & Key Dates (Academic Year [PLACEHOLDER YYYY-YYYY])
+- **Application Window Opens:** [PLACEHOLDER Month, DD]
+- **Application Deadline:** [PLACEHOLDER Month, DD] (earlier for international visa processing)
+- **Entrance Exam / Merit List:** [PLACEHOLDER Month, DD]
+- **Admission Decision:** [PLACEHOLDER Month, DD]
+- **Admission Letter Issued:** [PLACEHOLDER Month, DD]
+- **Semester Start:** [PLACEHOLDER Month, DD]
+
+### Required Documents
+- [PLACEHOLDER] Valid passport (6+ months validity)
+- [PLACEHOLDER] Passport-sized photograph (4x6 cm)
+- [PLACEHOLDER] Secondary school certificate (official copy, English translation)
+- [PLACEHOLDER] Official academic transcripts (certified English translation)
+- [PLACEHOLDER] English proficiency test score (TOEFL/IELTS/Duolingo)
+- [PLACEHOLDER] Proof of financial support (for 5 years of tuition + living expenses)
+- [PLACEHOLDER] Medical fitness certificate (Form 5A)
+- [PLACEHOLDER] Police clearance certificate (if applicable)
+
+### Fees & Scholarships (International)
+- **Tuition Fee (per semester):** [PLACEHOLDER USD $XXXX or ₹XXXX]
+- **Estimated Living Expenses (per year):** [PLACEHOLDER ₹XX,XXX – ₹XX,XXX]
+- **Total 5-year cost (estimated):** [PLACEHOLDER USD $XXXX or ₹XX,XXX]
+
+**Scholarships Available:**
+- [PLACEHOLDER — Merit-based continuation scholarships for 5-year program]
+- [PLACEHOLDER — ITEC/ICCR/MHRD scholarships]
+- [PLACEHOLDER — Institute fellowships for top performers]
+
+### Advantages
+- Seamless progression from B.Sc. to M.Sc. without separate entrance exam
+- [PLACEHOLDER — additional benefits specific to integrated program]
+- Early research exposure and specialized training
+- Long-term visa stability (single 5-year enrollment)
+
+### Contact & Support
+- **Integrated Program Coordinator:** [PLACEHOLDER name, email, phone]
+- **International Student Support Office:** [PLACEHOLDER contact]
+
+---
+
+## Integrated BSc-BEd (5-Year) Physics
+
+### Program Overview
+- **Degree Awarded:** B.Sc. + B.Ed. Physics (integrated teacher-education pathway for international students)
+- **Duration:** [PLACEHOLDER — 5 years / 10 semesters]
+- **Intake:** [PLACEHOLDER — XX seats for international students]
+
+### International Eligibility Requirements
+- [PLACEHOLDER — Secondary education equivalent to 10+2 or higher]
+- [PLACEHOLDER — minimum XXX% marks / GPA]
+- [PLACEHOLDER — English proficiency test score (TOEFL/IELTS/Duolingo) if education was not in English]
+- [PLACEHOLDER — Pass a teacher-aptitude assessment (or equivalent evaluation)]
+- [PLACEHOLDER — Medical fitness certificate (standard + height/health requirements for teaching)]
+
+### Visa & Immigration Requirements
+- **Student Visa (Category D):** Required for full 5-year program
+- [PLACEHOLDER — Admission Letter for visa application]
+- **Processing timeline:** [PLACEHOLDER — typically 2–4 weeks]
+- **FRRO Registration:** Within 14 days of arrival
+- **Financial proof:** Funds for 5 years (tuition + living expenses)
+- [PLACEHOLDER — Note: Teaching practice may involve school placements; coordinate with international office for any travel/visa implications]
+
+### Application Process
+1. Visit **[PLACEHOLDER Tezpur University International Admissions Portal](link)**
+2. Select "Integrated B.Sc-B.Ed Physics (International)"
+3. Complete the application form
+4. Upload required documents
+5. Pay application fee: [PLACEHOLDER amount in USD/INR]
+6. Submit and save receipt
+
+**Selection Method:** [PLACEHOLDER — Entrance exam (written + teaching-aptitude component) / Merit-based]
+
+### Timeline & Key Dates (Academic Year [PLACEHOLDER YYYY-YYYY])
+- **Application Window Opens:** [PLACEHOLDER Month, DD]
+- **Application Deadline:** [PLACEHOLDER Month, DD] (earlier for visa processing)
+- **Entrance Exam Date:** [PLACEHOLDER Month, DD]
+- **Result / Merit List Announcement:** [PLACEHOLDER Month, DD]
+- **Admission Decision:** [PLACEHOLDER Month, DD]
+- **Admission Letter Issued:** [PLACEHOLDER Month, DD]
+- **Semester Start:** [PLACEHOLDER Month, DD]
+
+### Required Documents
+- [PLACEHOLDER] Valid passport (6+ months validity)
+- [PLACEHOLDER] Passport-sized photograph (4x6 cm)
+- [PLACEHOLDER] Secondary school certificate (official copy, English translation)
+- [PLACEHOLDER] Official academic transcripts (certified English translation)
+- [PLACEHOLDER] English proficiency test score (TOEFL/IELTS/Duolingo/equivalent)
+- [PLACEHOLDER] Proof of financial support (5 years: tuition + living expenses)
+- [PLACEHOLDER] Medical fitness certificate (Form 5A + teacher-specific requirements)
+- [PLACEHOLDER] Police clearance certificate (if required)
+- [PLACEHOLDER] Statement of Interest in Teacher Education (250 words explaining why you want to teach physics)
+
+### Fees & Scholarships (International)
+- **Tuition Fee (per semester):** [PLACEHOLDER USD $XXXX or ₹XXXX]
+- **Estimated Living Expenses (per year):** [PLACEHOLDER ₹XX,XXX – ₹XX,XXX]
+- **Total 5-year cost (estimated):** [PLACEHOLDER USD $XXXX or ₹XX,XXX]
+
+**Scholarships Available:**
+- [PLACEHOLDER — Merit-based scholarships for B.Sc-B.Ed]
+- [PLACEHOLDER — Teacher training scholarships]
+- [PLACEHOLDER — Ministry of Education scholarships (if eligible)]
+
+### Career Pathways for International Graduates
+- Qualified physics teacher for international schools globally
+- Government school positions in home country (subject to home-country teacher certification)
+- Curriculum development and educational technology roles
+- Education NGOs and STEM outreach organizations
+
+### Contact & Support
+- **B.Sc-B.Ed Program Coordinator:** [PLACEHOLDER name, email, phone]
+- **Department Education Cell:** [PLACEHOLDER contact]
+- **International Student Support Office:** [PLACEHOLDER contact]
+
+---
+
+## General Information for International Students
+
+### Arrival & Orientation
+
+**Before Arrival:**
+- [PLACEHOLDER — Tezpur is in Northeast India; nearest airports: Guwahati (3.5 hours) or Tezpur Airport]
+- [PLACEHOLDER — Contact International Office for airport pickup arrangement (request in advance)]
+- Plan arrival at least [PLACEHOLDER — 1 week] before semester start
+
+**Upon Arrival:**
+- Register with FRRO within 14 days (International Office will guide)
+- Collect your student visa receipt and university ID
+- Attend international student orientation
+- Open a local bank account (International Office provides list of banks)
+- Arrange mobile SIM card and email setup
+
+### Health & Insurance
+
+**Health Insurance (Mandatory):**
+- All international students must maintain health insurance
+- [PLACEHOLDER — Tezpur University-approved providers: [list]]
+- Covers medical expenses up to [PLACEHOLDER amount]
+- Annual premium: [PLACEHOLDER ₹XXXX – ₹XXXX]
+
+**Medical Services:**
+- University health center: [PLACEHOLDER — open 24/7 for emergency]
+- Nearby hospitals: [PLACEHOLDER — list major hospitals in Tezpur]
+
+### Hostel Accommodation
+
+**International Student Hostel:**
+- [PLACEHOLDER — Separate hostel facility for international students]
+- [PLACEHOLDER — Cost: ₹XXXX/month (single room), ₹XXXX/month (shared)]
+- Includes: [PLACEHOLDER — meals, basic furniture, internet, utilities]
+- Booking: Apply during admission; spots allocated on first-come basis
+
+### Living Expenses & Cost of Living
+
+**Monthly Expenses Estimate:**
+- [PLACEHOLDER — Hostel/Rent: ₹XXXX – ₹XXXX]
+- [PLACEHOLDER — Food: ₹XXXX – ₹XXXX (vegetarian/non-vegetarian options available)]
+- [PLACEHOLDER — Transport: ₹XXXX – ₹XXXX]
+- [PLACEHOLDER — Phone/Internet: ₹XXXX – ₹XXXX]
+- [PLACEHOLDER — Entertainment/Misc: ₹XXXX – ₹XXXX]
+
+### Work During Studies
+
+**On-Campus Work:**
+- Student Visa permits limited on-campus work
+- [PLACEHOLDER — Maximum X hours per week during semester, full-time during breaks]
+- [PLACEHOLDER — Typical pay: ₹XXXX–₹XXXX per hour]
+
+**Off-Campus Work:**
+- Requires special permission from university
+- Generally not permitted during active coursework
+
+### Contact the International Office
+
+**International Student Support Office:**
+- Email: [PLACEHOLDER international.students@tezu.ac.in]
+- Phone: [PLACEHOLDER +91-XXXX-XXXXXX]
+- Office: [PLACEHOLDER location on campus]
+- Office Hours: [PLACEHOLDER Mon–Fri, 10:00 AM – 5:00 PM IST]
+
+---
+
+## Frequently Asked Questions
+
+**Q: What is the student visa processing time?**
+A: [PLACEHOLDER — Typically 2–4 weeks from submission at your nearest Indian mission/consulate.]
+
+**Q: Do I need to show proof of funds for my entire program?**
+A: [PLACEHOLDER — Yes; cover tuition + living expenses for your entire degree.]
+
+**Q: Is hostel accommodation guaranteed?**
+A: [PLACEHOLDER — Limited spots available; apply early. Off-campus rental is an option if full.]
+
+**Q: Can I work while studying?**
+A: [PLACEHOLDER — Limited on-campus work is permitted. Off-campus work requires special permission.]
+
+**Q: Are there scholarships for international students?**
+A: [PLACEHOLDER — Yes; ITEC, ICCR, MHRD, and merit-based institutional scholarships are available.]
+
+---
 
 *Last updated: [PLACEHOLDER Date]*

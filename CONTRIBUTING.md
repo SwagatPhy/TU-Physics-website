@@ -1,19 +1,16 @@
 # Contributing — read this before you change anything
 
 This repository is the official website of the Department of Physics, Tezpur University.
-**The repository owner ([@SwagatPhy](https://github.com/SwagatPhy)) is the only person who merges into `main`.**
-Nothing goes live unless the owner approves it.
+**The repository owner is the only person who merges into `main`.**
 
 ## The rules
 
 1. **Never push directly to `main`.** All changes come in through a pull request (PR).
 2. **Work on your own fork or branch**, one topic per branch (e.g. `people-add-scholars`, `news-october`).
 3. **Keep PRs small and single-purpose.** One page, one collection, or one fix.
-4. **Do not invent facts.** Names, emails, phone numbers, dates, statistics and any institutional claim must come from the department. If something is unknown, leave a `[PLACEHOLDER]` marker.
-5. **Do not commit** `node_modules/`, `dist/`, `.env` files, passwords, tokens, or personal phone numbers or emails without the person's consent.
-6. **Do not delete or rename** files in `src/content/`, `src/pages/` or `src/content.config.ts` without asking the owner first. Renaming a content field can silently break pages.
-7. **Plain HTML/CSS only.** No Tailwind or new frameworks or dependencies without approval.
-8. **Do not force-push** (`git push --force`) to anything that is shared.
+4. **Do not delete or rename** files in `src/content/`, `src/pages/` or `src/content.config.ts` without asking the owner first. Renaming a content field can silently break pages.
+5. **Plain HTML/CSS only.** No Tailwind or new frameworks or dependencies.
+6. **Do not force-push** (`git push --force`) to anything that is shared.
 
 ## How to contribute (step by step)
 
@@ -43,9 +40,8 @@ In the PR, say **what changed and which page(s) it affects**. If content came fr
 
 - [ ] `npm run build` passes with no errors
 - [ ] I only changed files related to my topic
-- [ ] No invented facts; unknowns are `[PLACEHOLDER]`
 - [ ] No secrets, personal data or large unneeded files
-- [ ] I checked the page in `npm run dev`, on desktop and phone width
+- [ ] I checked the page in `npm run dev`, on desktop.
 
 ## For the owner: merging
 

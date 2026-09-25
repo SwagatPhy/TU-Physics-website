@@ -6,6 +6,20 @@ import { formatDate } from '../../lib/date';
 const items = (await getCollection('newsEvents', ({ data }) => import.meta.env.DEV || !data.draft)).sort(
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
+
+// "Upcoming" is decided at build time (the site is static), so rebuild to move events into "Past".
+const today = new Date().toISOString().slice(0, 10);
+const isUpcoming = (item) => item.data.type === 'event' && item.data.date.toISOString().slice(0, 10) >= today;
+
+// Which filter tab an item belongs to: 'news', 'upcoming' or 'past'.
+const groupOf = (item) => (item.data.type === 'news' ? 'news' : isUpcoming(item) ? 'upcoming' : 'past');
+
+const tabs = [
+	{ id: 'all', label: 'All', count: items.length },
+	{ id: 'news', label: 'News', count: items.filter((i) => groupOf(i) === 'news').length },
+	{ id: 'upcoming', label: 'Upcoming Events', count: items.filter((i) => groupOf(i) === 'upcoming').length },
+	{ id: 'past', label: 'Past Events', count: items.filter((i) => groupOf(i) === 'past').length },
+];
 ---
 
 <Layout title="News & Events" description="Department news and upcoming events.">
@@ -18,10 +32,26 @@ const items = (await getCollection('newsEvents', ({ data }) => import.meta.env.D
 
 	<section class="section">
 		<div class="container">
+			<div class="filter-bar" role="tablist" aria-label="Filter news and events">
+				{
+					tabs.map((tab, i) => (
+						<button
+							type="button"
+							role="tab"
+							class="filter"
+							data-filter={tab.id}
+							aria-selected={i === 0 ? 'true' : 'false'}
+						>
+							{tab.label} <span class="filter-count">{tab.count}</span>
+						</button>
+					))
+				}
+			</div>
+
 			<ul class="card-grid">
 				{
 					items.map((item) => (
-						<li>
+						<li class="entry" data-group={groupOf(item)}>
 							<a class="card" href={`/news-events/${item.id}`}>
 								<span class="card-eyebrow">
 									{item.data.type === 'event' ? 'Event' : 'News'} &middot; {formatDate(item.data.date)}
@@ -34,6 +64,80 @@ const items = (await getCollection('newsEvents', ({ data }) => import.meta.env.D
 					))
 				}
 			</ul>
+
+			<p class="empty" hidden>Nothing here yet.</p>
 		</div>
 	</section>
 </Layout>
+
+<script>
+	// Show only the entries whose data-group matches the chosen tab ("all" shows everything).
+	const filters = document.querySelectorAll<HTMLButtonElement>('.filter');
+	const entries = document.querySelectorAll<HTMLElement>('.entry');
+	const empty = document.querySelector<HTMLElement>('.empty');
+
+	function showGroup(id: string) {
+		let visible = 0;
+		filters.forEach((f) => f.setAttribute('aria-selected', String(f.dataset.filter === id)));
+		entries.forEach((e) => {
+			e.hidden = id !== 'all' && e.dataset.group !== id;
+			if (!e.hidden) visible++;
+		});
+		if (empty) empty.hidden = visible > 0;
+		history.replaceState(null, '', id === 'all' ? location.pathname : `#${id}`);
+	}
+
+	filters.forEach((f) => f.addEventListener('click', () => showGroup(f.dataset.filter!)));
+
+	// Open the tab named in the URL (e.g. /news-events#upcoming), if any.
+	const fromUrl = location.hash.slice(1);
+	if (document.querySelector(`.filter[data-filter="${fromUrl}"]`)) showGroup(fromUrl);
+</script>
+
+<style>
+	.filter-bar {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin-bottom: var(--space-md);
+	}
+
+	.filter {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem 1rem;
+		border: 1px solid var(--color-border);
+		border-radius: 999px;
+		background: var(--color-surface);
+		color: var(--color-text);
+		font: inherit;
+		cursor: pointer;
+		transition: background 0.15s, color 0.15s, border-color 0.15s;
+	}
+
+	.filter:hover {
+		border-color: var(--color-accent);
+	}
+
+	.filter:focus-visible {
+		outline: 2px solid var(--color-accent);
+		outline-offset: 2px;
+	}
+
+	.filter[aria-selected='true'] {
+		background: var(--color-accent);
+		border-color: var(--color-accent);
+		color: #fff;
+		font-weight: 600;
+	}
+
+	.filter-count {
+		font-size: 0.8rem;
+		opacity: 0.8;
+	}
+
+	.empty {
+		color: var(--color-text-muted);
+	}
+</style>

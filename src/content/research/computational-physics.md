@@ -1,18 +1,24 @@
 ---
-specialization: "Optics & Photonics"
+specialization: "Computational modelling and Simulation"
+
 faculties:
-  - name: "Prof. Amit Sharma"
-    group: "Amit Sharma group"
-    url: "/faculty/amit-sharma"
+-   name: "Dr. Rupjyoti Gogoi"
+    group: "Rupjyoti Gogoi group"
+    url: "/faculty/rupjyoti-gogoi"
     contact: ""
     email: ""
-  - name: "Dr. Anita Mishra"
-    group: "Anita Mishra group"
-    url: "/faculty/anita-mishra"
+-   name: "Prof. Pralay Kr. Karmakar"
+    group: "Pralay Kr. Karmakar group"
+    url: "/faculty/pralay-kr-karmakar"
+    contact: ""
+    email: ""
+-   name: "Prof. Gazi Ameen Ahmed"
+    group: "Gazi Ameen Ahmed group"
+    url: "/faculty/gazi-ameen-ahmed"
     contact: ""
     email: ""
 description: "Focuses on quantum and nonlinear optical phenomena with applications in quantum information and imaging"
-image: "optics-and-photonics.jpeg"
+image: "computational-physics.png"
 ---
 
 ## Overview

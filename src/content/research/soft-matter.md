@@ -1,18 +1,13 @@
 ---
-specialization: "Theoretical & Mathematical Physics"
+specialization: "Soft Matter Physics"
 faculties:
-  - name: "Prof. Deepak Sinha"
-    group: "Deepak Sinha group"
-    url: "/faculty/deepak-sinha"
+  - name: "[PLACEHOLDER: Faculty name]"
+    group: "[PLACEHOLDER: Faculty group]"
+    url: "/faculty/placeholder"
     contact: ""
     email: ""
-  - name: "Dr. Kavya Menon"
-    group: "Kavya Menon group"
-    url: "/faculty/kavya-menon"
-    contact: ""
-    email: ""
-description: "Develops analytical and computational methods to understand complex physical systems and fundamental theories"
-image: "theoretical-physics.jpg"
+description: "[PLACEHOLDER: Soft Matter Physics description]"
+image: "soft-matter-physics.jpg"
 ---
 
 ## Overview

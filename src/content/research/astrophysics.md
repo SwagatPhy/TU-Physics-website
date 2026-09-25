@@ -1,9 +1,25 @@
 ---
-specialization: "Astrophysics & Space Physics"
-faculty: "Dr. Arun Das, Dr. Meera Iyer"
+specialization: "Astronomy & Space Physics"
+faculties:
+-   name: "Dr. Rupjyoti Gogoi"
+    group: "Rupjyoti Gogoi group"
+    url: "/faculty/rupjyoti-gogoi"
+    contact: ""
+    email: ""
+-   name: "Prof. Pralay Kr. Karmakar"
+    group: "Pralay Kr. Karmakar group"
+    url: "/faculty/pralay-kr-karmakar"
+    contact: ""
+    email: ""
+-   name: "Prof. Gazi Ameen Ahmed"
+    group: "Gazi Ameen Ahmed group"
+    url: "/faculty/gazi-ameen-ahmed"
+    contact: ""
+    email: ""
+
+
 description: "Studies stellar evolution, galactic dynamics, and space weather through observational data and computational simulations"
-contact: "Dr. Arun Das"
-email: "arun.das@tu.edu"
+image: "astronomy_and_space_physics.jpeg"
 ---
 
 ## Overview

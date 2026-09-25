@@ -1,9 +1,24 @@
 ---
 specialization: "Condensed Matter Physics"
-faculty: "Dr. Rajesh Kumar, Dr. Priya Singh"
+faculties:
+-   name: "Dr. Rupjyoti Gogoi"
+    group: "Rupjyoti Gogoi group"
+    url: "/faculty/rupjyoti-gogoi"
+    contact: ""
+    email: ""
+-   name: "Prof. Pralay Kr. Karmakar"
+    group: "Pralay Kr. Karmakar group"
+    url: "/faculty/pralay-kr-karmakar"
+    contact: ""
+    email: ""
+-   name: "Prof. Gazi Ameen Ahmed"
+    group: "Gazi Ameen Ahmed group"
+    url: "/faculty/gazi-ameen-ahmed"
+    contact: ""
+    email: ""
+
 description: "Studies the physical properties of materials using theoretical modeling and experimental techniques"
-contact: "Dr. Rajesh Kumar"
-email: "rajesh.kumar@tu.edu"
+image: "condense-matter-physics.jpg"
 ---
 
 ## Overview

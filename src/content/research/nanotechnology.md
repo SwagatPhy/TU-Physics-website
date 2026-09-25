@@ -1,18 +1,13 @@
 ---
-specialization: "Optics & Photonics"
+specialization: "Nanoscience and Nanotechnology"
 faculties:
-  - name: "Prof. Amit Sharma"
-    group: "Amit Sharma group"
-    url: "/faculty/amit-sharma"
-    contact: ""
-    email: ""
-  - name: "Dr. Anita Mishra"
-    group: "Anita Mishra group"
-    url: "/faculty/anita-mishra"
+  - name: "[PLACEHOLDER: Faculty name]"
+    group: "[PLACEHOLDER: Faculty group]"
+    url: "/faculty/placeholder"
     contact: ""
     email: ""
 description: "Focuses on quantum and nonlinear optical phenomena with applications in quantum information and imaging"
-image: "optics-and-photonics.jpeg"
+image: "nanoparticle-physics.webp"
 ---
 
 ## Overview

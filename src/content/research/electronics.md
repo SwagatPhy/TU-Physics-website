@@ -1,18 +1,23 @@
 ---
-specialization: "Materials Science & Engineering"
+specialization: "Electronics and Communications"
 faculties:
-  - name: "Dr. Neha Verma"
-    group: "Neha Verma group"
-    url: "/faculty/neha-verma"
+-   name: "Dr. Rupjyoti Gogoi"
+    group: "Rupjyoti Gogoi group"
+    url: "/faculty/rupjyoti-gogoi"
     contact: ""
     email: ""
-  - name: "Prof. Suresh Rao"
-    group: "Suresh Rao group"
-    url: "/faculty/suresh-rao"
+-   name: "Prof. Pralay Kr. Karmakar"
+    group: "Pralay Kr. Karmakar group"
+    url: "/faculty/pralay-kr-karmakar"
     contact: ""
     email: ""
-description: "Explores synthesis, characterization, and applications of advanced materials for electronics and energy storage"
-image: "material-science-and-engineering.jpg"
+-   name: "Prof. Gazi Ameen Ahmed"
+    group: "Gazi Ameen Ahmed group"
+    url: "/faculty/gazi-ameen-ahmed"
+    contact: ""
+    email: ""
+description: ""
+image: "electronics_and_communications.jpg"
 ---
 
 ## Overview

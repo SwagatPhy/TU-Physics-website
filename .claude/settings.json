@@ -20,7 +20,22 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '{\"systemMessage\": \"📢 Planning-manager TU message received\"}'"
+            "command": "echo '{\"systemMessage\": \"\ud83d\udce2 Planning-manager TU message received\"}'"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "clear|startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"The session was just cleared. Before anything else, run the repo-scan skill (Skill tool, skill: repo-scan) and give the user a short orientation report.\"}}'"
+          },
+          {
+            "type": "command",
+            "command": "cat \"$CLAUDE_PROJECT_DIR/.claude/next-session.md\""
           }
         ]
       }

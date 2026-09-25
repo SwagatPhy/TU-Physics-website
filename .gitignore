@@ -16,3 +16,6 @@ node_modules/
 
 # jetbrains setting folder
 .idea/
+
+# old claude worktrees (local checkouts, not part of the site)
+.claude/worktrees/

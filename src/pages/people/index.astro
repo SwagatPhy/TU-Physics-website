@@ -1,0 +1,237 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+const byName = (a, b) => a.data.name.localeCompare(b.data.name);
+const teaching = (await getCollection('teaching')).sort(byName);
+const nonTeaching = (await getCollection('nonTeaching')).sort(byName);
+const scholars = (await getCollection('researchScholars')).sort(byName);
+const assistants = (await getCollection('researchAssistants')).sort(byName);
+
+// One entry per tab. `id` links a tab button to its panel below.
+const tabs = [
+    { id: 'teaching', label: 'Teaching', count: teaching.length },
+    { id: 'non-teaching', label: 'Non-teaching', count: nonTeaching.length },
+    { id: 'scholars', label: 'Research Scholars', count: scholars.length },
+    { id: 'assistants', label: 'Research Assistants', count: assistants.length },
+];
+---
+
+<Layout title="people" description="Faculty, staff and research scholars of the Department of Physics.">
+    <header class="page-header container">
+        <h1>People</h1>
+        <p>Faculty, staff and research scholars of the Department of Physics.</p>
+    </header>
+
+    <div class="container people-layout">
+        <div class="tab-bar" role="tablist" aria-label="People groups" aria-orientation="vertical">
+            {tabs.map((tab, i) => (
+                <button
+                    type="button"
+                    role="tab"
+                    class="tab"
+                    data-tab={tab.id}
+                    aria-selected={i === 0 ? 'true' : 'false'}
+                >
+                    <span class="tab-label">{tab.label}</span>
+                    <span class="tab-count">{tab.count}</span>
+                </button>
+            ))}
+        </div>
+
+        <div class="panels">
+    <section class="panel" id="teaching">
+        <h2>Teaching Staff</h2>
+        {teaching.length === 0 && <p class="empty">Profiles coming soon.</p>}
+        <div class="card-grid people-grid">
+            {teaching.map(p => (
+                <article class="card">
+                    {p.data.photo && (
+                        <img src={`/People-photos/${p.data.photo}`} alt={p.data.name} class="person-photo" />
+                    )}
+                    <h3 class="card-title">{p.data.name}</h3>
+                    <p class="card-summary">{p.data.designation}</p>
+                    {p.data.researchAreas.length > 0 && (
+                        <p class="card-summary">{p.data.researchAreas.join(', ')}</p>
+                    )}
+                    {p.data.email && <a href={`mailto:${p.data.email}`}>{p.data.email}</a>}
+                </article>
+            ))}
+        </div>
+    </section>
+
+    <section class="panel" id="non-teaching" hidden>
+        <h2>Non-teaching Staff</h2>
+        {nonTeaching.length === 0 && <p class="empty">Profiles coming soon.</p>}
+        <div class="card-grid people-grid">
+            {nonTeaching.map(p => (
+                <article class="card">
+                    {p.data.photo && (
+                        <img src={`/People-photos/${p.data.photo}`} alt={p.data.name} class="person-photo" />
+                    )}
+                    <h3 class="card-title">{p.data.name}</h3>
+                    <p class="card-summary">{p.data.designation}</p>
+                    {p.data.office && <p class="card-summary">{p.data.office}</p>}
+                    {p.data.email && <a href={`mailto:${p.data.email}`}>{p.data.email}</a>}
+                </article>
+            ))}
+        </div>
+    </section>
+
+    <section class="panel" id="scholars" hidden>
+        <h2>Research Scholars (PhD)</h2>
+        {scholars.length === 0 && <p class="empty">Profiles coming soon.</p>}
+        <div class="card-grid people-grid">
+            {scholars.map(p => (
+                <article class="card">
+                    {p.data.photo && (
+                        <img src={`/People-photos/${p.data.photo}`} alt={p.data.name} class="person-photo" />
+                    )}
+                    <h3 class="card-title">{p.data.name}</h3>
+                    <p class="card-summary">Supervisor: {p.data.supervisor}</p>
+                    {p.data.researchArea && <p class="card-summary">{p.data.researchArea}</p>}
+                    {p.data.email && <a href={`mailto:${p.data.email}`}>{p.data.email}</a>}
+                </article>
+            ))}
+        </div>
+    </section>
+
+    <section class="panel" id="assistants" hidden>
+        <h2>Research Assistants</h2>
+        {assistants.length === 0 && <p class="empty">Profiles coming soon.</p>}
+        <div class="card-grid people-grid">
+            {assistants.map(p => (
+                <article class="card">
+                    {p.data.photo && (
+                        <img src={`/People-photos/${p.data.photo}`} alt={p.data.name} class="person-photo" />
+                    )}
+                    <h3 class="card-title">{p.data.name}</h3>
+                    <p class="card-summary">Supervisor: {p.data.supervisor}</p>
+                    {p.data.researchArea && <p class="card-summary">{p.data.researchArea}</p>}
+                    {p.data.email && <a href={`mailto:${p.data.email}`}>{p.data.email}</a>}
+                </article>
+            ))}
+        </div>
+    </section>
+        </div>
+    </div>
+</Layout>
+
+<script>
+    // Show one panel at a time.
+    const tabButtons = document.querySelectorAll<HTMLButtonElement>('.tab');
+    const panels = document.querySelectorAll<HTMLElement>('.panel');
+
+    function showPanel(id: string) {
+        tabButtons.forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === id)));
+        panels.forEach(p => (p.hidden = p.id !== id));
+        history.replaceState(null, '', `#${id}`);
+    }
+
+    tabButtons.forEach(b => b.addEventListener('click', () => showPanel(b.dataset.tab!)));
+
+    // Open the tab named in the URL (e.g. /people#scholars), if any.
+    const fromUrl = location.hash.slice(1);
+    if (document.getElementById(fromUrl)?.classList.contains('panel')) showPanel(fromUrl);
+</script>
+
+<style>
+    .people-layout {
+        display: grid;
+        grid-template-columns: 15rem minmax(0, 1fr);
+        gap: var(--space-md);
+        align-items: start;
+        padding-block: var(--space-md) var(--space-lg);
+    }
+
+    /* Left-hand tab list */
+    .tab-bar {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        position: sticky;
+        top: 1rem;
+        padding: 0.6rem;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 12px;
+    }
+
+    .tab {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        padding: 0.7rem 0.9rem;
+        border: 0;
+        border-radius: 8px;
+        background: transparent;
+        color: var(--color-text);
+        font: inherit;
+        text-align: left;
+        cursor: pointer;
+        transition: background 0.15s, color 0.15s;
+    }
+
+    .tab:hover { background: rgba(30, 58, 95, 0.08); }
+
+    .tab:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+    }
+
+    .tab[aria-selected="true"] {
+        background: var(--color-accent);
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .tab-count {
+        min-width: 1.6rem;
+        padding: 0.1rem 0.5rem;
+        border-radius: 999px;
+        background: var(--color-border);
+        color: var(--color-text-muted);
+        font-size: 0.8rem;
+        text-align: center;
+    }
+
+    .tab[aria-selected="true"] .tab-count {
+        background: rgba(255, 255, 255, 0.22);
+        color: #fff;
+    }
+
+    .empty { color: var(--color-text-muted); }
+
+    .people-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+    }
+
+    .person-photo {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 0.75rem;
+    }
+
+    @media (max-width: 64rem) {
+        .people-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    /* Small screens: tabs go on top as a horizontally scrolling row */
+    @media (max-width: 48rem) {
+        .people-layout { grid-template-columns: 1fr; }
+        .tab-bar {
+            flex-direction: row;
+            position: static;
+            overflow-x: auto;
+        }
+        .tab { white-space: nowrap; }
+    }
+
+    @media (max-width: 36rem) {
+        .people-grid { grid-template-columns: 1fr; }
+    }
+</style>

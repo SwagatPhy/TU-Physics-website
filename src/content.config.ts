@@ -45,14 +45,67 @@ const research = defineCollection({
     loader: glob({ pattern: '**/*.md', base: './src/content/research'}),
     schema: z.object({
         specialization: z.string(),
-        faculty: z.string(),
+        faculties: z.array(z.object({
+            name: z.string(),
+            group: z.string(),
+            url: z.string().optional(),
+            contact: z.string().optional(),
+            email: z.string().optional(),
+        })),
         description: z.string(),
-        contact: z.string(),
-        email: z.string(),
-
+        image: z.string().optional(),
     })
 });
 
 
 
-export const collections = { courses, admissions, newsEvents, research };
+// People: one collection per section; `photo` is relative to /People-photos/
+const teaching = defineCollection({
+    loader: glob({ pattern: '**/*.md', base: './src/content/people/Teaching' }),
+    schema: z.object({
+        name: z.string(),
+        designation: z.string(),
+        email: z.string().optional(),
+        phone: z.string().optional(),
+        researchAreas: z.array(z.string()).default([]),
+        photo: z.string().optional(),
+    }),
+});
+
+const nonTeaching = defineCollection({
+    loader: glob({ pattern: '**/*.md', base: './src/content/people/Non-teaching' }),
+    schema: z.object({
+        name: z.string(),
+        designation: z.string(),
+        office: z.string().optional(),
+        email: z.string().optional(),
+        photo: z.string().optional(),
+    }),
+});
+
+const researchScholars = defineCollection({
+    loader: glob({ pattern: '**/*.md', base: './src/content/people/Research-Scholars' }),
+    schema: z.object({
+        name: z.string(),
+        supervisor: z.string(),
+        research_area: z.string().optional(),
+        email: z.string().optional(),
+        photo: z.string().optional(),
+    }),
+});
+
+const researchAssistants = defineCollection({
+    loader: glob({ pattern: '**/*.md', base: './src/content/people/Research-Assistants' }),
+    schema: z.object({
+        name: z.string(),
+        supervisor: z.string(),
+        researchArea: z.string().optional(),
+        email: z.string().optional(),
+        photo: z.string().optional(),
+    }),
+});
+
+export const collections = {
+    courses, admissions, newsEvents, research,
+    teaching, nonTeaching, researchScholars, researchAssistants,
+};

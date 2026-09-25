@@ -122,7 +122,7 @@ import Layout from '../layouts/Layout.astro';
 
 ## 📊 Content Collections (Dynamic Lists & Detail Pages)
 
-Content collections let you store structured data that powers both list pages and detail pages. There are three collections:
+Content collections let you store structured data that powers both list pages and detail pages. There are three main collections below (courses, admissions, news & events), plus the research and people collections described after them.
 
 ### 1. **Courses** (for academic courses)
 
@@ -256,6 +256,58 @@ On October 14, we'll host Dr. Jane Smith discussing recent advances in quantum e
 4. Set draft: false to make it visible
 5. Add body content (supports markdown: bold, italic, links, lists, etc.)
 6. Items appear at `/news-events` (list) and `/news-events/slug-name` (detail)
+
+**News & Events page filters:** `/news-events` has filter tabs (All, News, Upcoming Events, Past Events). Events move from Upcoming to Past by comparing `date` with the day the site was built, so rebuild to refresh. `/news-events#past` opens a tab directly.
+
+---
+
+### 4. **Research** (research areas and their faculty groups)
+
+**Location:** `src/content/research/` (one file per area, e.g. `plasma.md`)
+
+**Schema:**
+```yaml
+specialization: string     # Area name shown on the tile
+description: string        # Short description
+image: string              # (optional) e.g. "/Research-areas/plasma.jpg" (file in public/Research-areas/)
+faculties:                 # List of groups; hover on the tile shows these
+  - name: string
+    group: string
+    url: string            # (optional)
+    contact: string        # (optional)
+    email: string          # (optional)
+```
+
+Pages: `/research` (tiles) and `/research/<file-name>` (detail). Keep `[PLACEHOLDER]` markers for anything the department hasn't confirmed.
+
+---
+
+### 5. **People** (four collections, one folder each)
+
+**Location:** `src/content/people/<group>/Firstname Lastname.md` — the page is `/people`, shown as tabs (Teaching, Non-teaching, Research Scholars, Research Assistants).
+
+| Folder | Collection name | Required fields | Optional fields |
+|--------|-----------------|-----------------|-----------------|
+| `Teaching/` | `teaching` | `name`, `designation` | `email`, `phone`, `researchAreas` (list), `photo` |
+| `Non-teaching/` | `nonTeaching` | `name`, `designation` | `office`, `email`, `photo` |
+| `Research-Scholars/` | `researchScholars` | `name`, `supervisor` | `researchArea`, `email`, `photo` |
+| `Research-Assistants/` | `researchAssistants` | `name`, `supervisor` | `researchArea`, `email`, `photo` |
+
+**Example** (`src/content/people/Research-Scholars/SnighaSharma.md`):
+```markdown
+---
+name: "Snigha Sharma"
+supervisor: "Dr. Rupjyoti Gogoi"
+researchArea: "Infrared Astronomy"
+email: "name@example.com"
+photo: "snigha.jpg"
+---
+```
+
+- `photo` is just the file name; put the image in `public/People-photos/`. Leave it out (or `""`) for no photo.
+- Field names are camelCase (`researchArea`, not `research_area`). Astro silently ignores frontmatter keys the schema doesn't list, so a misspelled field simply won't appear on the page.
+- Adding a person: create the file in the right folder and restart `npm run dev` if the folder was empty.
+- All four schemas live in `src/content.config.ts` (the file with the dot). Astro ignores `src/content/config.ts`; don't create one.
 
 ---
 
@@ -579,7 +631,9 @@ Code block
 ```bash
 npm run dev
 ```
-Then open http://localhost:3000 in your browser
+Then open http://localhost:4321 in your browser
+
+If a new content file doesn't show up (especially the first file in a previously empty folder), stop the server and run `npm run dev` again.
 
 ### Build for production:
 ```bash
@@ -590,6 +644,33 @@ npm run build
 ```bash
 npm run preview
 ```
+
+---
+
+## 🏠 Editing the Home Page
+
+**File:** `src/pages/index.astro` (frontmatter loads `research` and `newsEvents`; the rest is HTML + a `<style>` block at the bottom).
+
+Sections, top to bottom:
+
+| Section | Where the content comes from |
+|---------|------------------------------|
+| Hero (`hero-gradient`): title, subtitle, buttons, photo | Typed directly in the file; photo is `public/Dept-photos/dept_pho1.jpeg` |
+| Highlights strip (`highlights`) | **Hardcoded numbers** (faculty, research areas, established year, students) |
+| Mission (`mission`) | Typed directly |
+| "Teaching and Research" (`programs`) | Typed directly; unfinished |
+| Academic Programs (`program-tile`) | Typed directly |
+| Latest News / Upcoming Events | Automatic from `src/content/news-events/` (3 newest news, 3 newest events) |
+| Admissions call-to-action | Typed directly |
+
+**Known to-do items** (check these off as you go):
+- [ ] Highlights strip: every number is unverified. Faculty and research-area counts can be computed from the collections (`teaching.length`, `research.length`) instead of typed. The "Established" year must match the hero text (which says January 1998). Student numbers stay `[PLACEHOLDER]` until the department confirms.
+- [ ] "Teaching and Resesarch" heading has a typo, and its cards are nested inside cards (a comment in the file notes the class should change).
+- [ ] Hero subtitle has a typo ("offeres").
+- [ ] `researchPreview` is computed in the frontmatter but no research-preview section is rendered; the CSS for it (`.research-preview`) already exists.
+- [ ] Mission text is placeholder copy pending department sign-off; options live in `content-notes/home.md`.
+
+Copy for the home page comes from `content-notes/home.md` (via Notes-manager TU); don't invent facts.
 
 ---
 
@@ -627,6 +708,9 @@ npm run preview
 | Update navigation menu | `src/layouts/Layout.astro` (navLinks array) |
 | Add/edit course | `src/content/courses/*.md` |
 | Add/edit news or event | `src/content/news-events/*.md` |
+| Add/edit a research area | `src/content/research/*.md` |
+| Add/edit a person | `src/content/people/<group>/*.md` (photos in `public/People-photos/`) |
+| Edit the home page | `src/pages/index.astro` |
 | Add/edit admissions program | `src/content/admissions/*.md` |
 | Change colors | `src/styles/global.css` (top section) |
 | Add new static page | `src/pages/newpage.astro` |

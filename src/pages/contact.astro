@@ -1,0 +1,155 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Icon from '../components/Icon.astro';
+
+// Copy from content-notes/contact.md. [PLACEHOLDER] values are still pending
+// from the department — replace them in place when confirmed.
+const officeContacts = [
+	{ office: '[PLACEHOLDER Head of Department]', email: '[PLACEHOLDER hod.physics@tezu.ac.in]', phone: '[PLACEHOLDER phone]' },
+	{ office: '[PLACEHOLDER Admissions Coordinator]', email: '[PLACEHOLDER admissions.physics@tezu.ac.in]', phone: '[PLACEHOLDER phone]' },
+	{ office: '[PLACEHOLDER Office Superintendent]', email: '[PLACEHOLDER office.physics@tezu.ac.in]', phone: '[PLACEHOLDER phone]' },
+];
+
+const directions = [
+	{
+		icon: 'globe',
+		title: 'By air',
+		text: 'Nearest airport is [PLACEHOLDER — Tezpur Airport (Salonibari) / Guwahati’s LGBI, whichever is standard], approximately [PLACEHOLDER distance/time] from campus.',
+	},
+	{
+		icon: 'map-pin',
+		title: 'By rail',
+		text: 'Nearest railway station is [PLACEHOLDER — Rangapara North / Tezpur], approximately [PLACEHOLDER distance/time] from campus.',
+	},
+	{
+		icon: 'book',
+		title: 'On campus',
+		text: 'The department is located in [PLACEHOLDER — building/block], [PLACEHOLDER — brief landmark].',
+	},
+] as const;
+---
+
+<Layout title="Contact" description="Contact details and directions for the Department of Physics, Tezpur University.">
+	<PageHeader title="Contact & directions" eyebrow="Get in touch" />
+
+	<section class="section">
+		<div class="container split contact-top">
+			<div>
+				<h2>Department of Physics</h2>
+				<ul class="icon-list contact-list">
+					<li>
+						<Icon name="map-pin" />
+						<address>
+							[PLACEHOLDER — Building/Block name]<br />
+							Tezpur University, Napaam, Tezpur<br />
+							[PLACEHOLDER PIN Code], Assam, India
+						</address>
+					</li>
+					<li><Icon name="phone" /> <span>[PLACEHOLDER +91-XXXX-XXXXXX]</span></li>
+					<li><Icon name="mail" /> <span>[PLACEHOLDER — physics@tezu.ac.in]</span></li>
+				</ul>
+				<p class="text-muted">
+					For matters outside the department's scope, see the
+					<a href="https://www.tezu.ernet.in" rel="noopener">Tezpur University website <Icon name="external" /></a>.
+				</p>
+			</div>
+			<div class="map">
+				<iframe
+					title="Map of Tezpur University"
+					src="https://www.google.com/maps?q=Tezpur+University,+Napaam,+Assam&output=embed"
+					loading="lazy"
+					referrerpolicy="no-referrer-when-downgrade"
+				></iframe>
+			</div>
+		</div>
+	</section>
+
+	<section class="section section--soft">
+		<div class="container">
+			<div class="section-head">
+				<div>
+					<p class="eyebrow">Offices</p>
+					<h2>Department contacts</h2>
+				</div>
+			</div>
+			<ul class="grid">
+				{officeContacts.map((contact) => (
+					<li>
+						<article class="card">
+							<div class="card__body">
+								<h3 class="card__title">{contact.office}</h3>
+								<ul class="icon-list">
+									<li><Icon name="mail" /> {contact.email}</li>
+									<li><Icon name="phone" /> {contact.phone}</li>
+								</ul>
+							</div>
+						</article>
+					</li>
+				))}
+			</ul>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="container">
+			<div class="section-head">
+				<div>
+					<p class="eyebrow">Visiting</p>
+					<h2>How to reach us</h2>
+				</div>
+			</div>
+			<ul class="grid">
+				{directions.map((item) => (
+					<li class="direction">
+						<span class="direction__icon"><Icon name={item.icon} /></span>
+						<h3>{item.title}</h3>
+						<p>{item.text}</p>
+					</li>
+				))}
+			</ul>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.contact-top {
+		align-items: start;
+	}
+
+	.contact-list {
+		margin-block: var(--space-md) var(--space-lg);
+		font-size: 1.1rem;
+	}
+
+	.contact-list address {
+		font-style: normal;
+	}
+
+	.map {
+		border-radius: var(--radius);
+		overflow: hidden;
+		border: 1px solid var(--color-border);
+		background: var(--color-bg-soft);
+		aspect-ratio: 4 / 3;
+	}
+
+	.map iframe {
+		width: 100%;
+		height: 100%;
+		border: 0;
+		display: block;
+	}
+
+	.direction__icon {
+		display: grid;
+		place-items: center;
+		width: 3rem;
+		height: 3rem;
+		margin-bottom: var(--space-sm);
+		border-radius: 50%;
+		background: var(--color-bg-soft);
+		color: var(--navy);
+		font-size: 1.2rem;
+	}
+</style>

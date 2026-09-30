@@ -201,7 +201,8 @@ hr {
 	color: var(--color-on-dark);
 }
 
-.section + .section:not(.section--soft):not(.section--navy) {
+/* Two plain white sections in a row share one gap instead of two */
+.section:not(.section--soft):not(.section--navy) + .section:not(.section--soft):not(.section--navy) {
 	padding-top: 0;
 }
 

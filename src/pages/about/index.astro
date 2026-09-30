@@ -1,60 +1,228 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Icon from '../../components/Icon.astro';
+
+const teaching = await getCollection('teaching');
+const scholars = await getCollection('researchScholars');
+const research = await getCollection('research');
+
+const stats = [
+	{ value: '1998', label: 'Commenced in January' },
+	{ value: teaching.length, label: 'Faculty members' },
+	{ value: scholars.length, label: 'Research scholars' },
+	{ value: research.length, label: 'Research areas' },
+];
+
+const specializations = [
+	'Condensed Matter Physics',
+	'Nanoscience & Technology',
+	'High Energy Physics',
+	'Electronics',
+	'Photonics',
+	'Plasma Physics',
+	'Astrophysics',
+];
+
+const thrustAreas = [
+	'Nanomaterials',
+	'Solid State Ionics',
+	'Theoretical High Energy Physics',
+	'Plasma Physics',
+	'Optoelectronics',
+	'Microwaves',
+	'Astronomy and Astrophysics',
+	'Soft Matter Physics',
+	'Material Science',
+	'Nonlinear Dynamics',
+];
+
+const objectives = [
+	'To produce quality students ready for teaching and research.',
+	'To develop and push forward other frontier areas of current research which includes Nanoscience, Astrophysics, High Energy Physics, Plasma Physics, Photonics and Microwave technology.',
+	'To develop the essential infrastructure for high standards of research in the thrust area of Material Science.',
+	'To be a department of “Excellence” and be included in the top 10 physics departments of the country.',
+];
 ---
 
+<Layout title="About" description="About the Department of Physics, Tezpur University: history, vision, mission and objectives.">
+	<PageHeader
+		title="About the department"
+		eyebrow="Since 1998"
+		lead="The Department of Physics has stridden out not only in its post-graduation teaching but also in new frontiers of research since its commencement in January 1998."
+	/>
 
-<Layout title='About Us' description='About the Department of Physics'>
-    <header class='detail-header'>
-        <div class='container'>
-           <h1>About us</h1>
-            <p>Department of Physics has stridden out not only in its
-                post-graduation teaching but also in new frontiers of
-                research since its commencement in January 1998. The department
-                offeres two-year M.Sc. course in Physics along side Integrated
-                M.Sc. and Integrated B.Sc. B.Ed course. It offeres dual specialization
-                for post-graduation which may be selected from Condensed Matter
-                Physics, Nanoscience & Technology, High Energy Physics, Electronics, Photonics,
-                Plasma physics and Astrophysics. The Department inculcates the spirits
-                of research and can boast of some good research work carried out here,
-                the thrust areas being Nanomaterials, Solid State Ionics, Theoretical
-                High Energy Physics, Plasma Physics, Optoelectronics, Microwaves,
-                Astronomy and Astrophysics, Soft matter physics, Material science
-                and Nonlinear dynamics.</p>
-        </div>
-    </header>
+	<section class="section">
+		<div class="container split split--wide-start about-overview">
+			<div class="prose">
+				<p>
+					The department offers a two-year M.Sc. course in Physics alongside Integrated M.Sc. and Integrated
+					B.Sc. B.Ed. courses. It offers dual specialization for post-graduation, which may be selected from
+					the areas listed here.
+				</p>
+				<ul class="chip-list">
+					{specializations.map((item) => <li class="chip">{item}</li>)}
+				</ul>
+				<p class="mt-lg">
+					The department inculcates the spirit of research and can boast of some good research work carried
+					out here, the thrust areas being:
+				</p>
+				<ul class="chip-list">
+					{thrustAreas.map((item) => <li class="chip">{item}</li>)}
+				</ul>
+			</div>
+			<ul class="stats about-stats">
+				{stats.map((stat) => (
+					<li class="stat">
+						<span class="stat__value">{stat.value}</span>
+						<span class="stat__label">{stat.label}</span>
+					</li>
+				))}
+			</ul>
+		</div>
+	</section>
 
-    <div class='container'>
-       <div class='detail-body'>
-           <h1>Mission and Vision</h1>
-                <h3>Vision</h3>
-                <p>“To become a centre of excellence in pure and applied physics”</p>
-                <p>Utilize and extend advance research facilities to support quality teaching and basic research
-                thereby helping the department to grow as a centre of excellence in Science and Technology. </p>
+	<section class="section section--soft">
+		<div class="container">
+			<div class="section-head">
+				<div>
+					<p class="eyebrow">Direction</p>
+					<h2>Vision and mission</h2>
+				</div>
+			</div>
+			<div class="grid grid--2">
+				<article class="card statement">
+					<div class="card__body">
+						<span class="card__eyebrow">Vision</span>
+						<blockquote class="statement__quote">To become a centre of excellence in pure and applied physics.</blockquote>
+						<p class="card__text justify">
+							Utilize and extend advanced research facilities to support quality teaching and basic research,
+							thereby helping the department to grow as a centre of excellence in Science and Technology.
+						</p>
+					</div>
+				</article>
+				<article class="card statement">
+					<div class="card__body">
+						<span class="card__eyebrow">Mission</span>
+						<p class="statement__quote">
+							To excel in quality teaching and research by attracting the best of minds and keep pace with
+							contemporary research in terms of infrastructure and facilities.
+						</p>
+					</div>
+				</article>
+			</div>
+		</div>
+	</section>
 
-                <h3>Mission</h3>
-                <p>To excel in quality teaching and research by attracting the best of minds and keep pace with contemporary research in terms of infrastructure and facilities.</p>
+	<section class="section">
+		<div class="container split split--wide-start">
+			<div>
+				<p class="eyebrow">Objectives</p>
+				<h2>What the department works towards</h2>
+				<ul class="checklist prose">
+					{objectives.map((item) => <li>{item}</li>)}
+				</ul>
+			</div>
+			<aside class="aside-card">
+				<h2>Documents</h2>
+				<a class="doc-link" href="/Resources-files/program_objectives.pdf">
+					<Icon name="file" />
+					<span>
+						<strong>Program objectives</strong>
+						<span class="text-muted">PDF</span>
+					</span>
+					<Icon name="download" />
+				</a>
+			</aside>
+		</div>
+	</section>
 
-                <h3>Objectives</h3>
-                <ul>
-                    <li>To produce quality students ready for teaching and research.</li>
-                    <li>To develop and push forward other frontier areas of current research which includes Nanoscience, Astrophysics, High Energy Physics, Plasma physics, Photonics and Microwave technology.</li>
-                    <li>To develop the essential infrastructure for high standards of research in the thrust area of Material Science.</li>
-                    <li>To be a department of “Excellence” and be included in the top 10 physics departments of the country.</li>
-                </ul>
-       </div>
-    </div>
+	<section class="section section--navy section--tight">
+		<div class="container next-links">
+			<a href="/people"><span class="eyebrow">Next</span> Meet the people <Icon name="arrow-right" /></a>
+			<a href="/research"><span class="eyebrow">Next</span> Explore research <Icon name="arrow-right" /></a>
+			<a href="/facilities"><span class="eyebrow">Next</span> See the facilities <Icon name="arrow-right" /></a>
+		</div>
+	</section>
 </Layout>
 
 <style>
-    .detail-header p,
-    .detail-body p,
-    .detail-body li {
-        text-align: justify;
-        hyphens: auto;
-        color: var(--color-text-muted);
-    }
+	.about-overview {
+		align-items: start;
+	}
 
-    .detail-body li {
-        margin-bottom: 0.4rem;
-    }
+	.about-stats {
+		grid-template-columns: repeat(2, 1fr);
+		gap: var(--space-lg) var(--space-md);
+		padding: var(--space-lg);
+		border-radius: var(--radius);
+		background: var(--color-bg-soft);
+	}
+
+	.statement__quote {
+		margin: 0.25rem 0 0.75rem;
+		font-family: var(--font-serif);
+		font-size: 1.4rem;
+		line-height: 1.4;
+		color: var(--navy);
+	}
+
+	.doc-link {
+		display: flex;
+		align-items: center;
+		gap: 0.9rem;
+		padding: 0.9rem 1rem;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		text-decoration: none;
+		transition: border-color 0.2s var(--ease), background-color 0.2s var(--ease);
+	}
+
+	.doc-link:hover {
+		border-color: var(--color-border-strong);
+		background: var(--color-bg-soft);
+	}
+
+	.doc-link > span {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		line-height: 1.3;
+	}
+
+	.doc-link .text-muted {
+		font-size: 0.85rem;
+	}
+
+	.next-links {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+		gap: var(--space-md);
+	}
+
+	.next-links a {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.25rem 0.5rem;
+		padding: var(--space-md);
+		border: 1px solid rgba(199, 220, 229, 0.25);
+		border-radius: var(--radius);
+		color: var(--color-on-dark);
+		font-family: var(--font-serif);
+		font-size: 1.25rem;
+		text-decoration: none;
+		transition: border-color 0.2s var(--ease), background-color 0.2s var(--ease);
+	}
+
+	.next-links a:hover {
+		border-color: var(--mint);
+		background: rgba(255, 255, 255, 0.04);
+	}
+
+	.next-links .eyebrow {
+		flex-basis: 100%;
+		margin: 0;
+	}
 </style>

@@ -1,0 +1,94 @@
+---
+import fs from 'node:fs';
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import PhotoGallery from '../components/PhotoGallery.astro';
+import Icon from '../components/Icon.astro';
+
+// Every image in public/Facilities-photos/Facilities/ is shown in the gallery,
+// so adding a photo there is enough to publish it. Captions are pending from
+// the department (see content-notes/facilities.md).
+const labPhotoDir = 'public/Facilities-photos/Facilities';
+const labPhotos = fs
+	.readdirSync(labPhotoDir)
+	.filter((file) => /\.(jpe?g|png|webp)$/i.test(file))
+	.sort()
+	.map((file, i) => ({
+		src: `/Facilities-photos/Facilities/${file}`,
+		alt: `Laboratory equipment, photo ${i + 1}`,
+	}));
+
+const observatoryPhotos = [
+	{
+		src: '/Facilities-photos/Resources/web/Dome.jpg',
+		alt: 'The Tezpur University Observatory dome on a rooftop',
+		caption: 'Tezpur University Observatory',
+	},
+	{
+		src: '/Facilities-photos/Resources/web/Telescope.jpg',
+		alt: 'The observatory telescope inside the dome',
+		caption: 'The observatory telescope',
+	},
+	{
+		src: '/Facilities-photos/Resources/web/Dome_a.jpg',
+		alt: 'A group of students at the observatory telescope at night',
+		caption: 'Students at the observatory',
+	},
+];
+---
+
+<Layout title="Facilities" description="Laboratories, instruments and the observatory of the Department of Physics, Tezpur University.">
+	<PageHeader
+		title="Facilities"
+		eyebrow="Labs & observatory"
+		lead="[PLACEHOLDER — intro] The Department of Physics, Tezpur University maintains a range of teaching and research laboratories supporting its UG, PG, and PhD programs."
+	/>
+
+	<section class="section">
+		<div class="container split">
+			<div class="observatory-hero">
+				<img src={observatoryPhotos[0].src} alt={observatoryPhotos[0].alt} loading="lazy" />
+			</div>
+			<div>
+				<p class="eyebrow">Observatory</p>
+				<h2>Tezpur University Observatory</h2>
+				<p class="text-muted">[PLACEHOLDER — description of the observatory, its telescope and how it is used]</p>
+				<PhotoGallery photos={observatoryPhotos} label="Observatory photos" />
+			</div>
+		</div>
+	</section>
+
+	<section class="section section--soft">
+		<div class="container">
+			<div class="section-head">
+				<div>
+					<p class="eyebrow">Instruments</p>
+					<h2>Laboratory equipment</h2>
+					<p>{labPhotos.length} photos from the department's laboratories. Select a photo to view it larger.</p>
+				</div>
+			</div>
+			<PhotoGallery photos={labPhotos} label="Laboratory equipment photos" />
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="container container--narrow">
+			<div class="pending">
+				<Icon name="info" />
+				<p>
+					Details of the teaching laboratories, research laboratories (names, faculty in charge and major
+					equipment) and shared facilities are [PLACEHOLDER — pending from the department].
+				</p>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.observatory-hero img {
+		width: 100%;
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+		border-radius: var(--radius);
+	}
+</style>

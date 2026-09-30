@@ -1,823 +1,641 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import { formatDate } from '../lib/date';
+import { researchImage } from '../lib/images';
 
-const research = await getCollection('research');
-const newsEvents = await getCollection('newsEvents');
+// Headline numbers are counted from the content collections, so they stay
+// correct as people and research areas are added.
+const teaching = await getCollection('teaching');
+const scholars = await getCollection('researchScholars');
+const research = (await getCollection('research')).sort((a, b) =>
+	a.data.specialization.localeCompare(b.data.specialization),
+);
+const programs = (await getCollection('admissions')).sort((a, b) => a.data.order - b.data.order);
 
-const news = newsEvents
-	.filter(item => item.data.type === 'news' && !item.data.draft)
-	.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-	.slice(0, 3);
+const newsEvents = (await getCollection('newsEvents', ({ data }) => !data.draft)).sort(
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const news = newsEvents.filter((item) => item.data.type === 'news').slice(0, 3);
+const events = newsEvents.filter((item) => item.data.type === 'event').slice(0, 3);
 
-const events = newsEvents
-	.filter(item => item.data.type === 'event' && !item.data.draft)
-	.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-	.slice(0, 3);
+const stats = [
+	{ value: teaching.length, label: 'Faculty members' },
+	{ value: scholars.length, label: 'Research scholars' },
+	{ value: research.length, label: 'Research areas' },
+	{ value: programs.length, label: 'Degree programs' },
+];
 
-const researchPreview = research.slice(0, 3);
+const featuredResearch = research.filter((item) => item.data.image).slice(0, 6);
+
+// Visitor counter: set this to a URL that returns JSON like {"count": 1234}
+// to show a live count. While empty, the counter shows a dash.
+const VISITOR_COUNTER_URL = '';
 ---
 
-<!--First div is for the contents / links to about us/ the second division is for the image section (either make it slideshow)-->
-
 <Layout title="Home" description="Official website of the Department of Physics, Tezpur University.">
-	<section class="hero-gradient">
-		<div class="hero-content">
+	<!-- Hero -->
+	<section class="hero">
+		<img
+			class="hero__image"
+			src="/Dept-photos/web/dept_pho1.jpg"
+			alt="The Department of Physics building, Tezpur University"
+			fetchpriority="high"
+		/>
+		<div class="container hero__content">
+			<p class="eyebrow">Tezpur University</p>
 			<h1>Department of Physics</h1>
-			<p class="hero-tagline">Tezpur University</p>
-			<p class="hero-subtitle">
-
-                Department of Physics has stridden out not only in its post-graduation
-                teaching but also in new frontiers of research since its commencement in
-                January 1998. It offeres dual specialization for post-graduation which may be selected from Condensed Matter Physics,
-                Nanoscience & Technology, High Energy Physics, Electronics, Photonics, Plasma physics and Astrophysics.
-
+			<p class="hero__lead">
+				The Department of Physics has stridden out not only in its post-graduation teaching but also in new
+				frontiers of research since its commencement in January 1998.
 			</p>
-			<div class="hero-ctas">
-				<a href="/research" class="cta-button primary">Explore Research</a>
-				<a href="/admissions" class="cta-button primary">Admissions</a>
-                <a href="/about" class="cta-button secondary">Learn more ➡️</a>
+			<div class="btn-row">
+				<a class="btn btn--primary" href="/research">Explore research <Icon name="arrow-right" /></a>
+				<a class="btn btn--on-dark" href="/admissions">Admissions</a>
+				<a class="btn btn--on-dark" href="/about">About the department</a>
 			</div>
 		</div>
 
-        <div>
-            <img src="/Dept-photos/dept_pho1.jpeg" alt="Department-photo1" class="hero-image">
-        </div>
-
-
+		<!-- Clock and visitor counter (DESIGN.md) -->
+		<div class="container">
+			<dl class="hero__info" data-counter-url={VISITOR_COUNTER_URL}>
+				<div>
+					<dt><Icon name="clock" /> Tezpur (IST)</dt>
+					<dd><time id="clock-time">--:--</time> <span id="clock-date" class="hero__info-sub"></span></dd>
+				</div>
+				<div>
+					<dt><Icon name="eye" /> Visitors</dt>
+					<dd id="visitor-count">&mdash;</dd>
+				</div>
+			</dl>
+		</div>
 	</section>
 
-	<!-- Info bar: Current time and visitor counter -->
-	<section class="info-bar">
-		<div class="container">
-			<div class="info-items">
-				<div class="info-item" id="clock-display">
-					<span class="info-label">Current Time (IST):</span>
-					<span class="info-value">--:-- --</span>
-					<span class="info-detail">Today</span>
-				</div>
-				<div class="info-item">
-					<span class="info-label">Visitors:</span>
-					<!-- CONFIG: Replace this placeholder with your visitor counter data source -->
-					<!-- Options: Database, Analytics API, LocalStorage, CDN counter, etc. -->
-					<span class="info-value">—</span>
-				</div>
+	<!-- At a glance -->
+	<section class="section section--tight">
+		<div class="container intro">
+			<div>
+				<p class="eyebrow">At a glance</p>
+				<p class="intro__text justify">
+					The department offers a two-year M.Sc. course in Physics alongside Integrated M.Sc. and Integrated
+					B.Sc. B.Ed. courses, with dual specialization at post-graduation in Condensed Matter Physics,
+					Nanoscience &amp; Technology, High Energy Physics, Electronics, Photonics, Plasma Physics and
+					Astrophysics.
+				</p>
+				<a class="link-arrow" href="/about">More about the department <Icon name="arrow-right" /></a>
 			</div>
+			<ul class="stats">
+				{stats.map((stat) => (
+					<li class="stat">
+						<span class="stat__value">{stat.value}</span>
+						<span class="stat__label">{stat.label}</span>
+					</li>
+				))}
+			</ul>
 		</div>
 	</section>
 
-	<section class="section highlights">
+	<!-- Programs -->
+	<section class="section section--soft">
 		<div class="container">
-			<div class="highlights-grid">
-				<div class="highlight-card">
-					<div class="highlight-number">16</div>
-					<div class="highlight-label">Faculty Members</div>
+			<div class="section-head">
+				<div>
+					<p class="eyebrow">Study with us</p>
+					<h2>Programs</h2>
 				</div>
-				<div class="highlight-card">
-					<div class="highlight-number">6</div>
-					<div class="highlight-label">Research Areas</div>
-				</div>
-				<div class="highlight-card">
-					<div class="highlight-number">1980</div>
-					<div class="highlight-label">Established Since</div>
-				</div>
-				<div class="highlight-card">
-					<div class="highlight-number">500+</div>
-					<div class="highlight-label">Active Students</div>
-				</div>
+				<a class="link-arrow" href="/admissions">Admissions <Icon name="arrow-right" /></a>
 			</div>
+			<ul class="grid">
+				{programs.map((program, i) => (
+					<li>
+						<a class="card program-card" href={`/admissions/${program.id}`}>
+							<div class="card__body">
+								<span class="program-card__index">0{i + 1}</span>
+								<h3 class="card__title">{program.data.title}</h3>
+								<p class="card__text">{program.data.tagline}</p>
+								<span class="card__footer link-arrow">View program <Icon name="arrow-right" /></span>
+							</div>
+						</a>
+					</li>
+				))}
+			</ul>
 		</div>
 	</section>
 
-	<section class="section mission">
+	<!-- Research areas -->
+	<section class="section">
 		<div class="container">
-            <!--<h2> </h2>-->
-			<p class="mission-text">
-				The Department of Physics at Tezpur University is committed to excellence in both
-				undergraduate and postgraduate education and active research across theoretical and
-				experimental physics. Our faculty and scholars work across areas including condensed
-				matter physics, quantum optics, nuclear and particle physics, and materials science,
-				contributing to academic training and advancing physics research in the region.
-			</p>
+			<div class="section-head">
+				<div>
+					<p class="eyebrow">Research</p>
+					<h2>Areas of research</h2>
+				</div>
+				<a class="link-arrow" href="/research">All {research.length} research areas <Icon name="arrow-right" /></a>
+			</div>
+			<ul class="grid research-mosaic">
+				{featuredResearch.map((item) => (
+					<li>
+						<a class="research-tile" href={`/research/${item.id}`}>
+							<img src={researchImage(item.data.image!)} alt="" loading="lazy" decoding="async" />
+							<span class="research-tile__label">{item.data.specialization}</span>
+						</a>
+					</li>
+				))}
+			</ul>
 		</div>
 	</section>
 
-
-    <section class="section programs">
-        <div class="container">
-            <h2>Teaching and Resesarch</h2>
-            <div class="programs-grid">
-                <div class='program-card'>
-                    <h3>Research</h3>
-                        <div>
-                        <img src="/Dept-photos/dept_pho1.jpeg" alt="Departmental photo1">
-
-                        </div>
-                    <a href="/research" class="program-link">Learn More →</a>
-
-                </div>
-                <!--Change the class from program-card to something different, a smaller one-->
-                <div class='program-card'>
-                    <h3>Admission</h3>
-                    <div class='program-card'>
-                        <p>Undergraduate Degree</p>
-                    </div>
-                    <div class='program-card'>
-                        <p>Postgraduate Degree</p>
-                    </div>
-                    <div class='program-card'>
-                        <p>Doctoral Degree</p>
-                    </div>
-                    <a href="/admissions" class="program-link">Learn More →</a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-	<section class="section programs">
-		<div class="container">
-			<h2>Academic Programs</h2>
-			<div class="programs-grid">
-				<div class="program-tile">
-					<h3>Undergraduate</h3>
-					<p class="program-degree">B.Sc. Physics</p>
-					<p>Three-year rigorous program combining theoretical foundations with laboratory practice.</p>
-					<a href="/academics" class="program-link">Learn More →</a>
-				</div>
-				<div class="program-tile">
-					<h3>Postgraduate</h3>
-					<p class="program-degree">M.Sc. Physics</p>
-					<p>Advanced coursework in specialized research areas with thesis research component.</p>
-					<a href="/academics" class="program-link">Learn More →</a>
-				</div>
-				<div class="program-tile">
-					<h3>Doctorate</h3>
-					<p class="program-degree">Ph.D. Physics</p>
-					<p>Pursue cutting-edge research under faculty supervision across all research areas.</p>
-					<a href="/admissions" class="program-link">Learn More →</a>
+	<!-- Observatory feature -->
+	<section class="section section--navy">
+		<div class="container split">
+			<div class="feature-photos">
+				<img
+					class="feature-photos__main"
+					src="/Facilities-photos/Resources/web/Dome.jpg"
+					alt="The Tezpur University Observatory dome on a rooftop"
+					loading="lazy"
+				/>
+				<img
+					class="feature-photos__inset"
+					src="/Facilities-photos/Resources/web/Telescope.jpg"
+					alt="The observatory telescope inside the dome"
+					loading="lazy"
+				/>
+			</div>
+			<div>
+				<p class="eyebrow">Facilities</p>
+				<h2>Tezpur University Observatory</h2>
+				<p>
+					Alongside its teaching and research laboratories, the department's facilities include the Tezpur
+					University Observatory.
+				</p>
+				<div class="btn-row">
+					<a class="btn btn--primary" href="/facilities">See the facilities <Icon name="arrow-right" /></a>
 				</div>
 			</div>
 		</div>
 	</section>
 
-
-	<section class="section news-events">
+	<!-- News and events -->
+	<section class="section">
 		<div class="container">
-			<div class="news-events-grid">
-				<div class="news-column">
-					<h2>Latest News</h2>
-					<div class="news-list">
-						{news.length > 0 ? (
-							news.map(item => (
+			<div class="section-head">
+				<div>
+					<p class="eyebrow">What's happening</p>
+					<h2>News &amp; events</h2>
+				</div>
+				<a class="link-arrow" href="/news-events">All news &amp; events <Icon name="arrow-right" /></a>
+			</div>
+
+			<div class="news-layout">
+				<div>
+					<h3 class="column-title">Latest news</h3>
+					{news.length === 0 && <p class="text-muted">No news items at the moment.</p>}
+					<ul class="news-list">
+						{news.map((item) => (
+							<li>
 								<article class="news-item">
-									<div class="news-date">
-										{item.data.date.toLocaleDateString('en-US', {
-											month: 'short',
-											day: 'numeric',
-											year: 'numeric'
-										})}
-									</div>
-									<h3>{item.data.title}</h3>
+									<time class="news-item__date" datetime={item.data.date.toISOString()}>
+										{formatDate(item.data.date)}
+									</time>
+									<h4><a href={`/news-events/${item.id}`}>{item.data.title}</a></h4>
 									<p>{item.data.summary}</p>
-									<a href={`/news-events/${item.id}`} class="read-more">Read More →</a>
 								</article>
-							))
-						) : (
-							<p class="no-items">No news items at the moment.</p>
-						)}
-					</div>
+							</li>
+						))}
+					</ul>
 				</div>
 
-				<div class="events-column">
-					<h2>Upcoming Events</h2>
-					<div class="events-list">
-						{events.length > 0 ? (
-							events.map(item => (
+				<div>
+					<h3 class="column-title">Events</h3>
+					{events.length === 0 && <p class="text-muted">No events at the moment.</p>}
+					<ul class="news-list">
+						{events.map((item) => (
+							<li>
 								<article class="event-item">
-									<div class="event-date-badge">
-										<div class="event-day">{item.data.date.getDate()}</div>
-										<div class="event-month">{item.data.date.toLocaleDateString('en-US', { month: 'short' })}</div>
+									<div class="event-item__date" aria-hidden="true">
+										<span class="event-item__day">{item.data.date.getUTCDate()}</span>
+										<span class="event-item__month">
+											{item.data.date.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' })}
+										</span>
 									</div>
-									<div class="event-content">
-										<h3>{item.data.title}</h3>
-										<p class="event-location">{item.data.location || 'TU Campus'}</p>
-										<p>{item.data.summary}</p>
-										<a href={`/news-events/${item.id}`} class="read-more">Details →</a>
+									<div>
+										<h4><a href={`/news-events/${item.id}`}>{item.data.title}</a></h4>
+										<p class="event-item__meta">
+											<span class="visually-hidden">{formatDate(item.data.date)} · </span>
+											{item.data.location}
+										</p>
 									</div>
 								</article>
-							))
-						) : (
-							<p class="no-items">No upcoming events at the moment.</p>
-						)}
-					</div>
+							</li>
+						))}
+					</ul>
 				</div>
 			</div>
 		</div>
 	</section>
 
-	<section class="section admissions-cta">
+	<!-- Admissions call to action -->
+	<section class="section section--tight">
 		<div class="container">
-			<div class="cta-card">
-				<h2>Ready to Join Us?</h2>
-				<p>Explore our admissions process and start your physics journey with us.</p>
-				<a href="/admissions" class="cta-button primary">View Admissions</a>
+			<div class="cta-band">
+				<div>
+					<h2>Ready to join us?</h2>
+					<p>Explore our admissions process and start your physics journey with us.</p>
+				</div>
+				<div class="btn-row">
+					<a class="btn btn--primary" href="/admissions">View admissions <Icon name="arrow-right" /></a>
+					<a class="btn btn--on-dark" href="/contact">Contact the department</a>
+				</div>
 			</div>
 		</div>
 	</section>
 </Layout>
 
+<script>
+	// Live clock in India Standard Time.
+	const timeEl = document.getElementById('clock-time');
+	const dateEl = document.getElementById('clock-date');
+	const timeFormat = new Intl.DateTimeFormat('en-IN', {
+		hour: 'numeric',
+		minute: '2-digit',
+		second: '2-digit',
+		hour12: true,
+		timeZone: 'Asia/Kolkata',
+	});
+	const dateFormat = new Intl.DateTimeFormat('en-IN', {
+		weekday: 'short',
+		day: 'numeric',
+		month: 'short',
+		timeZone: 'Asia/Kolkata',
+	});
 
-
-<!--.hero-gradient {
-		background: linear-gradient(135deg, #1e3a5f 0%, #2d5a8c 50%, #3a6fa3 100%);
-		color: white;
-		padding-block: 6rem 4rem;
-		position: relative;
-		overflow: hidden;
-}
-
-	.hero-content {
-		position: relative;
-		z-index: 1;
-		max-width: 52rem;
+	function updateClock() {
+		const now = new Date();
+		if (timeEl) timeEl.textContent = timeFormat.format(now);
+		if (dateEl) dateEl.textContent = dateFormat.format(now);
 	}
 
-    .hero-image {
-        padding-block: 6rem 4rem;
-        position: right;
-    }
+	updateClock();
+	setInterval(updateClock, 1000);
 
-	.hero-ctas {
-		display: flex;
-		gap: 3rem;
-        padding: 4rem 4rem;
-		flex-wrap: wrap;
-        align-items: flex-start;
+	// Visitor counter: only runs once a counter URL is configured in index.astro.
+	const counterUrl = document.querySelector<HTMLElement>('.hero__info')?.dataset.counterUrl;
+	const countEl = document.getElementById('visitor-count');
+	if (counterUrl && countEl) {
+		fetch(counterUrl)
+			.then((response) => response.json())
+			.then((data) => {
+				if (typeof data.count === 'number') countEl.textContent = data.count.toLocaleString('en-IN');
+			})
+			.catch(() => {
+				/* leave the dash in place */
+			});
 	}
-
-
-    .cta-button {
-      /* existing styles... */
-      display: inline-block;
-      padding: 0.85rem 2rem;
-      border-radius: 0.375rem;
-      font-weight: 500;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      cursor: pointer;
-      border: none;
-      font-size: 0.95rem;
-      flex: 0 0 auto;  /* Prevent buttons from stretching */
-    }
-
--->
+</script>
 
 <style>
-
-
-	.hero-gradient::before {
-		content: '';
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background:
-			radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
-			radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
-		pointer-events: none;
-	}
-
-    .hero-gradient {
-        display: flex;
-        align-items: center;
-        gap: 6rem;
-        padding-block: 4rem;
-        padding: 2rem 3rem;
-        background: linear-gradient(125deg, var(--color-accent) 0%, var(--color-text-muted) 50%, var(--color-border) 100%);
-        color: white;
-
-
-    }
-
-    .hero-content {
-        flex: 0 0 35%;
-        max-width: 52rem;
-    }
-
-    .hero-image {
-        flex: 0 0 65%;
-        width: 98%;
-        min-height: 400px;
-        border-radius: 2.5rem;
-        object-fit: cover;
-    }
-
-    @media (max-width: 48rem) {
-        .hero-gradient {
-            flex-direction: column;
-            padding-block: 2rem;
-        }
-        .hero-image {
-            width: 90%;
-            height: auto;
-            max-height: 300px;
-            margin: 2rem 2rem;
-        }
-    }
-
-	.hero-gradient h1 {
-		font-size: clamp(2.5rem, 5vw, 3.5rem);
-		margin-bottom: 0.5rem;
-		color: white;
-	}
-
-    .hero-ctas {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        gap: 2.5rem;
-        flex-wrap: wrap;
-        margin-left: 2rem;
-        margin-right: 2rem;
-
-    }
-
-
-	.hero-tagline {
-		font-size: 1.25rem;
-		font-weight: 500;
-		color: rgba(255, 255, 255, 0.9);
-		margin-bottom: 1rem;
-        text-align: center;
-
-	}
-
-	.hero-subtitle {
-		font-size: 1.1rem;
-		line-height: 1.7;
-		color: rgba(255, 255, 255, 0.85);
-		margin-bottom: 2rem;
-        text-align: center;
-	}
-
-
-    .cta-button {
-        padding: 0.85rem 2rem;
-        width: 230px;
-
-        font-size: 16px;
-        font-weight: bold;
-        letter-spacing: .75px;
-        text-align: center;
-
-
-    }
-
-
-
-	.cta-button.primary {
-		background: white;
-		color: var(--color-accent);
-	}
-
-	.cta-button.primary:hover {
-		background: rgba(255, 255, 255, 0.9);
-		transform: translateY(-2px);
-		box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-	}
-
-	.cta-button.secondary {
-		background: rgba(255, 255, 255, 0.15);
-		color: white;
-		border: 1px solid rgba(255, 255, 255, 0.3);
-	}
-
-	.cta-button.secondary:hover {
-		background: rgba(255, 255, 255, 0.25);
-		border-color: rgba(255, 255, 255, 0.5);
-	}
-
-	.cta-button.tertiary {
-		background: rgba(255, 255, 255, 0.15);
-		color: white;
-		border: 1px solid rgba(255, 255, 255, 0.3);
-	}
-
-	.cta-button.tertiary:hover {
-		background: rgba(255, 255, 255, 0.25);
-		border-color: rgba(255, 255, 255, 0.5);
-	}
-
-
-
-	.highlights {
-		background: var(--color-surface);
-	}
-
-	.highlights-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-		gap: 2rem;
-	}
-
-	.highlight-card {
-		text-align: center;
-		padding: 2rem 1.5rem;
-	}
-
-	.highlight-number {
-		font-size: 2.5rem;
-		font-weight: 700;
-		color: var(--color-accent);
-		line-height: 1;
-		margin-bottom: 0.5rem;
-	}
-
-	.highlight-label {
-		color: var(--color-text-muted);
-		font-size: 0.95rem;
-	}
-
-	.mission {
-		background: white;
-	}
-
-	.mission h2 {
-		margin-bottom: 1.5rem;
-	}
-
-	.mission-text {
-		font-size: 1.05rem;
-		line-height: 1.8;
-		max-width: 48rem;
-		color: var(--color-text);
-	}
-
-	.programs {
-		background: var(--color-surface);
-	}
-
-	.programs h2 {
-		margin-bottom: 2rem;
-	}
-
-	.programs-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-		gap: 1.5rem;
-	}
-
-	.program-card {
-		background: white;
-		padding: 2rem;
-		border-radius: 0.5rem;
-		border: 1px solid var(--color-border);
-		transition: all 0.2s ease;
-	}
-
-	.program-card:hover {
-		border-color: var(--color-accent);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-	}
-
-	.program-card h3 {
-		margin-top: 0;
-	}
-
-	.program-tile {
-		background: white;
-		padding: 1.25rem;
-		border-radius: 0.375rem;
-		border: 1px solid var(--color-border);
-		transition: all 0.2s ease;
+	/* Hero ------------------------------------------------------------------ */
+	.hero {
+		position: relative;
+		isolation: isolate;
 		display: flex;
 		flex-direction: column;
+		justify-content: flex-end;
+		min-height: min(88vh, 52rem);
+		padding-top: var(--space-xl);
+		color: var(--color-on-dark);
+		background: var(--navy);
+		overflow: hidden;
 	}
 
-	.program-tile:hover {
-		border-color: var(--color-accent);
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-		transform: translateY(-2px);
+	.hero__image {
+		position: absolute;
+		inset: 0;
+		z-index: -2;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: 50% 40%;
 	}
 
-	.program-tile h3 {
-		margin: 0 0 0.5rem 0;
-		font-size: 1rem;
+	.hero::before {
+		/* navy wash so white text stays readable over the photo */
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background:
+			linear-gradient(90deg, rgba(0, 37, 78, 0.9) 0%, rgba(0, 37, 78, 0.6) 45%, rgba(0, 37, 78, 0.05) 100%),
+			linear-gradient(0deg, rgba(0, 37, 78, 0.7) 0%, transparent 35%);
 	}
 
-	.program-tile p {
-		font-size: 0.9rem;
-		margin: 0.35rem 0;
+	.hero__content {
+		padding-bottom: var(--space-lg);
 	}
 
-	.program-degree {
-		color: var(--color-accent);
+	.hero .eyebrow {
+		color: var(--ice);
+	}
+
+	.hero h1 {
+		color: var(--color-on-dark);
+		font-size: clamp(2.6rem, 1.8rem + 4vw, 4.75rem);
+		max-width: 12ch;
+		margin-bottom: var(--space-md);
+	}
+
+	.hero__lead {
+		max-width: 36rem;
+		font-size: clamp(1.05rem, 1rem + 0.35vw, 1.25rem);
+		color: rgba(255, 255, 255, 0.9);
+		text-align: justify;
+		hyphens: auto;
+		margin-bottom: var(--space-lg);
+	}
+
+	.hero__info {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-sm) var(--space-lg);
+		margin: 0 0 var(--space-md);
+		padding: var(--space-sm) var(--space-md);
+		width: fit-content;
+		max-width: 100%;
+		border: 1px solid rgba(199, 220, 229, 0.25);
+		border-radius: var(--radius);
+		background: rgba(0, 37, 78, 0.55);
+		backdrop-filter: blur(6px);
+		-webkit-backdrop-filter: blur(6px);
+	}
+
+	.hero__info dt {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		font-size: 0.75rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--ice);
+	}
+
+	.hero__info dd {
+		margin: 0.1rem 0 0;
+		font-variant-numeric: tabular-nums;
+		font-size: 1.1rem;
 		font-weight: 600;
-		font-size: 0.85rem;
-		margin-bottom: 0.35rem;
+		color: var(--color-on-dark);
 	}
 
-	.program-card p {
-		font-size: 0.95rem;
-	}
-
-	.program-link {
-		color: var(--color-accent);
-		text-decoration: none;
-		font-weight: 500;
+	.hero__info-sub {
+		margin-left: 0.4rem;
 		font-size: 0.9rem;
-		display: inline-block;
-		margin-top: 1rem;
+		font-weight: 400;
+		color: var(--ice);
 	}
 
-	.program-link:hover {
-		text-decoration: underline;
-	}
-
-	.research-preview {
-		background: white;
-	}
-
-	.research-preview h2 {
-		margin-bottom: 0.5rem;
-	}
-
-	.section-subtitle {
-		color: var(--color-text-muted);
-		margin-bottom: 2rem;
-		font-size: 1rem;
-	}
-
-	.research-preview .card {
-		cursor: pointer;
-	}
-
-	.research-preview .card:hover {
-		border-color: var(--color-accent);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-	}
-
-	.view-all {
-		text-align: center;
-		margin-top: 2rem;
-	}
-
-	.view-all-link {
-		color: var(--color-accent);
-		text-decoration: none;
-		font-weight: 500;
-	}
-
-	.view-all-link:hover {
-		text-decoration: underline;
-	}
-
-	.news-events {
-		background: var(--color-surface);
-	}
-
-	.news-events-grid {
+	/* At a glance ------------------------------------------------------------ */
+	.intro {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 3rem;
+		gap: var(--space-lg);
+		align-items: center;
 	}
 
-	@media (max-width: 48rem) {
-		.news-events-grid {
-			grid-template-columns: 1fr;
-			gap: 2rem;
+	.intro__text {
+		font-family: var(--font-serif);
+		font-size: clamp(1.2rem, 1.05rem + 0.5vw, 1.45rem);
+		line-height: 1.55;
+		color: var(--navy);
+	}
+
+	.intro .stats {
+		grid-template-columns: repeat(2, 1fr);
+		gap: var(--space-lg) var(--space-md);
+	}
+
+	@media (min-width: 60rem) {
+		.intro {
+			grid-template-columns: 1.2fr 1fr;
+			gap: var(--space-xl);
 		}
 	}
 
-	.news-column h2,
-	.events-column h2 {
-		margin-bottom: 1.5rem;
+	/* Programs --------------------------------------------------------------- */
+	.program-card__index {
+		font-family: var(--font-serif);
+		font-size: 0.95rem;
+		color: var(--slate);
+		padding-bottom: 0.5rem;
+		margin-bottom: 0.25rem;
+		border-bottom: 2px solid var(--mint);
+		width: fit-content;
 	}
 
-	.news-list,
-	.events-list {
-		display: flex;
-		flex-direction: column;
-		gap: 1.5rem;
+	/* Research mosaic -------------------------------------------------------- */
+	.research-mosaic {
+		grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
 	}
 
-	.news-item {
-		padding-bottom: 1.5rem;
+	.research-tile {
+		position: relative;
+		display: block;
+		aspect-ratio: 4 / 3;
+		border-radius: var(--radius);
+		overflow: hidden;
+		background: var(--navy);
+		text-decoration: none;
+	}
+
+	.research-tile img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.6s var(--ease);
+	}
+
+	.research-tile::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(0deg, rgba(0, 37, 78, 0.9) 0%, rgba(0, 37, 78, 0.1) 60%);
+		transition: background-color 0.3s var(--ease);
+	}
+
+	.research-tile:hover img {
+		transform: scale(1.05);
+	}
+
+	.research-tile__label {
+		position: absolute;
+		left: var(--space-md);
+		right: var(--space-md);
+		bottom: var(--space-md);
+		z-index: 1;
+		font-family: var(--font-serif);
+		font-size: 1.25rem;
+		font-weight: 600;
+		line-height: 1.25;
+		color: var(--color-on-dark);
+	}
+
+	.research-tile__label::after {
+		content: '';
+		display: block;
+		width: 2rem;
+		height: 2px;
+		margin-top: 0.6rem;
+		background: var(--mint);
+		transition: width 0.3s var(--ease);
+	}
+
+	.research-tile:hover .research-tile__label::after {
+		width: 4rem;
+	}
+
+	/* Observatory feature ------------------------------------------------------ */
+	.feature-photos {
+		position: relative;
+		padding: 0 12% 12% 0;
+	}
+
+	.feature-photos__main {
+		width: 100%;
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+		border-radius: var(--radius);
+	}
+
+	.feature-photos__inset {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		width: 42%;
+		aspect-ratio: 1;
+		object-fit: cover;
+		border-radius: var(--radius);
+		border: 4px solid var(--navy);
+	}
+
+	/* News & events ---------------------------------------------------------- */
+	.news-layout {
+		display: grid;
+		gap: var(--space-lg);
+	}
+
+	@media (min-width: 56rem) {
+		.news-layout {
+			grid-template-columns: 1.3fr 1fr;
+			gap: var(--space-xl);
+		}
+	}
+
+	.column-title {
+		font-family: var(--font-sans);
+		font-size: 0.8rem;
+		font-weight: 600;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--color-text-muted);
+		padding-bottom: var(--space-sm);
 		border-bottom: 1px solid var(--color-border);
 	}
 
-	.news-item:last-child {
-		border-bottom: none;
-		padding-bottom: 0;
+	.news-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
 	}
 
-	.news-date {
-		font-size: 0.8rem;
-		color: var(--color-accent);
-		font-weight: 600;
-		text-transform: uppercase;
-		letter-spacing: 0.03em;
-		margin-bottom: 0.5rem;
+	.news-list li {
+		padding-block: var(--space-md);
+		border-bottom: 1px solid var(--color-border);
 	}
 
-	.news-item h3 {
-		margin: 0.5rem 0;
-		font-size: 1.1rem;
+	.news-list h4 {
+		font-size: 1.2rem;
+		margin: 0.25rem 0 0.4rem;
+	}
+
+	.news-list h4 a {
+		text-decoration: none;
+	}
+
+	.news-list h4 a:hover {
+		text-decoration: underline;
 	}
 
 	.news-item p {
-		font-size: 0.95rem;
-		margin-bottom: 0.75rem;
+		margin: 0;
+	}
+
+	.news-item__date {
+		font-size: 0.88rem;
+		color: var(--color-text-muted);
 	}
 
 	.event-item {
 		display: flex;
-		gap: 1.25rem;
-		padding-bottom: 1.5rem;
-		border-bottom: 1px solid var(--color-border);
+		gap: var(--space-md);
+		align-items: flex-start;
 	}
 
-	.event-item:last-child {
-		border-bottom: none;
-		padding-bottom: 0;
-	}
-
-	.event-date-badge {
-		background: white;
-		border: 2px solid var(--color-accent);
-		border-radius: 0.375rem;
-		padding: 0.5rem 0.75rem;
-		text-align: center;
-		min-width: 4rem;
+	.event-item__date {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		width: 4rem;
+		height: 4rem;
 		flex-shrink: 0;
+		border-radius: var(--radius-sm);
+		background: var(--color-bg-soft);
+		border: 1px solid var(--color-border);
 	}
 
-	.event-day {
-		font-size: 1.3rem;
-		font-weight: 700;
-		color: var(--color-accent);
+	.event-item__day {
+		font-family: var(--font-serif);
+		font-size: 1.5rem;
+		font-weight: 600;
 		line-height: 1;
+		color: var(--navy);
 	}
 
-	.event-month {
+	.event-item__month {
 		font-size: 0.75rem;
-		color: var(--color-text-muted);
 		font-weight: 600;
+		letter-spacing: 0.08em;
 		text-transform: uppercase;
-		margin-top: 0.25rem;
+		color: var(--slate);
 	}
 
-	.event-content h3 {
-		margin: 0 0 0.35rem;
-		font-size: 1rem;
-	}
-
-	.event-location {
-		font-size: 0.85rem;
+	.event-item__meta {
+		margin: 0;
+		font-size: 0.92rem;
 		color: var(--color-text-muted);
-		margin: 0 0 0.5rem;
 	}
 
-	.event-content p {
-		font-size: 0.9rem;
-		margin-bottom: 0.75rem;
-	}
-
-	.read-more {
-		color: var(--color-accent);
-		text-decoration: none;
-		font-size: 0.9rem;
-		font-weight: 500;
-	}
-
-	.read-more:hover {
-		text-decoration: underline;
-	}
-
-	.no-items {
-		color: var(--color-text-muted);
-		font-style: italic;
-	}
-
-	.admissions-cta {
-		background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-text-muted) 100%);
-		color: white;
-	}
-
-	.cta-card {
-		text-align: center;
-		padding: 3rem 2rem;
-	}
-
-	.cta-card h2 {
-		color: white;
-		margin-bottom: 1rem;
-	}
-
-	.cta-card p {
-		color: rgba(255, 255, 255, 0.85);
-		margin-bottom: 2rem;
-		font-size: 1.05rem;
-	}
-
-	/* Info bar: Clock and visitor counter */
-	.info-bar {
-		background: var(--color-accent);
-		border-bottom: 1px solid var(--color-accent-secondary);
-		padding-block: var(--space-sm) var(--space-md);
-	}
-
-	.info-bar .container {
+	/* Call to action --------------------------------------------------------- */
+	.cta-band {
 		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-
-	.info-items {
-		display: flex;
-		gap: 2rem;
 		flex-wrap: wrap;
-		justify-content: center;
-	}
-
-	.info-item {
-		display: flex;
 		align-items: center;
-		gap: 0.75rem;
-		font-size: 0.9rem;
-		color: rgba(255, 255, 255, 0.85);
+		justify-content: space-between;
+		gap: var(--space-md);
+		padding: clamp(2rem, 1.5rem + 3vw, 4rem);
+		border-radius: calc(var(--radius) * 1.5);
+		color: var(--color-on-dark-muted);
+		background:
+			radial-gradient(circle at 100% 0%, rgba(123, 217, 176, 0.22), transparent 45%),
+			linear-gradient(135deg, var(--navy) 0%, #12406f 100%);
 	}
 
-	.info-label {
-		font-weight: 500;
-		color: rgba(255, 255, 255, 0.75);
+	.cta-band h2 {
+		color: var(--color-on-dark);
 	}
 
-	.info-value {
-		font-family: 'Courier New', monospace;
-		font-weight: 600;
-		color: var(--color-accent-secondary);
-		min-width: 6rem;
-	}
-
-	.info-detail {
-		font-size: 0.8rem;
-		color: rgba(255, 255, 255, 0.6);
-	}
-
-	@media (max-width: 48rem) {
-		.info-items {
-			gap: 1.5rem;
-			font-size: 0.85rem;
-		}
-
-		.info-value {
-			min-width: auto;
-		}
+	.cta-band p {
+		margin: 0;
+		max-width: 34rem;
 	}
 </style>
-
-<script>
-	// Update clock with current IST time
-	function updateClock() {
-		const clockDisplay = document.getElementById('clock-display');
-		if (!clockDisplay) return;
-
-		// Get current time in IST (UTC+5:30)
-		const now = new Date();
-		const istTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
-
-		// Format time as 12-hour with AM/PM
-		const hours = String(istTime.getHours()).padStart(2, '0');
-		const minutes = String(istTime.getMinutes()).padStart(2, '0');
-		const ampm = istTime.getHours() >= 12 ? 'PM' : 'AM';
-		const timeString = `${hours}:${minutes} ${ampm}`;
-
-		// Format date
-		const dateString = istTime.toLocaleDateString('en-US', {
-			weekday: 'short',
-			month: 'short',
-			day: 'numeric'
-		});
-
-		// Update display
-		const timeValue = clockDisplay.querySelector('.info-value');
-		const dateDetail = clockDisplay.querySelector('.info-detail');
-		if (timeValue) timeValue.textContent = timeString;
-		if (dateDetail) dateDetail.textContent = dateString;
-	}
-
-	// Initialize clock immediately
-	updateClock();
-
-	// Update clock every second
-	setInterval(updateClock, 1000);
-</script>

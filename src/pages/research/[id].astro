@@ -24,6 +24,14 @@ const facultyList = faculties.map(f => ({
     group: f.group,
     data: teachingMap.get(f.id),
 })).filter(f => !f.id.includes('[PLACEHOLDER'));
+
+// Format faculty title (Prof./Dr. based on designation)
+const getFacultyTitle = (designation) => {
+    if (!designation) return '';
+    if (designation.includes('Professor')) return 'Prof.';
+    if (designation.includes('Dr.') || designation.toLowerCase().includes('doctor')) return 'Dr.';
+    return '';
+};
 ---
 
 <Layout title={specialization} description={description}>
@@ -35,25 +43,25 @@ const facultyList = faculties.map(f => ({
     <section class="detail-body">
         {facultyList.length > 0 && (
             <div class="faculty-section">
-                <h2>Faculty</h2>
-                <div class="faculty-list">
+                <h2>Faculty & Research Groups</h2>
+                <div class="faculty-grid">
                     {facultyList.map(f => (
-                        <div class="faculty-card">
+                        <article class="faculty-tile">
                             {f.data ? (
-                                <>
-                                    <h3>
-                                        <a href={`/people/${f.id}`}>{f.data.name}</a>
+                                <a href={`/people/${f.id}`} class="faculty-link">
+                                    <h3 class="faculty-name">
+                                        {getFacultyTitle(f.data.designation)} {f.data.name}
                                     </h3>
-                                    {f.group && <p class="group-name">{f.group}</p>}
-                                    <p class="designation">{f.data.designation}</p>
+                                    {f.group && <p class="faculty-group">{f.group}</p>}
+                                    <p class="faculty-designation">{f.data.designation}</p>
                                     {f.data.email && (
-                                        <p><a href={`mailto:${f.data.email}`}>{f.data.email}</a></p>
+                                        <p class="faculty-email">{f.data.email}</p>
                                     )}
-                                </>
+                                </a>
                             ) : (
                                 <p class="placeholder">{f.id}</p>
                             )}
-                        </div>
+                        </article>
                     ))}
                 </div>
             </div>
@@ -66,3 +74,112 @@ const facultyList = faculties.map(f => ({
         <a href="/research" class="back-link">← Back to Research</a>
     </section>
 </Layout>
+
+<style>
+    .detail-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .detail-header h1 {
+        margin: 0 0 0.5rem 0;
+        font-size: 2rem;
+    }
+
+    .detail-header p {
+        margin: 0;
+        font-size: 1.1rem;
+        color: var(--color-text-muted);
+    }
+
+    .detail-body {
+        max-width: none;
+    }
+
+    .faculty-section {
+        margin-bottom: 3rem;
+    }
+
+    .faculty-section h2 {
+        margin-bottom: 1.5rem;
+        font-size: 1.4rem;
+    }
+
+    .faculty-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .faculty-tile {
+        border: 1px solid var(--color-border);
+        border-radius: 12px;
+        background: var(--color-surface);
+        transition: all 0.2s;
+        overflow: hidden;
+    }
+
+    .faculty-tile:hover {
+        border-color: var(--color-accent);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .faculty-link {
+        display: block;
+        padding: 1.5rem;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .faculty-name {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.2rem;
+        color: var(--color-accent);
+        font-weight: 600;
+    }
+
+    .faculty-group {
+        margin: 0.5rem 0;
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--color-text);
+    }
+
+    .faculty-designation {
+        margin: 0.5rem 0;
+        font-size: 0.9rem;
+        color: var(--color-text-muted);
+    }
+
+    .faculty-email {
+        margin: 0.75rem 0 0 0;
+        font-size: 0.85rem;
+        color: var(--color-accent);
+        word-break: break-all;
+    }
+
+    .research-content {
+        margin: 2rem 0;
+        line-height: 1.8;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-top: 2rem;
+        color: var(--color-accent);
+        text-decoration: none;
+        font-size: 0.95rem;
+    }
+
+    .back-link:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 48rem) {
+        .faculty-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

@@ -175,7 +175,12 @@ const tabs = [
         transition: background 0.15s, color 0.15s;
     }
 
-    .tab:hover { background: rgba(30, 58, 95, 0.08); }
+    .tab:hover { background: rgba(0, 37, 78, 0.08); }
+
+    .tab.active,
+    .tab[aria-selected="true"]:hover {
+        background: var(--color-accent);
+    }
 
     .tab:focus-visible {
         outline: 2px solid var(--color-accent);
@@ -193,14 +198,15 @@ const tabs = [
         padding: 0.1rem 0.5rem;
         border-radius: 999px;
         background: var(--color-border);
-        color: var(--color-text-muted);
+        color: var(--color-accent);
         font-size: 0.8rem;
+        font-weight: 600;
         text-align: center;
     }
 
     .tab[aria-selected="true"] .tab-count {
-        background: rgba(255, 255, 255, 0.22);
-        color: #fff;
+        background: var(--color-accent-secondary);
+        color: var(--color-accent);
     }
 
     .empty { color: var(--color-text-muted); }

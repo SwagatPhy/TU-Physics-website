@@ -1,36 +1,50 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../../layouts/Layout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Icon from '../../../components/Icon.astro';
 
 const courses = (await getCollection('courses')).sort((a, b) => a.data.code.localeCompare(b.data.code));
+
+const levels = [
+	{ id: 'undergraduate', label: 'Undergraduate' },
+	{ id: 'postgraduate', label: 'Postgraduate' },
+].map((level) => ({ ...level, courses: courses.filter((c) => c.data.level === level.id) }));
 ---
 
-<Layout title="Courses" description="Course catalog for the Department of Physics.">
-	<header class="page-header">
-		<div class="container">
-			<h1>Courses</h1>
-			<p>The department's course catalog, undergraduate and postgraduate.</p>
-		</div>
-	</header>
+<Layout title="Courses" description="Course catalog of the Department of Physics, Tezpur University.">
+	<PageHeader
+		title="Course catalog"
+		lead="The department's courses, undergraduate and postgraduate."
+		crumbs={[{ label: 'Academics', href: '/academics' }]}
+	/>
 
-	<section class="section">
-		<div class="container">
-			<ul class="card-grid">
-				{
-					courses.map((course) => (
+	{levels.map((level, i) => (
+		<section class={`section ${i % 2 === 1 ? 'section--soft' : ''}`}>
+			<div class="container">
+				<div class="section-head">
+					<h2>{level.label}</h2>
+				</div>
+				{level.courses.length === 0 && <p class="empty-state">No courses listed yet.</p>}
+				<ul class="grid grid--wide">
+					{level.courses.map((course) => (
 						<li>
 							<a class="card" href={`/academics/courses/${course.id}`}>
-								<span class="card-eyebrow">
-									{course.data.code} &middot; {course.data.credits} credits
-								</span>
-								<h3 class="card-title">{course.data.title}</h3>
-								<p class="card-summary">{course.data.description}</p>
+								<div class="card__body">
+									<span class="card__eyebrow">{course.data.code} · {course.data.credits} credits</span>
+									<h3 class="card__title">{course.data.title}</h3>
+									<p class="card__text">{course.data.description}</p>
+									<span class="card__footer text-muted">{course.data.faculty}</span>
+								</div>
 							</a>
 						</li>
-					))
-				}
-			</ul>
-			<a class="back-link" href="/academics">&larr; Academics</a>
-		</div>
-	</section>
+					))}
+				</ul>
+			</div>
+		</section>
+	))}
+
+	<div class="container">
+		<a class="back-link" href="/academics"><Icon name="arrow-left" /> Academics</a>
+	</div>
 </Layout>

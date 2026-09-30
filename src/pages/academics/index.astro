@@ -1,53 +1,173 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Icon from '../../components/Icon.astro';
 
+const programs = (await getCollection('admissions')).sort((a, b) => a.data.order - b.data.order);
 const courses = (await getCollection('courses')).sort((a, b) => a.data.code.localeCompare(b.data.code));
 ---
 
-<Layout title="Academics" description="Course structure, and rules and regulations for the Department of Physics.">
-	<header class="page-header">
-		<div class="container">
-			<h1>Academics</h1>
-			<p>
-				Everything about how study in the department is structured — the course catalog, and
-				the academic rules and regulations that govern it. For admission requirements, see{' '}
-				<a href="/admissions">Admissions</a>.
-			</p>
-        We add the details here.
-      <p>
-      </p>
-		</div>
-	</header>
+<Layout title="Academics" description="Programs, course structure, and rules and regulations of the Department of Physics, Tezpur University.">
+	<PageHeader
+		title="Academics"
+		eyebrow="Teaching"
+		lead="How study in the department is structured — the programs, the course catalog, and the academic rules and regulations that govern them."
+	/>
 
 	<section class="section">
 		<div class="container">
-			<h2>Rules &amp; regulations</h2>
-			<p>Grading, attendance, academic integrity, and progression requirements.</p>
-			<a class="back-link" href="/academics/rules">Read the rules &amp; regulations &rarr;</a>
-		</div>
-	</section>
-
-	<section class="section">
-		<div class="container">
-			<h2>Course structure</h2>
-			<p>Courses offered by the department, undergraduate and postgraduate.</p>
-			<ul class="card-grid">
-				{
-					courses.map((course) => (
-						<li>
-							<a class="card" href={`/academics/courses/${course.id}`}>
-								<span class="card-eyebrow">
-									{course.data.code} &middot; {course.data.credits} credits
-								</span>
-								<h3 class="card-title">{course.data.title}</h3>
-								<p class="card-summary">{course.data.description}</p>
-                <p class="card-faculty"><b>{course.data.faculty}</b></p>
-							</a>
-						</li>
-					))
-				}
+			<div class="section-head">
+				<div>
+					<p class="eyebrow">Degrees</p>
+					<h2>Programs</h2>
+					<p>For eligibility and how to apply, see <a href="/admissions">Admissions</a>.</p>
+				</div>
+			</div>
+			<ul class="grid">
+				{programs.map((program) => (
+					<li>
+						<a class="card" href={`/admissions/${program.id}`}>
+							<div class="card__body">
+								<span class="card__eyebrow">{program.data.duration}</span>
+								<h3 class="card__title">{program.data.title}</h3>
+								<p class="card__text">{program.data.tagline}</p>
+							</div>
+						</a>
+					</li>
+				))}
 			</ul>
 		</div>
 	</section>
+
+	<section class="section section--soft">
+		<div class="container">
+			<div class="section-head">
+				<div>
+					<p class="eyebrow">Course structure</p>
+					<h2>Courses</h2>
+					<p>Courses offered by the department, undergraduate and postgraduate.</p>
+				</div>
+				<a class="link-arrow" href="/academics/courses">Full course catalog <Icon name="arrow-right" /></a>
+			</div>
+			<ul class="course-list">
+				{courses.map((course) => (
+					<li>
+						<a class="course-row" href={`/academics/courses/${course.id}`}>
+							<span class="course-row__code">{course.data.code}</span>
+							<span class="course-row__main">
+								<strong>{course.data.title}</strong>
+								<span class="text-muted">{course.data.faculty}</span>
+							</span>
+							<span class="course-row__meta">
+								<span class="badge">{course.data.level === 'undergraduate' ? 'UG' : 'PG'}</span>
+								{course.data.credits} credits
+							</span>
+							<Icon name="arrow-right" />
+						</a>
+					</li>
+				))}
+			</ul>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="container grid grid--2">
+			<a class="card" href="/academics/rules">
+				<div class="card__body">
+					<span class="card__eyebrow">Policies</span>
+					<h3 class="card__title">Rules &amp; regulations</h3>
+					<p class="card__text">Grading, attendance, academic integrity and progression requirements.</p>
+					<span class="card__footer link-arrow">Read the rules <Icon name="arrow-right" /></span>
+				</div>
+			</a>
+			<a class="card" href="/Resources-files/program_objectives.pdf">
+				<div class="card__body">
+					<span class="card__eyebrow">Document · PDF</span>
+					<h3 class="card__title">Program objectives</h3>
+					<p class="card__text">The department's program objectives.</p>
+					<span class="card__footer link-arrow">Open PDF <Icon name="download" /></span>
+				</div>
+			</a>
+		</div>
+	</section>
 </Layout>
+
+<style>
+	.course-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		border-top: 1px solid var(--color-border-strong);
+	}
+
+	.course-row {
+		display: grid;
+		grid-template-columns: 6.5rem 1fr auto auto;
+		gap: var(--space-md);
+		align-items: center;
+		padding: var(--space-md) var(--space-sm);
+		border-bottom: 1px solid var(--color-border-strong);
+		color: inherit;
+		text-decoration: none;
+		transition: background-color 0.2s var(--ease);
+	}
+
+	.course-row:hover {
+		background: var(--color-bg);
+	}
+
+	.course-row .icon {
+		color: var(--slate);
+		transition: transform 0.2s var(--ease);
+	}
+
+	.course-row:hover .icon {
+		transform: translateX(3px);
+	}
+
+	.course-row__code {
+		font-family: var(--font-serif);
+		font-weight: 600;
+		color: var(--navy);
+	}
+
+	.course-row__main {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.course-row__main strong {
+		color: var(--navy);
+		font-weight: 600;
+	}
+
+	.course-row__main .text-muted {
+		font-size: 0.9rem;
+	}
+
+	.course-row__meta {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		font-size: 0.9rem;
+		color: var(--color-text-muted);
+		white-space: nowrap;
+	}
+
+	@media (max-width: 40rem) {
+		.course-row {
+			grid-template-columns: 1fr auto;
+			gap: 0.25rem var(--space-sm);
+		}
+
+		.course-row__meta {
+			grid-column: 1;
+		}
+
+		.course-row .icon {
+			grid-row: 1 / span 3;
+			grid-column: 2;
+		}
+	}
+</style>

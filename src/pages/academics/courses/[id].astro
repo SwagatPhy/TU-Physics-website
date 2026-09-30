@@ -1,6 +1,8 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../../../layouts/Layout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Icon from '../../../components/Icon.astro';
 
 export async function getStaticPaths() {
 	const courses = await getCollection('courses');
@@ -11,27 +13,58 @@ export async function getStaticPaths() {
 }
 
 const { course } = Astro.props;
-const { title, code, credits, level, description } = course.data;
+const { title, code, credits, level, description, faculty } = course.data;
 const { Content } = await render(course);
 ---
 
 <Layout title={`${code}: ${title}`} description={description}>
-	<header class="detail-header">
-		<div class="container">
-			<div class="detail-meta">
-				<span class="badge">{code}</span>
-				<span class="badge">{credits} credits</span>
-				<span class="badge">{level === 'undergraduate' ? 'Undergraduate' : 'Postgraduate'}</span>
-			</div>
-			<h1>{title}</h1>
-			<p>{description}</p>
-		</div>
-	</header>
+	<PageHeader
+		title={title}
+		eyebrow={code}
+		lead={description}
+		crumbs={[
+			{ label: 'Academics', href: '/academics' },
+			{ label: 'Courses', href: '/academics/courses' },
+		]}
+	/>
 
-	<div class="container">
-		<div class="detail-body">
-			<Content />
-			<a class="back-link" href="/academics/courses">&larr; All courses</a>
+	<div class="container detail-layout">
+		<div>
+			<article class="prose">
+				<Content />
+			</article>
+			<a class="back-link" href="/academics/courses"><Icon name="arrow-left" /> All courses</a>
 		</div>
+
+		<aside>
+			<dl class="aside-card course-facts">
+				<div><dt>Code</dt><dd>{code}</dd></div>
+				<div><dt>Credits</dt><dd>{credits}</dd></div>
+				<div><dt>Level</dt><dd>{level === 'undergraduate' ? 'Undergraduate' : 'Postgraduate'}</dd></div>
+				<div><dt>Faculty</dt><dd>{faculty}</dd></div>
+			</dl>
+		</aside>
 	</div>
 </Layout>
+
+<style>
+	.course-facts {
+		display: grid;
+		gap: var(--space-sm);
+		margin: 0;
+	}
+
+	.course-facts dt {
+		font-size: 0.78rem;
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--color-text-muted);
+	}
+
+	.course-facts dd {
+		margin: 0;
+		color: var(--navy);
+		font-weight: 600;
+	}
+</style>

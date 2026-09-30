@@ -1,162 +1,80 @@
 ---
 import { getCollection } from 'astro:content';
-import Layout from '../../layouts/Layout.astro'
+import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import { researchImage } from '../../lib/images';
 
-const research = (await getCollection('research')).sort((a,b) => a.data.specialization.localeCompare(b.data.specialization));
+const research = (await getCollection('research')).sort((a, b) =>
+	a.data.specialization.localeCompare(b.data.specialization),
+);
+
+// Research entries list faculty by file name ("RupjyotiGogoi"); teaching entry
+// ids are the lower-cased file name ("rupjyotigogoi").
 const teaching = await getCollection('teaching');
-const teachingMap = new Map(teaching.map(p => [p.id, p.data]));
+const teachingById = new Map(teaching.map((p) => [p.id, p.data]));
 
-// Resolve faculty IDs to teaching data
-// Note: Astro converts filename IDs to lowercase, but research tiles use PascalCase IDs
-const researchWithFaculty = research.map(item => ({
-    ...item,
-    resolvedFaculty: (item.data.faculties || [])
-        .filter(f => f.id && typeof f.id === 'string' && !f.id.includes('[PLACEHOLDER'))
-        .map(f => {
-            const lowercaseId = f.id.toLowerCase();
-            return {
-                id: f.id,
-                lowercaseId,
-                group: f.group,
-                data: teachingMap.get(lowercaseId),
-            };
-        })
+const areas = research.map((item) => ({
+	...item,
+	faculty: item.data.faculties
+		.map((f) => ({ id: f.id.toLowerCase(), person: teachingById.get(f.id.toLowerCase()) }))
+		.filter((f) => f.person),
 }));
 ---
 
-<Layout title="research" description="Current research going on in the Department of Physics.">
-    <header class="page-header container">
-        <div>
-            <h1>Research</h1>
-            <p>
-                Research in the Department of Physics spans several areas of theoretical and experimental physics. Faculty and research scholars actively publish in peer-reviewed journals and undertake sponsored research projects.
-            </p>
-        </div>
-    </header>
+<Layout title="Research" description="Research areas of the Department of Physics, Tezpur University.">
+	<PageHeader
+		title="Research"
+		eyebrow={`${research.length} areas`}
+		lead="Research in the Department of Physics spans several areas of theoretical and experimental physics. Faculty and research scholars actively publish in peer-reviewed journals and undertake sponsored research projects."
+	/>
 
-    <section class="research-areas container">
-        <div class="card-grid research-grid">
-            {researchWithFaculty.map(item => (
-                <article class="card research-card">
-                    <a href={`/research/${item.id}`} class="card-link">
-                        {item.data.image && (
-                            <img src={`/Research-areas/${item.data.image}`} alt={item.data.specialization} class="card-image" />
-                        )}
-                        <h3 class="card-title">{item.data.specialization}</h3>
-                        <p class="card-summary">{item.data.description}</p>
-                    </a>
-
-                    {item.resolvedFaculty.length > 0 && (
-                        <div class="faculty-overlay">
-                            <div class="faculty-list">
-                                {item.resolvedFaculty.map(faculty => (
-                                    <a href={`/people/${faculty.lowercaseId}`} class="faculty-link">
-                                        {faculty.data && (
-                                            <>
-                                                <div class="faculty-name">{faculty.data.name}</div>
-                                                {faculty.group && <div class="faculty-group">{faculty.group}</div>}
-                                            </>
-                                        )}
-                                    </a>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </article>
-            ))}
-        </div>
-    </section>
+	<section class="section">
+		<div class="container">
+			<ul class="grid grid--wide">
+				{areas.map((item) => (
+					<li>
+						<article class="card card--link">
+							{item.data.image && (
+								<div class="card__media">
+									<img src={researchImage(item.data.image)} alt="" loading="lazy" decoding="async" />
+								</div>
+							)}
+							<div class="card__body">
+								<h2 class="card__title"><a href={`/research/${item.id}`}>{item.data.specialization}</a></h2>
+								{item.data.description && <p class="card__text">{item.data.description}</p>}
+								{item.faculty.length > 0 && (
+									<div class="card__footer">
+										<span class="card__eyebrow">Faculty</span>
+										<ul class="faculty-names">
+											{item.faculty.map((f) => (
+												<li><a href={`/people/${f.id}`}>{f.person!.name}</a></li>
+											))}
+										</ul>
+									</div>
+								)}
+							</div>
+						</article>
+					</li>
+				))}
+			</ul>
+		</div>
+	</section>
 </Layout>
 
 <style>
-    /* Four-column board: 4 tiles per row, remaining tiles wrap below */
-    .research-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 1rem;
-    }
+	.faculty-names {
+		list-style: none;
+		margin: 0.35rem 0 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem 0.9rem;
+		font-size: 0.93rem;
+	}
 
-    .research-card {
-        position: relative;
-        padding: 0.75rem;
-        overflow: hidden;
-        border-radius: 8px;
-    }
-
-    .card-link {
-        display: block;
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .card-image {
-        width: 100%;
-        height: 140px;
-        object-fit: cover;
-        border-radius: 8px;
-        margin-bottom: 0.75rem;
-    }
-
-    .faculty-overlay {
-        position: absolute;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.8);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 8px;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        pointer-events: none;
-        z-index: 10;
-    }
-
-    .research-card:hover .faculty-overlay,
-    .research-card:focus-within .faculty-overlay {
-        opacity: 1;
-        pointer-events: auto;
-    }
-
-    .faculty-list {
-        display: flex;
-        flex-direction: column;
-        gap: 1.2rem;
-        width: 100%;
-        padding: 1.5rem 1rem;
-        text-align: center;
-    }
-
-    .faculty-link {
-        display: block;
-        text-decoration: none;
-        color: white;
-        transition: all 0.2s ease;
-        padding: 0.5rem;
-        border-radius: 6px;
-    }
-
-    .faculty-link:hover {
-        background: rgba(255, 255, 255, 0.1);
-        transform: translateY(-2px);
-    }
-
-    .faculty-name {
-        font-weight: 600;
-        font-size: 0.95rem;
-        margin-bottom: 0.4rem;
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-    }
-
-    .faculty-group {
-        font-size: 0.85rem;
-        opacity: 0.95;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-    }
-
-    @media (max-width: 64rem) {
-        .research-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
-
-    @media (max-width: 36rem) {
-        .research-grid { grid-template-columns: 1fr; }
-    }
+	/* Faculty links sit above the card's stretched title link */
+	.faculty-names a {
+		position: relative;
+		z-index: 1;
+	}
 </style>

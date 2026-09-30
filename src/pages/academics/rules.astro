@@ -1,44 +1,49 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Icon from '../../components/Icon.astro';
+
+// The department's actual policies are still pending. Each section keeps a
+// [PLACEHOLDER] until the real text arrives via Notes-manager.
+const sections = [
+	{ id: 'grading', title: 'Grading', text: '[PLACEHOLDER — grading scheme and minimum grades required]' },
+	{ id: 'attendance', title: 'Attendance', text: '[PLACEHOLDER — attendance requirement for sitting examinations]' },
+	{ id: 'integrity', title: 'Academic integrity', text: '[PLACEHOLDER — policy on plagiarism, collaboration and data fabrication]' },
+	{ id: 'progression', title: 'Progression', text: '[PLACEHOLDER — progression requirements for UG, PG and PhD students]' },
+];
 ---
 
-<Layout title="Rules & Regulations" description="Academic rules and regulations for the Department of Physics.">
-	<header class="detail-header">
-		<div class="container">
-			<h1>Rules &amp; Regulations</h1>
-			<p>Placeholder — replace with the department's actual academic policies.</p>
+<Layout title="Rules & Regulations" description="Academic rules and regulations of the Department of Physics, Tezpur University.">
+	<PageHeader title="Rules & regulations" crumbs={[{ label: 'Academics', href: '/academics' }]} />
+
+	<div class="container detail-layout">
+		<div class="prose">
+			{sections.map((section) => (
+				<section id={section.id}>
+					<h2>{section.title}</h2>
+					<p>{section.text}</p>
+				</section>
+			))}
+			<a class="back-link" href="/academics"><Icon name="arrow-left" /> Academics</a>
 		</div>
-	</header>
 
-	<div class="container">
-		<div class="detail-body">
-			<h2>Grading</h2>
-			<p>
-				Placeholder text. Courses are graded on a letter scale from A to F. A minimum grade of
-				C is required to satisfy a program's core-course requirements.
-			</p>
-
-			<h2>Attendance</h2>
-			<p>
-				Placeholder text. Students are expected to attend at least 75% of scheduled classes and
-				laboratory sessions per course to be eligible to sit the final examination.
-			</p>
-
-			<h2>Academic integrity</h2>
-			<p>
-				Placeholder text. Plagiarism, unauthorized collaboration, and fabrication of data are
-				treated as academic misconduct and are subject to the university's disciplinary
-				procedures.
-			</p>
-
-			<h2>Progression</h2>
-			<p>
-				Placeholder text. Undergraduate students must maintain a minimum cumulative GPA of 2.0
-				to progress to the next year of study. Graduate students are reviewed annually by their
-				supervisory committee.
-			</p>
-
-			<a class="back-link" href="/academics">&larr; Academics</a>
-		</div>
+		<aside>
+			<nav class="aside-card" aria-label="On this page">
+				<h2>On this page</h2>
+				<ul class="toc">
+					{sections.map((section) => <li><a href={`#${section.id}`}>{section.title}</a></li>)}
+				</ul>
+			</nav>
+		</aside>
 	</div>
 </Layout>
+
+<style>
+	.toc {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.5rem;
+	}
+</style>

@@ -1,185 +1,109 @@
 ---
-import {getCollection, render} from 'astro:content';
-import Layout from '../../layouts/Layout.astro'
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Icon from '../../components/Icon.astro';
+import { researchImage } from '../../lib/images';
 
 export async function getStaticPaths() {
-    const topics = await getCollection('research');
-    return topics.map((topics) => ({
-        params: {id: topics.id},
-        props: {topics},
-    }));
+	const areas = await getCollection('research');
+	return areas.map((area) => ({
+		params: { id: area.id },
+		props: { area },
+	}));
 }
 
-const {topics} = Astro.props;
-const { specialization, description, faculties } = topics.data;
-const { Content } = await render(topics);
+const { area } = Astro.props;
+const { specialization, description, faculties, image } = area.data;
+const { Content } = await render(area);
 
-// Fetch teaching collection to look up faculty details
+// Faculty are listed by file name ("RupjyotiGogoi"); entry ids are lower-case.
 const teaching = await getCollection('teaching');
-const teachingMap = new Map(teaching.map(p => [p.id, p.data]));
+const teachingById = new Map(teaching.map((p) => [p.id, p.data]));
+const faculty = faculties
+	.map((f) => ({ id: f.id.toLowerCase(), group: f.group, person: teachingById.get(f.id.toLowerCase()) }))
+	.filter((f) => f.person);
 
-// Resolve faculty IDs to actual faculty data
-const facultyList = faculties.map(f => ({
-    id: f.id,
-    group: f.group,
-    data: teachingMap.get(f.id),
-})).filter(f => !f.id.includes('[PLACEHOLDER'));
-
-// Format faculty title (Prof./Dr. based on designation)
-const getFacultyTitle = (designation) => {
-    if (!designation) return '';
-    if (designation.includes('Professor')) return 'Prof.';
-    if (designation.includes('Dr.') || designation.toLowerCase().includes('doctor')) return 'Dr.';
-    return '';
-};
+// Other areas, for the "More research" links at the bottom.
+const otherAreas = (await getCollection('research'))
+	.filter((other) => other.id !== area.id)
+	.sort((a, b) => a.data.specialization.localeCompare(b.data.specialization));
 ---
 
-<Layout title={specialization} description={description}>
-    <header class="detail-header">
-        <h1>{specialization}</h1>
-        <p>{description}</p>
-    </header>
+<Layout title={specialization} description={description || `${specialization} research at the Department of Physics, Tezpur University.`}>
+	<PageHeader title={specialization} lead={description} crumbs={[{ label: 'Research', href: '/research' }]} />
 
-    <section class="detail-body">
-        {facultyList.length > 0 && (
-            <div class="faculty-section">
-                <h2>Faculty & Research Groups</h2>
-                <div class="faculty-grid">
-                    {facultyList.map(f => (
-                        <article class="faculty-tile">
-                            {f.data ? (
-                                <a href={`/people/${f.id}`} class="faculty-link">
-                                    <h3 class="faculty-name">
-                                        {getFacultyTitle(f.data.designation)} {f.data.name}
-                                    </h3>
-                                    {f.group && <p class="faculty-group">{f.group}</p>}
-                                    <p class="faculty-designation">{f.data.designation}</p>
-                                    {f.data.email && (
-                                        <p class="faculty-email">{f.data.email}</p>
-                                    )}
-                                </a>
-                            ) : (
-                                <p class="placeholder">{f.id}</p>
-                            )}
-                        </article>
-                    ))}
-                </div>
-            </div>
-        )}
+	<div class="container detail-layout">
+		<div>
+			{image && (
+				<img class="area-image" src={researchImage(image)} alt="" />
+			)}
+			<article class="prose">
+				<Content />
+			</article>
+			<a class="back-link" href="/research"><Icon name="arrow-left" /> All research areas</a>
+		</div>
 
-        <article class="research-content">
-            <Content />
-        </article>
-
-        <a href="/research" class="back-link">← Back to Research</a>
-    </section>
+		<aside>
+			<div class="aside-card">
+				<h2>Faculty &amp; groups</h2>
+				{faculty.length === 0 && <p class="text-muted">Faculty for this area to be added.</p>}
+				<ul class="faculty-list">
+					{faculty.map((f) => (
+						<li>
+							<a href={`/people/${f.id}`}>{f.person!.name}</a>
+							<span class="text-muted">{f.group ?? f.person!.designation}</span>
+						</li>
+					))}
+				</ul>
+			</div>
+			<div class="aside-card">
+				<h2>More research</h2>
+				<ul class="other-areas">
+					{otherAreas.map((other) => (
+						<li><a href={`/research/${other.id}`}>{other.data.specialization}</a></li>
+					))}
+				</ul>
+			</div>
+		</aside>
+	</div>
 </Layout>
 
 <style>
-    .detail-header {
-        margin-bottom: 2rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid var(--color-border);
-    }
+	.area-image {
+		width: 100%;
+		max-height: 24rem;
+		object-fit: cover;
+		border-radius: var(--radius);
+		margin-bottom: var(--space-lg);
+	}
 
-    .detail-header h1 {
-        margin: 0 0 0.5rem 0;
-        font-size: 2rem;
-    }
+	.faculty-list,
+	.other-areas {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.75rem;
+	}
 
-    .detail-header p {
-        margin: 0;
-        font-size: 1.1rem;
-        color: var(--color-text-muted);
-    }
+	.faculty-list li {
+		display: flex;
+		flex-direction: column;
+		line-height: 1.35;
+	}
 
-    .detail-body {
-        max-width: none;
-    }
+	.faculty-list a {
+		font-weight: 600;
+		text-decoration: none;
+	}
 
-    .faculty-section {
-        margin-bottom: 3rem;
-    }
+	.faculty-list .text-muted {
+		font-size: 0.88rem;
+	}
 
-    .faculty-section h2 {
-        margin-bottom: 1.5rem;
-        font-size: 1.4rem;
-    }
-
-    .faculty-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 1.5rem;
-    }
-
-    .faculty-tile {
-        border: 1px solid var(--color-border);
-        border-radius: 12px;
-        background: var(--color-surface);
-        transition: all 0.2s;
-        overflow: hidden;
-    }
-
-    .faculty-tile:hover {
-        border-color: var(--color-accent);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        transform: translateY(-2px);
-    }
-
-    .faculty-link {
-        display: block;
-        padding: 1.5rem;
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .faculty-name {
-        margin: 0 0 0.5rem 0;
-        font-size: 1.2rem;
-        color: var(--color-accent);
-        font-weight: 600;
-    }
-
-    .faculty-group {
-        margin: 0.5rem 0;
-        font-size: 1rem;
-        font-weight: 500;
-        color: var(--color-text);
-    }
-
-    .faculty-designation {
-        margin: 0.5rem 0;
-        font-size: 0.9rem;
-        color: var(--color-text);
-    }
-
-    .faculty-email {
-        margin: 0.75rem 0 0 0;
-        font-size: 0.85rem;
-        color: var(--color-accent);
-        word-break: break-all;
-    }
-
-    .research-content {
-        margin: 2rem 0;
-        line-height: 1.8;
-    }
-
-    .back-link {
-        display: inline-block;
-        margin-top: 2rem;
-        color: var(--color-accent);
-        text-decoration: none;
-        font-size: 0.95rem;
-    }
-
-    .back-link:hover {
-        text-decoration: underline;
-    }
-
-    @media (max-width: 48rem) {
-        .faculty-grid {
-            grid-template-columns: 1fr;
-        }
-    }
+	.other-areas {
+		gap: 0.4rem;
+		font-size: 0.95rem;
+	}
 </style>

@@ -1,6 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import PersonCard from '../../components/PersonCard.astro';
+import Icon from '../../components/Icon.astro';
 
 const byName = (a, b) => a.data.name.localeCompare(b.data.name);
 const teaching = (await getCollection('teaching')).sort(byName);
@@ -10,242 +13,171 @@ const assistants = (await getCollection('researchAssistants')).sort(byName);
 
 // One entry per tab. `id` links a tab button to its panel below.
 const tabs = [
-    { id: 'teaching', label: 'Teaching', count: teaching.length },
-    { id: 'non-teaching', label: 'Non-teaching', count: nonTeaching.length },
-    { id: 'scholars', label: 'Research Scholars', count: scholars.length },
-    { id: 'assistants', label: 'Research Assistants', count: assistants.length },
+	{ id: 'teaching', label: 'Faculty', heading: 'Teaching faculty', count: teaching.length },
+	{ id: 'non-teaching', label: 'Staff', heading: 'Non-teaching staff', count: nonTeaching.length },
+	{ id: 'scholars', label: 'Research scholars', heading: 'Research scholars (PhD)', count: scholars.length },
+	{ id: 'assistants', label: 'Research assistants', heading: 'Research assistants', count: assistants.length },
 ];
+
+// Research scholars and assistants share a card shape.
+const researcherCard = (p) => ({
+	name: p.data.name,
+	role: `Supervisor: ${p.data.supervisor}`,
+	topics: p.data.research_area ? [p.data.research_area] : [],
+	email: p.data.email,
+	photo: p.data.photo,
+});
 ---
 
-<Layout title="people" description="Faculty, staff and research scholars of the Department of Physics.">
-    <header class="page-header container">
-        <h1>People</h1>
-        <p>Faculty, staff and research scholars of the Department of Physics.</p>
-    </header>
+<Layout title="People" description="Faculty, staff and research scholars of the Department of Physics, Tezpur University.">
+	<PageHeader
+		title="People"
+		eyebrow="Our community"
+		lead="Faculty, staff and research scholars of the Department of Physics."
+	/>
 
-    <div class="container people-layout">
-        <div class="tab-bar" role="tablist" aria-label="People groups" aria-orientation="vertical">
-            {tabs.map((tab, i) => (
-                <button
-                    type="button"
-                    role="tab"
-                    class="tab"
-                    data-tab={tab.id}
-                    aria-selected={i === 0 ? 'true' : 'false'}
-                >
-                    <span class="tab-label">{tab.label}</span>
-                    <span class="tab-count">{tab.count}</span>
-                </button>
-            ))}
-        </div>
+	<section class="section">
+		<div class="container">
+			<div class="people-toolbar">
+				<div class="tabs" role="tablist" aria-label="People groups">
+					{tabs.map((tab, i) => (
+						<button
+							type="button"
+							role="tab"
+							class="tab"
+							id={`tab-${tab.id}`}
+							data-tab={tab.id}
+							aria-controls={tab.id}
+							aria-selected={i === 0 ? 'true' : 'false'}
+							tabindex={i === 0 ? 0 : -1}
+						>
+							{tab.label}
+							<span class="tab__count">{tab.count}</span>
+						</button>
+					))}
+				</div>
+				<label class="search-field">
+					<span class="visually-hidden">Search people by name or research area</span>
+					<Icon name="search" />
+					<input type="search" id="people-search" placeholder="Search by name or research area" autocomplete="off" />
+				</label>
+			</div>
 
-        <div class="panels">
-    <section class="panel" id="teaching">
-        <h2>Teaching Staff</h2>
-        {teaching.length === 0 && <p class="empty">Profiles coming soon.</p>}
-        <div class="card-grid people-grid">
-            {teaching.map(p => (
-                <a href={`/people/${p.id}`} class="card-link">
-                    <article class="card">
-                        {p.data.photo && (
-                            <img src={`/People-photos/${p.data.photo}`} alt={p.data.name} class="person-photo" />
-                        )}
-                        <h3 class="card-title">{p.data.name}</h3>
-                        <p class="card-summary">{p.data.designation}</p>
-                        {p.data.research_areas && p.data.research_areas.length > 0 && (
-                            <p class="card-summary">{p.data.research_areas.join(', ')}</p>
-                        )}
-                        {p.data.email && <p class="card-email">{p.data.email}</p>}
-                    </article>
-                </a>
-            ))}
-        </div>
-    </section>
+			<section class="panel" id="teaching" role="tabpanel" aria-labelledby="tab-teaching">
+				<h2 class="visually-hidden">{tabs[0].heading}</h2>
+				<ul class="grid grid--wide">
+					{teaching.map((p) => (
+						<li>
+							<PersonCard
+								name={p.data.name}
+								role={p.data.designation}
+								topics={p.data.research_areas}
+								email={p.data.email}
+								photo={p.data.photo}
+								href={`/people/${p.id}`}
+							/>
+						</li>
+					))}
+				</ul>
+			</section>
 
-    <section class="panel" id="non-teaching" hidden>
-        <h2>Non-teaching Staff</h2>
-        {nonTeaching.length === 0 && <p class="empty">Profiles coming soon.</p>}
-        <div class="card-grid people-grid">
-            {nonTeaching.map(p => (
-                <article class="card">
-                    {p.data.photo && (
-                        <img src={`/People-photos/${p.data.photo}`} alt={p.data.name} class="person-photo" />
-                    )}
-                    <h3 class="card-title">{p.data.name}</h3>
-                    <p class="card-summary">{p.data.designation}</p>
-                    {p.data.office && <p class="card-summary">{p.data.office}</p>}
-                    {p.data.email && <a href={`mailto:${p.data.email}`}>{p.data.email}</a>}
-                </article>
-            ))}
-        </div>
-    </section>
+			<section class="panel" id="non-teaching" role="tabpanel" aria-labelledby="tab-non-teaching" hidden>
+				<h2 class="visually-hidden">{tabs[1].heading}</h2>
+				<ul class="grid grid--wide">
+					{nonTeaching.map((p) => (
+						<li>
+							<PersonCard
+								name={p.data.name}
+								role={p.data.designation}
+								topics={p.data.office ? [p.data.office] : []}
+								email={p.data.email}
+								photo={p.data.photo}
+							/>
+						</li>
+					))}
+				</ul>
+			</section>
 
-    <section class="panel" id="scholars" hidden>
-        <h2>Research Scholars (PhD)</h2>
-        {scholars.length === 0 && <p class="empty">Profiles coming soon.</p>}
-        <div class="card-grid people-grid">
-            {scholars.map(p => (
-                <article class="card">
-                    {p.data.photo && (
-                        <img src={`/People-photos/${p.data.photo}`} alt={p.data.name} class="person-photo" />
-                    )}
-                    <h3 class="card-title">{p.data.name}</h3>
-                    <p class="card-summary">Supervisor: {p.data.supervisor}</p>
-                    {p.data.researchArea && <p class="card-summary">{p.data.researchArea}</p>}
-                    {p.data.email && <a href={`mailto:${p.data.email}`}>{p.data.email}</a>}
-                </article>
-            ))}
-        </div>
-    </section>
+			<section class="panel" id="scholars" role="tabpanel" aria-labelledby="tab-scholars" hidden>
+				<h2 class="visually-hidden">{tabs[2].heading}</h2>
+				<ul class="grid grid--wide">
+					{scholars.map((p) => <li><PersonCard {...researcherCard(p)} /></li>)}
+				</ul>
+			</section>
 
-    <section class="panel" id="assistants" hidden>
-        <h2>Research Assistants</h2>
-        {assistants.length === 0 && <p class="empty">Profiles coming soon.</p>}
-        <div class="card-grid people-grid">
-            {assistants.map(p => (
-                <article class="card">
-                    {p.data.photo && (
-                        <img src={`/People-photos/${p.data.photo}`} alt={p.data.name} class="person-photo" />
-                    )}
-                    <h3 class="card-title">{p.data.name}</h3>
-                    <p class="card-summary">Supervisor: {p.data.supervisor}</p>
-                    {p.data.researchArea && <p class="card-summary">{p.data.researchArea}</p>}
-                    {p.data.email && <a href={`mailto:${p.data.email}`}>{p.data.email}</a>}
-                </article>
-            ))}
-        </div>
-    </section>
-        </div>
-    </div>
+			<section class="panel" id="assistants" role="tabpanel" aria-labelledby="tab-assistants" hidden>
+				<h2 class="visually-hidden">{tabs[3].heading}</h2>
+				<ul class="grid grid--wide">
+					{assistants.map((p) => <li><PersonCard {...researcherCard(p)} /></li>)}
+				</ul>
+			</section>
+
+			<p class="empty-state" id="people-empty" hidden>No one in this group matches your search.</p>
+		</div>
+	</section>
 </Layout>
 
 <script>
-    // Show one panel at a time.
-    const tabButtons = document.querySelectorAll<HTMLButtonElement>('.tab');
-    const panels = document.querySelectorAll<HTMLElement>('.panel');
+	const tabButtons = [...document.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+	const panels = document.querySelectorAll<HTMLElement>('.panel');
+	const search = document.getElementById('people-search') as HTMLInputElement;
+	const empty = document.getElementById('people-empty')!;
 
-    function showPanel(id: string) {
-        tabButtons.forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === id)));
-        panels.forEach(p => (p.hidden = p.id !== id));
-        history.replaceState(null, '', `#${id}`);
-    }
+	// Show one panel at a time.
+	function showPanel(id: string) {
+		tabButtons.forEach((b) => {
+			const selected = b.dataset.tab === id;
+			b.setAttribute('aria-selected', String(selected));
+			b.tabIndex = selected ? 0 : -1;
+		});
+		panels.forEach((p) => (p.hidden = p.id !== id));
+		history.replaceState(null, '', `#${id}`);
+		applySearch();
+	}
 
-    tabButtons.forEach(b => b.addEventListener('click', () => showPanel(b.dataset.tab!)));
+	// Hide cards in the visible panel that don't match the search text.
+	function applySearch() {
+		const query = search.value.trim().toLowerCase();
+		const panel = [...panels].find((p) => !p.hidden);
+		if (!panel) return;
+		let visible = 0;
+		panel.querySelectorAll<HTMLElement>('li:has(> [data-person])').forEach((item) => {
+			const text = item.querySelector<HTMLElement>('[data-person]')!.dataset.person!;
+			item.hidden = query !== '' && !text.includes(query);
+			if (!item.hidden) visible++;
+		});
+		empty.hidden = visible > 0;
+	}
 
-    // Open the tab named in the URL (e.g. /people#scholars), if any.
-    const fromUrl = location.hash.slice(1);
-    if (document.getElementById(fromUrl)?.classList.contains('panel')) showPanel(fromUrl);
+	tabButtons.forEach((b) => b.addEventListener('click', () => showPanel(b.dataset.tab!)));
+	search.addEventListener('input', applySearch);
+
+	// Arrow keys move between tabs (standard tablist behaviour).
+	document.querySelector('[role="tablist"]')!.addEventListener('keydown', (event: Event) => {
+		const key = (event as KeyboardEvent).key;
+		if (key !== 'ArrowRight' && key !== 'ArrowLeft') return;
+		const current = tabButtons.findIndex((b) => b.getAttribute('aria-selected') === 'true');
+		const next = tabButtons[(current + (key === 'ArrowRight' ? 1 : -1) + tabButtons.length) % tabButtons.length];
+		next.focus();
+		showPanel(next.dataset.tab!);
+	});
+
+	// Open the tab named in the URL (e.g. /people#scholars), if any.
+	const fromUrl = location.hash.slice(1);
+	if (document.getElementById(fromUrl)?.classList.contains('panel')) showPanel(fromUrl);
 </script>
 
 <style>
-    .people-layout {
-        display: grid;
-        grid-template-columns: 15rem minmax(0, 1fr);
-        gap: var(--space-md);
-        align-items: start;
-        padding-block: var(--space-md) var(--space-lg);
-    }
+	.people-toolbar {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-md);
+		margin-bottom: var(--space-lg);
+	}
 
-    /* Left-hand tab list */
-    .tab-bar {
-        display: flex;
-        flex-direction: column;
-        gap: 0.4rem;
-        position: sticky;
-        top: 1rem;
-        padding: 0.6rem;
-        background: var(--color-surface);
-        border: 1px solid var(--color-border);
-        border-radius: 12px;
-    }
-
-    .tab {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.5rem;
-        padding: 0.7rem 0.9rem;
-        border: 0;
-        border-radius: 8px;
-        background: transparent;
-        color: var(--color-text);
-        font: inherit;
-        text-align: left;
-        cursor: pointer;
-        transition: background 0.15s, color 0.15s;
-    }
-
-    .tab:hover { background: rgba(0, 37, 78, 0.08); }
-
-    .tab.active,
-    .tab[aria-selected="true"]:hover {
-        background: var(--color-accent);
-    }
-
-    .tab:focus-visible {
-        outline: 2px solid var(--color-accent);
-        outline-offset: 2px;
-    }
-
-    .tab[aria-selected="true"] {
-        background: var(--color-accent);
-        color: #fff;
-        font-weight: 600;
-    }
-
-    .tab-count {
-        min-width: 1.6rem;
-        padding: 0.1rem 0.5rem;
-        border-radius: 999px;
-        background: var(--color-border);
-        color: var(--color-accent);
-        font-size: 0.8rem;
-        font-weight: 600;
-        text-align: center;
-    }
-
-    .tab[aria-selected="true"] .tab-count {
-        background: var(--color-accent-secondary);
-        color: var(--color-accent);
-    }
-
-    .empty { color: var(--color-text-muted); }
-
-    .card-link {
-        text-decoration: none;
-        color: inherit;
-        display: block;
-    }
-
-    .people-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 1rem;
-    }
-
-    .person-photo {
-        width: 100%;
-        aspect-ratio: 1 / 1;
-        object-fit: cover;
-        border-radius: 8px;
-        margin-bottom: 0.75rem;
-    }
-
-    @media (max-width: 64rem) {
-        .people-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
-
-    /* Small screens: tabs go on top as a horizontally scrolling row */
-    @media (max-width: 48rem) {
-        .people-layout { grid-template-columns: 1fr; }
-        .tab-bar {
-            flex-direction: row;
-            position: static;
-            overflow-x: auto;
-        }
-        .tab { white-space: nowrap; }
-    }
-
-    @media (max-width: 36rem) {
-        .people-grid { grid-template-columns: 1fr; }
-    }
+	.people-toolbar .tabs {
+		margin: 0;
+	}
 </style>

@@ -82,7 +82,9 @@ img {
 
 /* Site header / nav */
 .site-header {
-	border-bottom: 1px solid var(--color-border);
+	background: var(--color-accent);
+	border-bottom: 3px solid var(--color-accent-secondary);
+	box-shadow: 0 2px 8px rgba(0, 37, 78, 0.1);
 }
 
 .site-header .container {
@@ -90,16 +92,17 @@ img {
 	align-items: center;
 	justify-content: space-between;
 	gap: var(--space-md);
-	padding-block: var(--space-sm);
+	padding-block: var(--space-md);
 }
 
 .site-title {
 	font-family: var(--font-serif);
 	font-size: 1.25rem;
 	font-weight: 700;
-	color: var(--color-text);
+	color: #ffffff;
 	text-decoration: none;
 	white-space: nowrap;
+	letter-spacing: 0.02em;
 }
 
 .site-nav {
@@ -109,15 +112,16 @@ img {
 }
 
 .site-nav a {
-	color: var(--color-text-muted);
+	color: rgba(255, 255, 255, 0.85);
 	text-decoration: none;
 	font-size: 0.95rem;
+	transition: color 0.2s ease;
 }
 
 .site-nav a:hover,
 .site-nav a:focus-visible {
-	color: var(--color-accent);
-	text-decoration: underline;
+	color: var(--color-accent-secondary);
+	text-decoration: none;
 }
 
 /* Hero */
@@ -139,7 +143,8 @@ img {
 
 /* Site footer */
 .site-footer {
-	border-top: 1px solid var(--color-border);
+	background: var(--color-accent);
+	border-top: 3px solid var(--color-accent-secondary);
 	margin-top: var(--space-xl);
 }
 
@@ -149,12 +154,18 @@ img {
 	flex-wrap: wrap;
 	justify-content: space-between;
 	gap: var(--space-md);
-	color: var(--color-text-muted);
+	color: rgba(255, 255, 255, 0.75);
 	font-size: 0.9rem;
 }
 
 .site-footer a {
-	color: var(--color-text-muted);
+	color: rgba(255, 255, 255, 0.85);
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+.site-footer a:hover {
+	color: var(--color-accent-secondary);
 }
 
 /* Page header (section landing pages) */
@@ -191,17 +202,19 @@ img {
 
 .card {
 	display: block;
-	border: 1px solid var(--color-border);
+	border: 2px solid var(--color-border);
 	border-radius: 0.5rem;
 	padding: var(--space-md);
 	text-decoration: none;
-	transition: box-shadow 0.15s ease, border-color 0.15s ease;
+	transition: all 0.2s ease;
+	background: var(--color-bg);
 }
 
 .card:hover,
 .card:focus-visible {
-	border-color: var(--color-accent);
-	box-shadow: 0 2px 8px rgb(0 0 0 / 0.06);
+	border-color: var(--color-accent-secondary);
+	box-shadow: 0 4px 12px rgba(123, 217, 176, 0.15);
+	transform: translateY(-2px);
 }
 
 .card-eyebrow {
@@ -209,7 +222,8 @@ img {
 	font-size: 0.8rem;
 	text-transform: uppercase;
 	letter-spacing: 0.03em;
-	color: var(--color-text-muted);
+	color: var(--color-accent-secondary);
+	font-weight: 600;
 	margin-bottom: 0.35rem;
 }
 
@@ -233,7 +247,7 @@ img {
 	text-transform: uppercase;
 	letter-spacing: 0.03em;
 	font-weight: 600;
-	padding: 0.15rem 0.55rem;
+	padding: 0.25rem 0.65rem;
 	border-radius: 999px;
 	background: var(--color-surface);
 	color: var(--color-accent);

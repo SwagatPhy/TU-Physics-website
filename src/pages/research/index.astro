@@ -7,15 +7,20 @@ const teaching = await getCollection('teaching');
 const teachingMap = new Map(teaching.map(p => [p.id, p.data]));
 
 // Resolve faculty IDs to teaching data
+// Note: Astro converts filename IDs to lowercase, but research tiles use PascalCase IDs
 const researchWithFaculty = research.map(item => ({
     ...item,
     resolvedFaculty: (item.data.faculties || [])
-        .map(f => ({
-            id: f.id,
-            group: f.group,
-            data: teachingMap.get(f.id),
-        }))
         .filter(f => f.id && typeof f.id === 'string' && !f.id.includes('[PLACEHOLDER'))
+        .map(f => {
+            const lowercaseId = f.id.toLowerCase();
+            return {
+                id: f.id,
+                lowercaseId,
+                group: f.group,
+                data: teachingMap.get(lowercaseId),
+            };
+        })
 }));
 ---
 
@@ -45,7 +50,7 @@ const researchWithFaculty = research.map(item => ({
                         <div class="faculty-overlay">
                             <div class="faculty-list">
                                 {item.resolvedFaculty.map(faculty => (
-                                    <a href={`/people/${faculty.id}`} class="faculty-link">
+                                    <a href={`/people/${faculty.lowercaseId}`} class="faculty-link">
                                         {faculty.data && (
                                             <>
                                                 <div class="faculty-name">{faculty.data.name}</div>

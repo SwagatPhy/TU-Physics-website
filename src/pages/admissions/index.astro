@@ -1,61 +1,100 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Icon from '../../components/Icon.astro';
 
-const levels = (await getCollection('admissions')).sort((a, b) => a.data.order - b.data.order);
+const programs = (await getCollection('admissions')).sort((a, b) => a.data.order - b.data.order);
+
+const audiences = [
+	{
+		href: '/admissions/national',
+		icon: 'map-pin',
+		eyebrow: 'Indian nationals',
+		title: 'National admissions',
+		text: 'Information for students from India applying to our programs.',
+	},
+	{
+		href: '/admissions/international',
+		icon: 'globe',
+		eyebrow: 'International students',
+		title: 'International admissions',
+		text: 'Information for international students from around the world.',
+	},
+] as const;
 ---
 
-<Layout title="Admissions" description="Admissions for the Department of Physics: Integrated BSc-MSc, Integrated BSc-BEd, MSc, and PhD programs.">
-	<header class="page-header">
-		<div class="container">
-			<h1>Admissions</h1>
-			<p>
-				Admissions to the Department of Physics. Explore our four programs for Indian nationals and international students.
-				Select your applicant category and program below.
-			</p>
-		</div>
-	</header>
+<Layout title="Admissions" description="Admissions to the Department of Physics, Tezpur University: Integrated BSc-MSc, Integrated BSc-BEd, MSc and PhD.">
+	<PageHeader
+		title="Admissions"
+		eyebrow="Join the department"
+		lead="Admissions to the Department of Physics. Explore our four programs for Indian nationals and international students — start by choosing your applicant category."
+	/>
 
-	<!-- Applicant Category Navigation -->
-	<section class="section admissions-categories">
+	<section class="section">
 		<div class="container">
-			<h2>Select Your Applicant Category</h2>
-			<ul class="card-grid">
-				<li>
-					<a class="card" href="/admissions/national">
-						<span class="card-eyebrow">Indian Nationals</span>
-						<h3 class="card-title">National Admissions</h3>
-						<p class="card-summary">Information for students from India applying to our programs.</p>
-					</a>
-				</li>
-				<li>
-					<a class="card" href="/admissions/international">
-						<span class="card-eyebrow">International Students</span>
-						<h3 class="card-title">International Admissions</h3>
-						<p class="card-summary">Information for international students from around the world.</p>
-					</a>
-				</li>
+			<ul class="grid grid--2">
+				{audiences.map((item) => (
+					<li>
+						<a class="card audience-card" href={item.href}>
+							<div class="card__body">
+								<span class="audience-card__icon"><Icon name={item.icon} /></span>
+								<span class="card__eyebrow">{item.eyebrow}</span>
+								<h2 class="card__title">{item.title}</h2>
+								<p class="card__text">{item.text}</p>
+								<span class="card__footer link-arrow">Continue <Icon name="arrow-right" /></span>
+							</div>
+						</a>
+					</li>
+				))}
 			</ul>
 		</div>
 	</section>
 
-	<!-- Programs -->
-	<section class="section program-levels">
+	<section class="section section--soft">
 		<div class="container">
-			<h2>Our Programs</h2>
-			<ul class="card-grid">
-				{
-					levels.map((level) => (
-						<li>
-							<a class="card" href={`/admissions/${level.id}`}>
-								<span class="card-eyebrow">{level.data.duration}</span>
-								<h3 class="card-title">{level.data.title}</h3>
-								<p class="card-summary">{level.data.tagline}</p>
-							</a>
-						</li>
-					))
-				}
+			<div class="section-head">
+				<div>
+					<p class="eyebrow">Programs</p>
+					<h2>Our programs</h2>
+				</div>
+			</div>
+			<ul class="grid">
+				{programs.map((program, i) => (
+					<li>
+						<a class="card" href={`/admissions/${program.id}`}>
+							<div class="card__body">
+								<span class="card__eyebrow">0{i + 1} · {program.data.duration}</span>
+								<h3 class="card__title">{program.data.title}</h3>
+								<p class="card__text">{program.data.tagline}</p>
+								<span class="card__footer link-arrow">Program details <Icon name="arrow-right" /></span>
+							</div>
+						</a>
+					</li>
+				))}
 			</ul>
 		</div>
 	</section>
 </Layout>
+
+<style>
+	.audience-card .card__body {
+		padding: var(--space-lg);
+	}
+
+	.audience-card .card__title {
+		font-size: 1.6rem;
+	}
+
+	.audience-card__icon {
+		display: grid;
+		place-items: center;
+		width: 3.25rem;
+		height: 3.25rem;
+		margin-bottom: var(--space-sm);
+		border-radius: 50%;
+		background: var(--navy);
+		color: var(--mint);
+		font-size: 1.35rem;
+	}
+</style>

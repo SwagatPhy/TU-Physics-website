@@ -1,6 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Icon from '../../components/Icon.astro';
 import { formatDate } from '../../lib/date';
 
 const items = (await getCollection('newsEvents', ({ data }) => import.meta.env.DEV || !data.draft)).sort(
@@ -9,72 +11,69 @@ const items = (await getCollection('newsEvents', ({ data }) => import.meta.env.D
 
 // "Upcoming" is decided at build time (the site is static), so rebuild to move events into "Past".
 const today = new Date().toISOString().slice(0, 10);
-const isUpcoming = (item) => item.data.type === 'event' && item.data.date.toISOString().slice(0, 10) >= today;
+type Item = (typeof items)[number];
+const isUpcoming = (item: Item) => item.data.type === 'event' && item.data.date.toISOString().slice(0, 10) >= today;
 
 // Which filter tab an item belongs to: 'news', 'upcoming' or 'past'.
-const groupOf = (item) => (item.data.type === 'news' ? 'news' : isUpcoming(item) ? 'upcoming' : 'past');
+const groupOf = (item: Item): 'news' | 'upcoming' | 'past' => (item.data.type === 'news' ? 'news' : isUpcoming(item) ? 'upcoming' : 'past');
 
 const tabs = [
 	{ id: 'all', label: 'All', count: items.length },
 	{ id: 'news', label: 'News', count: items.filter((i) => groupOf(i) === 'news').length },
-	{ id: 'upcoming', label: 'Upcoming Events', count: items.filter((i) => groupOf(i) === 'upcoming').length },
-	{ id: 'past', label: 'Past Events', count: items.filter((i) => groupOf(i) === 'past').length },
+	{ id: 'upcoming', label: 'Upcoming events', count: items.filter((i) => groupOf(i) === 'upcoming').length },
+	{ id: 'past', label: 'Past events', count: items.filter((i) => groupOf(i) === 'past').length },
 ];
+
+const badgeFor = { news: 'News', upcoming: 'Upcoming', past: 'Past event' };
 ---
 
-<Layout title="News & Events" description="Department news and upcoming events.">
-	<header class="page-header">
-		<div class="container">
-			<h1>News &amp; Events</h1>
-			<p>Department announcements, colloquia, and open days, newest first.</p>
-		</div>
-	</header>
+<Layout title="News & Events" description="News, colloquia and events at the Department of Physics, Tezpur University.">
+	<PageHeader
+		title="News & events"
+		eyebrow="What's happening"
+		lead="Department announcements, colloquia, and open days, newest first."
+	/>
 
 	<section class="section">
-		<div class="container">
-			<div class="filter-bar" role="tablist" aria-label="Filter news and events">
-				{
-					tabs.map((tab, i) => (
-						<button
-							type="button"
-							role="tab"
-							class="filter"
-							data-filter={tab.id}
-							aria-selected={i === 0 ? 'true' : 'false'}
-						>
-							{tab.label} <span class="filter-count">{tab.count}</span>
-						</button>
-					))
-				}
+		<div class="container container--narrow">
+			<div class="tabs" role="tablist" aria-label="Filter news and events">
+				{tabs.map((tab, i) => (
+					<button type="button" role="tab" class="tab" data-filter={tab.id} aria-selected={i === 0 ? 'true' : 'false'}>
+						{tab.label} <span class="tab__count">{tab.count}</span>
+					</button>
+				))}
 			</div>
 
-			<ul class="card-grid">
-				{
-					items.map((item) => (
-						<li class="entry" data-group={groupOf(item)}>
-							<a class="card" href={`/news-events/${item.id}`}>
-								<span class="card-eyebrow">
-									{item.data.type === 'event' ? 'Event' : 'News'} &middot; {formatDate(item.data.date)}
-									{item.data.location ? ` · ${item.data.location}` : ''}
-								</span>
-								<h3 class="card-title">{item.data.title}</h3>
-								<p class="card-summary">{item.data.summary}</p>
-							</a>
-						</li>
-					))
-				}
-			</ul>
+			<ol class="timeline">
+				{items.map((item) => (
+					<li class="entry" data-group={groupOf(item)}>
+						<time class="entry__date" datetime={item.data.date.toISOString()}>{formatDate(item.data.date)}</time>
+						<article class="card card--link entry__card">
+							<div class="card__body">
+								<div class="entry__meta">
+									<span class={`badge ${groupOf(item) === 'upcoming' ? 'badge--mint' : ''}`}>{badgeFor[groupOf(item)]}</span>
+									{item.data.location && (
+										<span class="text-muted entry__location"><Icon name="map-pin" /> {item.data.location}</span>
+									)}
+								</div>
+								<h2 class="card__title"><a href={`/news-events/${item.id}`}>{item.data.title}</a></h2>
+								<p class="card__text">{item.data.summary}</p>
+							</div>
+						</article>
+					</li>
+				))}
+			</ol>
 
-			<p class="empty" hidden>Nothing here yet.</p>
+			<p class="empty-state" hidden>Nothing here yet.</p>
 		</div>
 	</section>
 </Layout>
 
 <script>
 	// Show only the entries whose data-group matches the chosen tab ("all" shows everything).
-	const filters = document.querySelectorAll<HTMLButtonElement>('.filter');
+	const filters = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
 	const entries = document.querySelectorAll<HTMLElement>('.entry');
-	const empty = document.querySelector<HTMLElement>('.empty');
+	const empty = document.querySelector<HTMLElement>('.empty-state');
 
 	function showGroup(id: string) {
 		let visible = 0;
@@ -91,53 +90,84 @@ const tabs = [
 
 	// Open the tab named in the URL (e.g. /news-events#upcoming), if any.
 	const fromUrl = location.hash.slice(1);
-	if (document.querySelector(`.filter[data-filter="${fromUrl}"]`)) showGroup(fromUrl);
+	if (document.querySelector(`[data-filter="${fromUrl}"]`)) showGroup(fromUrl);
 </script>
 
 <style>
-	.filter-bar {
+	/* Vertical timeline: date on the left, card on the right, joined by a rule */
+	.timeline {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: var(--space-md);
+	}
+
+	.entry {
+		display: grid;
+		grid-template-columns: 9rem 1fr;
+		gap: var(--space-md);
+		position: relative;
+	}
+
+	.entry::before {
+		content: '';
+		position: absolute;
+		left: 9.75rem;
+		top: 0;
+		bottom: calc(-1 * var(--space-md));
+		width: 1px;
+		background: var(--color-border-strong);
+	}
+
+	.entry:last-child::before {
+		bottom: 0;
+	}
+
+	.entry__date {
+		padding-top: 1.4rem;
+		font-size: 0.9rem;
+		font-weight: 600;
+		color: var(--color-text-muted);
+		text-align: right;
+		padding-right: var(--space-sm);
+	}
+
+	.entry__card {
+		margin-left: var(--space-sm);
+	}
+
+	.entry__meta {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.5rem;
-		margin-bottom: var(--space-md);
+		align-items: center;
+		gap: 0.5rem 1rem;
 	}
 
-	.filter {
+	.entry__location {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.5rem;
-		padding: 0.5rem 1rem;
-		border: 1px solid var(--color-border);
-		border-radius: 999px;
-		background: var(--color-surface);
-		color: var(--color-text);
-		font: inherit;
-		cursor: pointer;
-		transition: background 0.15s, color 0.15s, border-color 0.15s;
+		gap: 0.3rem;
+		font-size: 0.9rem;
 	}
 
-	.filter:hover {
-		border-color: var(--color-accent);
-	}
+	@media (max-width: 40rem) {
+		.entry {
+			grid-template-columns: 1fr;
+			gap: 0.4rem;
+		}
 
-	.filter:focus-visible {
-		outline: 2px solid var(--color-accent);
-		outline-offset: 2px;
-	}
+		.entry::before {
+			display: none;
+		}
 
-	.filter[aria-selected='true'] {
-		background: var(--color-accent);
-		border-color: var(--color-accent);
-		color: #fff;
-		font-weight: 600;
-	}
+		.entry__date {
+			padding: 0;
+			text-align: left;
+		}
 
-	.filter-count {
-		font-size: 0.8rem;
-		opacity: 0.8;
-	}
-
-	.empty {
-		color: var(--color-text-muted);
+		.entry__card {
+			margin-left: 0;
+		}
 	}
 </style>

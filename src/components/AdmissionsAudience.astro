@@ -1,0 +1,107 @@
+---
+// Shared body of /admissions/national and /admissions/international:
+// the National | International switch, the four program cards, and
+// audience-specific information blocks passed in by the page.
+import { getCollection } from 'astro:content';
+import PageHeader from './PageHeader.astro';
+import Icon from './Icon.astro';
+
+interface InfoBlock {
+	title: string;
+	items: string[];
+}
+
+interface Props {
+	audience: 'national' | 'international';
+	title: string;
+	lead: string;
+	info: InfoBlock[];
+}
+
+const { audience, title, lead, info } = Astro.props;
+const programs = (await getCollection('admissions')).sort((a, b) => a.data.order - b.data.order);
+
+const switches = [
+	{ id: 'national', label: 'Indian nationals', href: '/admissions/national' },
+	{ id: 'international', label: 'International students', href: '/admissions/international' },
+];
+---
+
+<PageHeader title={title} lead={lead} crumbs={[{ label: 'Admissions', href: '/admissions' }]}>
+	<nav aria-label="Applicant category">
+		<ul class="tabs audience-switch">
+			{switches.map((item) => (
+				<li>
+					<a class="tab" href={item.href} aria-current={item.id === audience ? 'page' : undefined}>{item.label}</a>
+				</li>
+			))}
+		</ul>
+	</nav>
+</PageHeader>
+
+<section class="section">
+	<div class="container">
+		<div class="section-head">
+			<div>
+				<p class="eyebrow">Programs</p>
+				<h2>Choose a program</h2>
+				<p>Each program page lists eligibility, how to apply and the application deadline.</p>
+			</div>
+		</div>
+		<ul class="grid">
+			{programs.map((program) => (
+				<li>
+					<a class="card" href={`/admissions/${program.id}`}>
+						<div class="card__body">
+							<span class="card__eyebrow">{program.data.duration}</span>
+							<h3 class="card__title">{program.data.title}</h3>
+							<p class="card__text">{program.data.tagline}</p>
+							<span class="card__footer link-arrow">Program details <Icon name="arrow-right" /></span>
+						</div>
+					</a>
+				</li>
+			))}
+		</ul>
+	</div>
+</section>
+
+<section class="section section--soft">
+	<div class="container">
+		<div class="section-head">
+			<div>
+				<p class="eyebrow">Good to know</p>
+				<h2>General information</h2>
+			</div>
+		</div>
+		<div class="grid grid--wide">
+			{info.map((block) => (
+				<article class="card">
+					<div class="card__body">
+						<h3 class="card__title">{block.title}</h3>
+						<ul class="info-list">
+							{block.items.map((item) => <li set:html={item} />)}
+						</ul>
+					</div>
+				</article>
+			))}
+		</div>
+	</div>
+</section>
+
+<style>
+	.audience-switch {
+		margin: var(--space-md) 0 0;
+	}
+
+	.info-list {
+		margin: 0.25rem 0 0;
+		padding-left: 1.1rem;
+		display: grid;
+		gap: 0.4rem;
+		font-size: 0.97rem;
+	}
+
+	.info-list li::marker {
+		color: var(--slate);
+	}
+</style>

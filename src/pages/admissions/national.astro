@@ -1,123 +1,39 @@
 ---
-import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import AdmissionsAudience from '../../components/AdmissionsAudience.astro';
 
-const programs = (await getCollection('admissions')).sort((a, b) => a.data.order - b.data.order);
+// From content-notes/admissions-national.md ("General Information").
+const info = [
+	{
+		title: 'Admission portal',
+		items: ['[PLACEHOLDER — Tezpur University Admissions Portal URL]'],
+	},
+	{
+		title: 'Fees & support',
+		items: [
+			'<strong>Application fee (all programs):</strong> [PLACEHOLDER amount in INR]',
+			'<strong>Tuition per semester:</strong> [PLACEHOLDER amount]',
+			'<strong>Scholarships:</strong> [PLACEHOLDER — Merit-based / Need-based / UGC-CSIR / DST-INSPIRE / Others]',
+		],
+	},
+	{
+		title: 'Contact',
+		items: [
+			'Department of Physics, Tezpur University',
+			'[PLACEHOLDER — Address/Building location]',
+			'<strong>Email:</strong> [PLACEHOLDER physics@tezu.ac.in]',
+			'<strong>Phone:</strong> [PLACEHOLDER +91-XXXX-XXXXXX]',
+			'<strong>Office hours:</strong> [PLACEHOLDER Mon–Fri, 10:00 AM – 4:00 PM IST]',
+		],
+	},
+];
 ---
 
-<Layout title="National Admissions" description="Admissions information for national students at the Department of Physics.">
-	<header class="page-header">
-		<div class="container">
-			<h1>National Admissions</h1>
-			<p>Information and guidelines for Indian students applying to the Department of Physics.</p>
-		</div>
-	</header>
-
-	<nav class="admissions-nav">
-		<div class="container">
-			<ul class="nav-tabs">
-				<li><a href="/admissions/national" class="nav-tab active">National</a></li>
-				<li><a href="/admissions/international" class="nav-tab">International</a></li>
-			</ul>
-		</div>
-	</nav>
-
-	<section class="section">
-		<div class="container">
-			<h2>Our Programs</h2>
-			<p>Explore detailed information for each program by selecting from the cards below or visit the individual program pages.</p>
-			<ul class="card-grid">
-				{
-					programs.map((program) => (
-						<li>
-							<a class="card" href={`/admissions/${program.id}`}>
-								<span class="card-eyebrow">{program.data.duration}</span>
-								<h3 class="card-title">{program.data.title}</h3>
-								<p class="card-summary">{program.data.tagline}</p>
-							</a>
-						</li>
-					))
-				}
-			</ul>
-		</div>
-	</section>
-
-	<style>
-		.admissions-nav {
-			border-bottom: 1px solid var(--color-border);
-			background: var(--color-surface);
-		}
-
-		.nav-tabs {
-			list-style: none;
-			margin: 0;
-			padding: 0;
-			display: flex;
-			gap: 1rem;
-		}
-
-		.nav-tab {
-			display: block;
-			padding: 1rem 1.5rem;
-			text-decoration: none;
-			color: var(--color-text);
-			border-bottom: 2px solid transparent;
-			transition: all 0.2s ease;
-			font-weight: 500;
-		}
-
-		.nav-tab:hover {
-			color: var(--color-text);
-		}
-
-		.nav-tab.active {
-			color: var(--color-accent);
-			border-bottom-color: var(--color-accent);
-		}
-
-		.card-grid {
-			list-style: none;
-			margin: 2rem 0;
-			padding: 0;
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-			gap: 2rem;
-		}
-
-		.card {
-			display: block;
-			padding: 1.5rem;
-			border: 1px solid var(--color-border);
-			border-radius: 0.5rem;
-			text-decoration: none;
-			transition: all 0.2s ease;
-			background: var(--color-bg);
-		}
-
-		.card:hover {
-			border-color: var(--color-accent);
-			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-		}
-
-		.card-eyebrow {
-			display: block;
-			font-size: 0.875rem;
-			font-weight: 600;
-			color: var(--color-accent);
-			margin-bottom: 0.5rem;
-			text-transform: uppercase;
-		}
-
-		.card-title {
-			margin: 0.5rem 0 1rem;
-			font-size: 1.25rem;
-			color: var(--color-text);
-		}
-
-		.card-summary {
-			margin: 0;
-			color: var(--color-text-muted);
-			line-height: 1.6;
-		}
-	</style>
+<Layout title="National Admissions" description="Admissions information for Indian students at the Department of Physics, Tezpur University.">
+	<AdmissionsAudience
+		audience="national"
+		title="National admissions"
+		lead="Information and guidelines for Indian students applying to the Department of Physics."
+		info={info}
+	/>
 </Layout>

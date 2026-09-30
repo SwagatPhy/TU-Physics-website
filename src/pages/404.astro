@@ -1,0 +1,27 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<Layout title="Page not found" description="The page you were looking for could not be found.">
+	<section class="section">
+		<div class="container container--narrow not-found">
+			<p class="eyebrow">Error 404</p>
+			<h1>Page not found</h1>
+			<p class="lead">The page you were looking for doesn't exist or has moved.</p>
+			<div class="btn-row">
+				<a class="btn btn--navy" href="/">Go to the home page <Icon name="arrow-right" /></a>
+				<a class="btn btn--outline" href="/contact">Contact the department</a>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.not-found {
+		min-height: 50vh;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+</style>

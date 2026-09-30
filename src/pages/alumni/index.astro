@@ -1,578 +1,185 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Icon from '../../components/Icon.astro';
+
+// Copy from content-notes/alumni.md. Everything marked [PLACEHOLDER] is
+// pending from the department.
+const impact = ['Total alumni', 'Countries', 'Research publications', 'Faculty positions'];
+
+const spotlights = [
+	{ track: 'Research & academia' },
+	{ track: 'Industry leadership' },
+	{ track: 'Public service & policy' },
+];
+
+const network = [
+	{
+		title: 'Alumni events & reunions',
+		text: 'Department anniversary celebration, regional alumni meetups and a homecoming seminar series. [PLACEHOLDER — dates and cities]',
+	},
+	{
+		title: 'Mentorship',
+		text: 'Connect with students pursuing your research area or career path.',
+	},
+	{
+		title: 'Collaboration & research',
+		text: 'Reach out to fellow alumni working on complementary topics.',
+	},
+	{
+		title: 'Visiting lectures',
+		text: 'Alumni return to campus for seminars, lab visits and career talks. [PLACEHOLDER — number of talks last academic year]',
+	},
+];
 ---
 
-<Layout title="Alumni" description="Connect with our vibrant alumni community and discover career pathways in physics.">
-	<!-- Hero Section -->
-	<section class="hero-gradient">
-		<div class="hero-content">
-			<h1>Our Alumni Community</h1>
-			<p class="hero-tagline">Advancing Physics Worldwide</p>
-			<p class="hero-subtitle">
-				Our graduates shape careers in research, academia, industry, and beyond. Join a global network
-				of physicists making an impact on science and society.
-			</p>
-			<div class="hero-ctas">
-				<a href="#stories" class="cta-button primary">Explore Stories</a>
-				<a href="#network" class="cta-button secondary">Join the Network</a>
-			</div>
+<Layout title="Alumni" description="The alumni community of the Department of Physics, Tezpur University.">
+	<PageHeader
+		title="Our alumni community"
+		eyebrow="Alumni"
+		lead="Our graduates shape careers in research, academia, industry, and beyond. Join a global network of physicists making an impact on science and society."
+	>
+		<div class="btn-row header-actions">
+			<a class="btn btn--navy" href="#stories">Explore stories</a>
+			<a class="btn btn--outline" href="#connect">Stay connected</a>
 		</div>
-	</section>
+	</PageHeader>
 
-	<!-- Alumni Highlights Section -->
-	<section class="section highlights">
+	<section class="section section--tight">
 		<div class="container">
-			<h2>Alumni Impact</h2>
-			<div class="highlights-grid">
-				<div class="highlight-card">
-					<div class="highlight-number">[PLACEHOLDER]</div>
-					<div class="highlight-label">Total Alumni</div>
-				</div>
-				<div class="highlight-card">
-					<div class="highlight-number">[PLACEHOLDER]</div>
-					<div class="highlight-label">Countries</div>
-				</div>
-				<div class="highlight-card">
-					<div class="highlight-number">[PLACEHOLDER]</div>
-					<div class="highlight-label">Research Publications</div>
-				</div>
-				<div class="highlight-card">
-					<div class="highlight-number">[PLACEHOLDER]</div>
-					<div class="highlight-label">Faculty Positions</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<!-- Alumni Stories Section -->
-	<section class="section stories" id="stories">
-		<div class="container">
-			<h2>Alumni Spotlights</h2>
-			<p class="section-subtitle">Meet our accomplished alumni making a difference in the world</p>
-			<ul class="stories-grid">
-				<li>
-					<article class="story-card">
-						<div class="story-image-placeholder">[PLACEHOLDER]</div>
-						<div class="story-content">
-							<h3 class="story-title">[PLACEHOLDER — Alumni Name]</h3>
-							<p class="story-role">[PLACEHOLDER — Current Position/Organization]</p>
-							<p class="story-description">
-								[PLACEHOLDER — Brief career journey and achievements]
-							</p>
-							<a href="#" class="story-link">Read Full Story →</a>
-						</div>
-					</article>
-				</li>
-				<li>
-					<article class="story-card">
-						<div class="story-image-placeholder">[PLACEHOLDER]</div>
-						<div class="story-content">
-							<h3 class="story-title">[PLACEHOLDER — Alumni Name]</h3>
-							<p class="story-role">[PLACEHOLDER — Current Position/Organization]</p>
-							<p class="story-description">
-								[PLACEHOLDER — Brief career journey and achievements]
-							</p>
-							<a href="#" class="story-link">Read Full Story →</a>
-						</div>
-					</article>
-				</li>
-				<li>
-					<article class="story-card">
-						<div class="story-image-placeholder">[PLACEHOLDER]</div>
-						<div class="story-content">
-							<h3 class="story-title">[PLACEHOLDER — Alumni Name]</h3>
-							<p class="story-role">[PLACEHOLDER — Current Position/Organization]</p>
-							<p class="story-description">
-								[PLACEHOLDER — Brief career journey and achievements]
-							</p>
-							<a href="#" class="story-link">Read Full Story →</a>
-						</div>
-					</article>
-				</li>
+			<ul class="stats">
+				{impact.map((label) => (
+					<li class="stat">
+						<span class="stat__value stat__value--pending">[PLACEHOLDER]</span>
+						<span class="stat__label">{label}</span>
+					</li>
+				))}
 			</ul>
 		</div>
 	</section>
 
-	<!-- Alumni Network Section -->
-	<section class="section network" id="network">
+	<section class="section section--soft" id="stories">
 		<div class="container">
-			<h2>Alumni Network & Events</h2>
-			<div class="network-grid">
-				<div class="network-card">
-					<h3>Regional Chapters</h3>
-					<p>
-						[PLACEHOLDER — Description of regional alumni chapters and how to connect with alumni in your area]
-					</p>
-					<a href="#" class="network-link">Find Your Chapter →</a>
+			<div class="section-head">
+				<div>
+					<p class="eyebrow">Spotlights</p>
+					<h2>Alumni stories</h2>
+					<p>Meet our alumni making a difference in the world.</p>
 				</div>
-				<div class="network-card">
-					<h3>Networking Events</h3>
-					<p>
-						[PLACEHOLDER — Information about annual reunions, networking sessions, and alumni gatherings]
-					</p>
-					<a href="#" class="network-link">View Events →</a>
+			</div>
+			<ul class="grid">
+				{spotlights.map((story) => (
+					<li>
+						<article class="card">
+							<div class="card__media story-media" aria-hidden="true">
+								<span>[PLACEHOLDER photo]</span>
+							</div>
+							<div class="card__body">
+								<span class="card__eyebrow">{story.track}</span>
+								<h3 class="card__title">[PLACEHOLDER — Alumni name]</h3>
+								<p class="card__text text-muted">[PLACEHOLDER — Current position/organization]</p>
+								<p class="card__text">[PLACEHOLDER — Brief career journey and achievements]</p>
+							</div>
+						</article>
+					</li>
+				))}
+			</ul>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="container">
+			<div class="section-head">
+				<div>
+					<p class="eyebrow">Community</p>
+					<h2>Alumni network</h2>
 				</div>
-				<div class="network-card">
-					<h3>Online Community</h3>
-					<p>
-						[PLACEHOLDER — Details about online forums, social media groups, and digital networking opportunities]
-					</p>
-					<a href="#" class="network-link">Join Online →</a>
-				</div>
-				<div class="network-card">
-					<h3>Career Services</h3>
-					<p>
-						[PLACEHOLDER — Alumni career support, mentorship programs, and job board information]
-					</p>
-					<a href="#" class="network-link">Learn More →</a>
-				</div>
+			</div>
+			<ul class="grid">
+				{network.map((item) => (
+					<li class="network-item">
+						<h3>{item.title}</h3>
+						<p>{item.text}</p>
+					</li>
+				))}
+			</ul>
+		</div>
+	</section>
+
+	<section class="section section--navy" id="connect">
+		<div class="container grid grid--wide">
+			<div>
+				<h2 class="connect-title">Stay connected</h2>
+				<p>
+					Quarterly updates on department achievements, alumni news, events, and opportunities.
+					[PLACEHOLDER — newsletter subscription link]
+				</p>
+			</div>
+			<div>
+				<h3>Give back</h3>
+				<p>
+					Contributions from alumni can support scholarships, research equipment, student travel and alumni
+					events. [PLACEHOLDER — how to contribute]
+				</p>
+			</div>
+			<div>
+				<h3>Alumni coordinator</h3>
+				<ul class="icon-list">
+					<li><Icon name="mail" /> [PLACEHOLDER alumni@tezu.ac.in]</li>
+					<li><Icon name="phone" /> [PLACEHOLDER +91-XXXX-XXXXXX]</li>
+					<li><Icon name="map-pin" /> [PLACEHOLDER Department of Physics, Building/Block, Room #]</li>
+				</ul>
 			</div>
 		</div>
 	</section>
 
-	<!-- Alumni Engagement Section -->
-	<section class="section engagement">
-		<div class="container">
-			<h2>Stay Connected</h2>
-			<div class="engagement-content">
-				<div class="engagement-column">
-					<h3>Alumni Newsletter</h3>
-					<p>
-						[PLACEHOLDER — Description of alumni newsletter content and subscription information]
-					</p>
-					<form class="newsletter-form" onsubmit="return false;">
-						<input type="email" placeholder="Your email address" required />
-						<button type="submit" class="submit-button">Subscribe</button>
-					</form>
-				</div>
-
-				<div class="engagement-column">
-					<h3>Support the Department</h3>
-					<p>
-						[PLACEHOLDER — Information about donations, endowments, and how alumni can support the department]
-					</p>
-					<a href="#" class="cta-button primary">Make a Donation</a>
-				</div>
-
-				<div class="engagement-column">
-					<h3>Contact Alumni Relations</h3>
-					<div class="contact-info">
-						<p>
-							<strong>Alumni Office</strong><br />
-							[PLACEHOLDER — Department of Physics, Tezpur University]<br />
-							<strong>Email:</strong> [PLACEHOLDER — alumni@tezu.ac.in]<br />
-							<strong>Phone:</strong> [PLACEHOLDER — +91-XXXX-XXXXXX]<br />
-							<strong>Hours:</strong> [PLACEHOLDER — Mon–Fri, 10:00 AM – 4:00 PM IST]
-						</p>
-					</div>
-				</div>
+	<section class="section">
+		<div class="container container--narrow">
+			<div class="pending">
+				<Icon name="users" />
+				<p>
+					<strong>Alumni directory.</strong> Search for classmates by name, graduation year, or research area.
+					[PLACEHOLDER — Searchable alumni directory]
+				</p>
 			</div>
 		</div>
 	</section>
-
-	<!-- Alumni Directory Section -->
-	<section class="section directory">
-		<div class="container">
-			<h2>Alumni Directory</h2>
-			<p class="section-subtitle">
-				Connect with fellow alumni, explore career paths, and expand your professional network.
-			</p>
-			<div class="directory-placeholder">
-				<p>[PLACEHOLDER — Alumni directory interface and search functionality]</p>
-				<a href="#" class="cta-button primary">Access Directory</a>
-			</div>
-		</div>
-	</section>
-
-	<style>
-		.hero-gradient {
-			background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-text-muted) 100%);
-			color: white;
-			padding: 4rem 2rem;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			text-align: center;
-			min-height: 40vh;
-		}
-
-		.hero-content {
-			max-width: 800px;
-		}
-
-		.hero-content h1 {
-			font-size: 3rem;
-			margin: 0 0 1rem 0;
-			font-weight: 700;
-		}
-
-		.hero-tagline {
-			font-size: 1.5rem;
-			margin: 0 0 1rem 0;
-			opacity: 0.95;
-		}
-
-		.hero-subtitle {
-			font-size: 1.1rem;
-			margin: 0 0 2rem 0;
-			opacity: 0.9;
-			line-height: 1.6;
-		}
-
-		.hero-ctas {
-			display: flex;
-			gap: 1rem;
-			justify-content: center;
-			flex-wrap: wrap;
-			margin-bottom: 1rem;
-		}
-
-		.cta-button {
-			display: inline-block;
-			padding: 0.875rem 1.75rem;
-			border-radius: 0.375rem;
-			text-decoration: none;
-			font-weight: 600;
-			transition: all 0.2s ease;
-		}
-
-		.cta-button.primary {
-			background: white;
-			color: var(--color-accent);
-		}
-
-		.cta-button.primary:hover {
-			background: rgba(255, 255, 255, 0.9);
-		}
-
-		.cta-button.secondary {
-			background: transparent;
-			color: white;
-			border: 2px solid white;
-		}
-
-		.cta-button.secondary:hover {
-			background: rgba(255, 255, 255, 0.1);
-		}
-
-		.section {
-			padding: 3rem 2rem;
-		}
-
-		.container {
-			max-width: 1200px;
-			margin: 0 auto;
-			padding: 0 2rem;
-		}
-
-		.section h2 {
-			font-size: 2rem;
-			margin: 0 0 0.5rem 0;
-			color: var(--color-text);
-		}
-
-		.section-subtitle {
-			font-size: 1rem;
-			color: var(--color-text-muted);
-			margin: 0.5rem 0 2rem 0;
-		}
-
-		/* Highlights Grid */
-		.highlights {
-			background: var(--color-surface);
-		}
-
-		.highlights-grid {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-			gap: 1.5rem;
-			margin-top: 2rem;
-		}
-
-		.highlight-card {
-			text-align: center;
-			padding: 2rem 1rem;
-			background: white;
-			border-radius: 0.5rem;
-			border: 1px solid var(--color-border);
-		}
-
-		.highlight-number {
-			font-size: 2.5rem;
-			font-weight: 700;
-			color: var(--color-accent);
-			margin-bottom: 0.5rem;
-		}
-
-		.highlight-label {
-			font-size: 1rem;
-			color: var(--color-text-muted);
-		}
-
-		/* Stories Grid */
-		.stories-grid {
-			list-style: none;
-			padding: 0;
-			margin: 2rem 0 0 0;
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-			gap: 2rem;
-		}
-
-		.story-card {
-			display: flex;
-			flex-direction: column;
-			border: 1px solid var(--color-border);
-			border-radius: 0.5rem;
-			overflow: hidden;
-			transition: all 0.2s ease;
-		}
-
-		.story-card:hover {
-			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-		}
-
-		.story-image-placeholder {
-			width: 100%;
-			height: 200px;
-			background: var(--color-surface);
-			border-bottom: 1px solid var(--color-border);
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			color: var(--color-text-muted);
-			font-style: italic;
-			padding: 1rem;
-			text-align: center;
-		}
-
-		.story-content {
-			padding: 1.5rem;
-			flex: 1;
-			display: flex;
-			flex-direction: column;
-		}
-
-		.story-title {
-			font-size: 1.25rem;
-			margin: 0 0 0.5rem 0;
-			color: var(--color-text);
-		}
-
-		.story-role {
-			font-size: 0.95rem;
-			color: var(--color-accent);
-			font-weight: 600;
-			margin: 0 0 1rem 0;
-		}
-
-		.story-description {
-			flex: 1;
-			font-size: 0.95rem;
-			color: var(--color-text);
-			line-height: 1.6;
-			margin: 0 0 1rem 0;
-		}
-
-		.story-link {
-			color: var(--color-accent);
-			text-decoration: none;
-			font-weight: 600;
-			transition: all 0.2s ease;
-		}
-
-		.story-link:hover {
-			color: var(--color-accent);
-			text-decoration: underline;
-		}
-
-		/* Network Grid */
-		.network {
-			background: white;
-		}
-
-		.network-grid {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-			gap: 2rem;
-			margin-top: 2rem;
-		}
-
-		.network-card {
-			padding: 2rem;
-			background: var(--color-surface);
-			border: 1px solid var(--color-border);
-			border-radius: 0.5rem;
-		}
-
-		.network-card h3 {
-			font-size: 1.2rem;
-			margin: 0 0 1rem 0;
-			color: var(--color-text);
-		}
-
-		.network-card p {
-			font-size: 0.95rem;
-			color: var(--color-text);
-			line-height: 1.6;
-			margin: 0 0 1.5rem 0;
-		}
-
-		.network-link {
-			display: inline-block;
-			color: var(--color-accent);
-			text-decoration: none;
-			font-weight: 600;
-			transition: all 0.2s ease;
-		}
-
-		.network-link:hover {
-			color: var(--color-accent);
-			text-decoration: underline;
-		}
-
-		/* Engagement Section */
-		.engagement {
-			background: var(--color-surface);
-		}
-
-		.engagement-content {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-			gap: 2rem;
-			margin-top: 2rem;
-		}
-
-		.engagement-column {
-			padding: 2rem;
-			background: white;
-			border-radius: 0.5rem;
-			border: 1px solid var(--color-border);
-		}
-
-		.engagement-column h3 {
-			font-size: 1.2rem;
-			margin: 0 0 1rem 0;
-			color: var(--color-text);
-		}
-
-		.engagement-column p {
-			font-size: 0.95rem;
-			color: var(--color-text);
-			line-height: 1.6;
-			margin: 0 0 1.5rem 0;
-		}
-
-		.newsletter-form {
-			display: flex;
-			gap: 0.5rem;
-		}
-
-		.newsletter-form input {
-			flex: 1;
-			padding: 0.75rem;
-			border: 1px solid var(--color-border);
-			border-radius: 0.375rem;
-			font-size: 0.95rem;
-		}
-
-		.submit-button {
-			padding: 0.75rem 1.5rem;
-			background: var(--color-accent);
-			color: white;
-			border: none;
-			border-radius: 0.375rem;
-			font-weight: 600;
-			cursor: pointer;
-			transition: all 0.2s ease;
-		}
-
-		.submit-button:hover {
-			background: var(--color-text-muted);
-		}
-
-		.contact-info {
-			font-size: 0.9rem;
-			line-height: 1.8;
-			color: var(--color-text);
-		}
-
-		.contact-info strong {
-			display: block;
-			margin-top: 0.5rem;
-			color: var(--color-accent);
-		}
-
-		.contact-info br {
-			content: "";
-		}
-
-		/* Directory Section */
-		.directory {
-			background: white;
-		}
-
-		.directory-placeholder {
-			background: var(--color-surface);
-			border: 1px dashed var(--color-border);
-			padding: 3rem 2rem;
-			text-align: center;
-			border-radius: 0.5rem;
-			margin-top: 2rem;
-		}
-
-		.directory-placeholder p {
-			color: var(--color-text-muted);
-			font-style: italic;
-			margin: 0 0 1.5rem 0;
-		}
-
-		/* Responsive Design */
-		@media (max-width: 768px) {
-			.hero-content h1 {
-				font-size: 2rem;
-			}
-
-			.hero-tagline {
-				font-size: 1.2rem;
-			}
-
-			.hero-subtitle {
-				font-size: 1rem;
-			}
-
-			.hero-ctas {
-				flex-direction: column;
-				align-items: center;
-			}
-
-			.cta-button {
-				width: 100%;
-				max-width: 300px;
-			}
-
-			.section h2 {
-				font-size: 1.5rem;
-			}
-
-			.highlights-grid,
-			.network-grid,
-			.engagement-content {
-				grid-template-columns: 1fr;
-			}
-
-			.stories-grid {
-				grid-template-columns: 1fr;
-			}
-
-			.newsletter-form {
-				flex-direction: column;
-			}
-
-			.newsletter-form input,
-			.submit-button {
-				width: 100%;
-			}
-		}
-	</style>
 </Layout>
+
+<style>
+	.header-actions {
+		margin-top: var(--space-md);
+	}
+
+	.stat__value--pending {
+		font-size: 1.1rem;
+		color: var(--slate);
+	}
+
+	.story-media {
+		display: grid;
+		place-items: center;
+		color: var(--slate);
+		font-size: 0.9rem;
+		background:
+			radial-gradient(circle at 30% 30%, rgba(123, 217, 176, 0.25), transparent 50%),
+			var(--color-bg-soft);
+	}
+
+	.network-item {
+		padding-top: var(--space-md);
+		border-top: 2px solid var(--mint);
+	}
+
+	.network-item p {
+		margin: 0;
+	}
+
+	.connect-title {
+		font-size: 1.6rem;
+	}
+
+	.section--navy .icon-list .icon {
+		color: var(--mint);
+	}
+</style>

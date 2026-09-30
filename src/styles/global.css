@@ -836,6 +836,15 @@ a.card:hover .card__media img,
 	hyphens: auto;
 }
 
+/* Narrow phone columns turn justified text into gappy "rivers" */
+@media (max-width: 40rem) {
+	.prose p,
+	.prose li,
+	.justify {
+		text-align: left;
+	}
+}
+
 .prose h2 {
 	font-size: 1.6rem;
 	margin-top: var(--space-lg);

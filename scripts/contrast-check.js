@@ -6,16 +6,16 @@
  */
 
 // Color palette from src/styles/global.css
+// Keep in sync with the tokens at the top of global.css.
 const palette = {
-	'--color-text': '#565651',
-	'--color-text-muted': '#4E6D93',
-	'--color-accent': '#00254E',
-	'--color-accent-hover': '#4E6D93',
-	'--color-border': '#8DB2D9',
-	'--color-surface': '#C7DCE5',
-	'--color-accent-secondary': '#7BD9B0',
-	'--color-cta': '#FFBF3E',
-	'--color-bg': '#ffffff',
+	'--navy': '#00254E',
+	'--slate': '#4E6D93',
+	'--ice': '#C7DCE5',
+	'--graphite': '#565651',
+	'--mint': '#7BD9B0',
+	'--amber': '#FFBF3E',
+	'--color-bg': '#FFFFFF',
+	'--color-bg-soft': '#EEF5F7',
 };
 
 // Convert hex to RGB
@@ -56,27 +56,28 @@ function getContrast(hex1, hex2) {
 }
 
 // Text/background combinations actually used on the site
+// (Mint is only used decoratively on light backgrounds — rules, dots — never as text.)
 const combinations = [
-	// Global text on backgrounds
-	{ text: '--color-text', bg: '--color-bg', name: 'Body text on white' },
-	{ text: '--color-text', bg: '--color-surface', name: 'Body text on light blue surface' },
-	{ text: '--color-text-muted', bg: '--color-bg', name: 'Muted text on white' },
-	{ text: '--color-text-muted', bg: '--color-surface', name: 'Muted text on light blue surface' },
+	// Body and muted text
+	{ text: '--graphite', bg: '--color-bg', name: 'Body text on white' },
+	{ text: '--graphite', bg: '--color-bg-soft', name: 'Body text on soft section' },
+	{ text: '--slate', bg: '--color-bg', name: 'Muted text / eyebrows on white' },
+	{ text: '--slate', bg: '--color-bg-soft', name: 'Muted text / eyebrows on soft section' },
 
-	// Headers & accent text
-	{ text: '--color-accent', bg: '--color-bg', name: 'Navy accent on white' },
-	{ text: '--color-accent', bg: '--color-surface', name: 'Navy accent on light blue surface' },
-	{ text: '--color-accent-secondary', bg: '--color-bg', name: 'Mint accent on white' },
-
-	// On dark backgrounds (hero, footer)
-	{ text: '#ffffff', bg: '--color-accent', name: 'White text on navy hero/footer' },
-
-	// Card eyebrow (navy on light)
-	{ text: '--color-accent', bg: '--color-surface', name: 'Card eyebrow (navy on surface)' },
+	// Headings, links, chips, badges
+	{ text: '--navy', bg: '--color-bg', name: 'Headings and links on white' },
+	{ text: '--navy', bg: '--color-bg-soft', name: 'Headings and chips on soft section' },
+	{ text: '--navy', bg: '--ice', name: 'Badge text (navy on ice)' },
+	{ text: '--navy', bg: '--mint', name: 'Mint badge / active tab count' },
 
 	// Buttons
-	{ text: '--color-accent', bg: '--color-bg', name: 'Primary button text (navy on white)' },
-	{ text: '#ffffff', bg: '--color-cta', name: 'CTA button text (white on amber)' },
+	{ text: '--navy', bg: '--amber', name: 'Primary button (navy on amber)' },
+	{ text: '--color-bg', bg: '--navy', name: 'Navy button, active tab, footer links' },
+
+	// Navy sections and footer
+	{ text: '--ice', bg: '--navy', name: 'Body text on navy sections/footer' },
+	{ text: '--mint', bg: '--navy', name: 'Footer headings (mint on navy)' },
+	{ text: '--amber', bg: '--navy', name: 'Focus ring on navy (non-text, needs 3:1)' },
 ];
 
 // Calculate and display

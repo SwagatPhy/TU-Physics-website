@@ -1,0 +1,187 @@
+---
+// Thumbnail grid that opens photos in a lightbox (<dialog>).
+// Keyboard: Enter opens, ←/→ step through, Esc closes.
+
+interface Photo {
+	src: string;
+	alt: string;
+	caption?: string;
+}
+
+interface Props {
+	photos: Photo[];
+	label: string; // accessible name for the gallery
+}
+
+const { photos, label } = Astro.props;
+---
+
+<div class="gallery" data-gallery>
+	<ul class="gallery__grid" aria-label={label}>
+		{photos.map((photo, i) => (
+			<li>
+				<button type="button" class="gallery__thumb" data-index={i} aria-label={`Open photo: ${photo.alt}`}>
+					<img src={photo.src} alt={photo.alt} loading="lazy" decoding="async" />
+				</button>
+			</li>
+		))}
+	</ul>
+
+	<dialog class="lightbox" aria-label={label}>
+		<figure class="lightbox__figure">
+			<img class="lightbox__img" src="" alt="" />
+			<figcaption class="lightbox__caption"></figcaption>
+		</figure>
+		<button type="button" class="lightbox__btn lightbox__close" data-action="close" aria-label="Close">&times;</button>
+		<button type="button" class="lightbox__btn lightbox__prev" data-action="prev" aria-label="Previous photo">&lsaquo;</button>
+		<button type="button" class="lightbox__btn lightbox__next" data-action="next" aria-label="Next photo">&rsaquo;</button>
+	</dialog>
+
+	<script type="application/json" set:html={JSON.stringify(photos)} />
+</div>
+
+<script>
+	document.querySelectorAll<HTMLElement>('[data-gallery]').forEach((gallery) => {
+		const photos = JSON.parse(gallery.querySelector('script[type="application/json"]')!.textContent!);
+		const dialog = gallery.querySelector('dialog')!;
+		const img = dialog.querySelector<HTMLImageElement>('.lightbox__img')!;
+		const caption = dialog.querySelector<HTMLElement>('.lightbox__caption')!;
+		let current = 0;
+
+		function show(index: number) {
+			current = (index + photos.length) % photos.length;
+			const photo = photos[current];
+			img.src = photo.src;
+			img.alt = photo.alt;
+			caption.textContent = `${photo.caption ?? photo.alt} — ${current + 1} of ${photos.length}`;
+		}
+
+		gallery.querySelectorAll<HTMLButtonElement>('.gallery__thumb').forEach((thumb) => {
+			thumb.addEventListener('click', () => {
+				show(Number(thumb.dataset.index));
+				dialog.showModal();
+			});
+		});
+
+		dialog.addEventListener('click', (event) => {
+			const target = event.target as HTMLElement;
+			const action = target.closest<HTMLElement>('[data-action]')?.dataset.action;
+			if (action === 'close' || target === dialog) dialog.close();
+			if (action === 'prev') show(current - 1);
+			if (action === 'next') show(current + 1);
+		});
+
+		dialog.addEventListener('keydown', (event) => {
+			if (event.key === 'ArrowLeft') show(current - 1);
+			if (event.key === 'ArrowRight') show(current + 1);
+		});
+	});
+</script>
+
+<style>
+	.gallery__grid {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(min(100%, 11rem), 1fr));
+		gap: 0.75rem;
+	}
+
+	.gallery__thumb {
+		display: block;
+		width: 100%;
+		padding: 0;
+		border: 0;
+		border-radius: var(--radius-sm);
+		overflow: hidden;
+		background: var(--color-bg-soft);
+		cursor: zoom-in;
+	}
+
+	.gallery__thumb img {
+		width: 100%;
+		aspect-ratio: 17 / 10;
+		object-fit: cover;
+		transition: transform 0.4s var(--ease), opacity 0.2s;
+	}
+
+	.gallery__thumb:hover img {
+		transform: scale(1.05);
+	}
+
+	.lightbox {
+		width: min(64rem, 100vw - 2rem);
+		max-height: calc(100vh - 2rem);
+		padding: 0;
+		border: 0;
+		border-radius: var(--radius);
+		background: var(--navy);
+		color: var(--color-on-dark);
+		overflow: visible;
+	}
+
+	.lightbox::backdrop {
+		background: rgba(0, 20, 45, 0.82);
+	}
+
+	.lightbox__figure {
+		margin: 0;
+	}
+
+	.lightbox__img {
+		width: 100%;
+		max-height: calc(100vh - 7rem);
+		object-fit: contain;
+		border-radius: var(--radius) var(--radius) 0 0;
+		background: #000;
+	}
+
+	.lightbox__caption {
+		padding: 0.8rem 1.1rem;
+		font-size: 0.92rem;
+		color: var(--color-on-dark-muted);
+	}
+
+	.lightbox__btn {
+		position: absolute;
+		display: grid;
+		place-items: center;
+		width: 2.75rem;
+		height: 2.75rem;
+		border: 0;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.92);
+		color: var(--navy);
+		font-size: 1.8rem;
+		line-height: 1;
+		cursor: pointer;
+		box-shadow: var(--shadow);
+	}
+
+	.lightbox__close {
+		top: -0.9rem;
+		right: -0.9rem;
+	}
+
+	.lightbox__prev,
+	.lightbox__next {
+		top: 50%;
+		transform: translateY(-50%);
+	}
+
+	.lightbox__prev {
+		left: 0.75rem;
+	}
+
+	.lightbox__next {
+		right: 0.75rem;
+	}
+
+	@media (max-width: 36rem) {
+		.lightbox__close {
+			top: 0.5rem;
+			right: 0.5rem;
+		}
+	}
+</style>

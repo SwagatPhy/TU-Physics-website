@@ -1,0 +1,34 @@
+---
+// Header band at the top of every inner page: breadcrumb, title, optional lead.
+// Extra content (badges, buttons) can be passed through the default slot.
+
+interface Crumb {
+	label: string;
+	href?: string;
+}
+
+interface Props {
+	title: string;
+	lead?: string;
+	eyebrow?: string;
+	crumbs?: Crumb[];
+}
+
+const { title, lead, eyebrow, crumbs = [] } = Astro.props;
+const trail: Crumb[] = [{ label: 'Home', href: '/' }, ...crumbs];
+---
+
+<header class="page-header">
+	<div class="container">
+		<nav class="breadcrumb" aria-label="Breadcrumb">
+			<ol>
+				{trail.map((crumb) => <li>{crumb.href ? <a href={crumb.href}>{crumb.label}</a> : crumb.label}</li>)}
+				<li aria-current="page">{title}</li>
+			</ol>
+		</nav>
+		{eyebrow && <p class="eyebrow">{eyebrow}</p>}
+		<h1>{title}</h1>
+		{lead && <p class="lead justify">{lead}</p>}
+		<slot />
+	</div>
+</header>

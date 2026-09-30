@@ -1,0 +1,80 @@
+---
+// One person in the People directory. Shows the photo when there is one,
+// otherwise a circle with the person's initials.
+
+interface Props {
+	name: string;
+	role?: string; // designation, or "Supervisor: …"
+	topics?: string[]; // research areas, shown as chips
+	email?: string;
+	photo?: string; // filename inside /public/People-photos/
+	href?: string; // profile page, if the person has one
+}
+
+const { name, role, topics = [], email, photo, href } = Astro.props;
+
+const initials = name
+	.replace(/^(Dr|Prof)\.?\s+/i, '')
+	.split(/\s+/)
+	.filter(Boolean)
+	.map((word) => word[0])
+	.slice(0, 2)
+	.join('')
+	.toUpperCase();
+
+// Skip obviously unfinished values so they don't render as links.
+const showEmail = email && email.includes('@') && !email.includes('PLACEHOLDER');
+---
+
+<article class={`card person-card ${href ? 'card--link' : ''}`} data-person={`${name} ${role ?? ''} ${topics.join(' ')}`.toLowerCase()}>
+	<div class="person-card__top">
+		<div class="avatar">
+			{photo ? <img src={`/People-photos/${photo}`} alt="" loading="lazy" decoding="async" /> : initials}
+		</div>
+		<div>
+			<h3 class="card__title person-card__name">
+				{href ? <a href={href}>{name}</a> : name}
+			</h3>
+			{role && <p class="person-card__role">{role}</p>}
+		</div>
+	</div>
+	{topics.length > 0 && (
+		<ul class="chip-list">
+			{topics.map((topic) => <li class="chip">{topic}</li>)}
+		</ul>
+	)}
+	{showEmail && (
+		<a class="person-card__email" href={`mailto:${email}`}>{email}</a>
+	)}
+</article>
+
+<style>
+	.person-card {
+		gap: var(--space-sm);
+		padding: var(--space-md);
+	}
+
+	.person-card__top {
+		display: flex;
+		gap: 1rem;
+		align-items: center;
+	}
+
+	.person-card__name {
+		font-size: 1.1rem;
+	}
+
+	.person-card__role {
+		margin: 0.15rem 0 0;
+		font-size: 0.92rem;
+		color: var(--color-text-muted);
+	}
+
+	.person-card__email {
+		position: relative; /* stays clickable above the card's stretched link */
+		z-index: 1;
+		margin-top: auto;
+		font-size: 0.9rem;
+		overflow-wrap: anywhere;
+	}
+</style>

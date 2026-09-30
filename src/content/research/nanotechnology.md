@@ -1,8 +1,6 @@
 ---
 specialization: "Nanoscience and Nanotechnology"
-faculties:
-  - id: "[PLACEHOLDER: Faculty]"
-
+faculties: []
 description: "Focuses on quantum and nonlinear optical phenomena with applications in quantum information and imaging"
 image: "nanoparticle-physics.webp"
 ---

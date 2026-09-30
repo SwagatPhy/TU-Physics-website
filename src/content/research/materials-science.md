@@ -1,11 +1,6 @@
 ---
 specialization: "Materials Science & Engineering"
-faculties:
-  - id: "[PLACEHOLDER: NehaVerma]"
-    group: "Neha Verma group"
-  - id: "[PLACEHOLDER: SureshRao]"
-    group: "Suresh Rao group"
-
+faculties: []
 description: "Explores synthesis, characterization, and applications of advanced materials for electronics and energy storage"
 image: "material-science-and-engineering.jpg"
 ---

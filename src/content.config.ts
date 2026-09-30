@@ -48,7 +48,7 @@ const research = defineCollection({
         faculties: z.array(z.object({
             id: z.string(),
             group: z.string().optional(),
-        })),
+        })).default([]),
         description: z.string(),
         image: z.string().optional(),
     })

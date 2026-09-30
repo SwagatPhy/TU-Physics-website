@@ -1,11 +1,6 @@
 ---
 specialization: "Theoretical & Mathematical Physics"
-faculties:
-  - id: "[PLACEHOLDER: DeepakSinha]"
-    group: "Deepak Sinha group"
-  - id: "[PLACEHOLDER: KavyaMenon]"
-    group: "Kavya Menon group"
-
+faculties: []
 description: "Develops analytical and computational methods to understand complex physical systems and fundamental theories"
 image: "theoretical-physics.jpg"
 ---

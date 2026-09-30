@@ -1,11 +1,6 @@
 ---
 specialization: "Optics & Photonics"
-faculties:
-  - id: "[PLACEHOLDER: AmitSharma]"
-    group: "Amit Sharma group"
-  - id: "[PLACEHOLDER: AnitaMishra]"
-    group: "Anita Mishra group"
-
+faculties: []
 description: "Focuses on quantum and nonlinear optical phenomena with applications in quantum information and imaging"
 image: "optics-and-photonics.jpeg"
 ---

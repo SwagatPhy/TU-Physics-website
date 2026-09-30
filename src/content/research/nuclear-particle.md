@@ -1,11 +1,6 @@
 ---
 specialization: "Nuclear & Particle Physics"
-faculties:
-  - id: "[PLACEHOLDER: VikramPatel]"
-    group: "Vikram Patel group"
-  - id: "[PLACEHOLDER: SanjayGupta]"
-    group: "Sanjay Gupta group"
-
+faculties: []
 description: "Investigates fundamental forces and constituents of matter through theoretical frameworks and computational methods"
 image: "nuclear-physics.jpg"
 ---

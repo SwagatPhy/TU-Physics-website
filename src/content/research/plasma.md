@@ -1,8 +1,6 @@
 ---
 specialization: "Plasma Physics"
-faculties:
-  - id: "[PLACEHOLDER: Faculty]"
-
+faculties: []
 description: "[PLACEHOLDER: Plasma Physics description]"
 image: "plasma-physics.jpg"
 ---

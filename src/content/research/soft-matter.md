@@ -1,8 +1,6 @@
 ---
 specialization: "Soft Matter Physics"
-faculties:
-  - id: "[PLACEHOLDER: Faculty]"
-
+faculties: []
 description: "[PLACEHOLDER: Soft Matter Physics description]"
 image: "soft-matter-physics.jpg"
 ---

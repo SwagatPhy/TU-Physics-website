@@ -2,7 +2,21 @@
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro'
 
-const levels = (await getCollection('research')).sort((a,b) => a.data.specialization.localeCompare(b.data.specialization));
+const research = (await getCollection('research')).sort((a,b) => a.data.specialization.localeCompare(b.data.specialization));
+const teaching = await getCollection('teaching');
+const teachingMap = new Map(teaching.map(p => [p.id, p.data]));
+
+// Resolve faculty IDs to teaching data
+const researchWithFaculty = research.map(item => ({
+    ...item,
+    resolvedFaculty: (item.data.faculties || [])
+        .map(f => ({
+            id: f.id,
+            group: f.group,
+            data: teachingMap.get(f.id),
+        }))
+        .filter(f => f.id && typeof f.id === 'string' && !f.id.includes('[PLACEHOLDER'))
+}));
 ---
 
 <Layout title="research" description="Current research going on in the Department of Physics.">
@@ -17,7 +31,7 @@ const levels = (await getCollection('research')).sort((a,b) => a.data.specializa
 
     <section class="research-areas container">
         <div class="card-grid research-grid">
-            {levels.map(item => (
+            {researchWithFaculty.map(item => (
                 <article class="card research-card">
                     <a href={`/research/${item.id}`} class="card-link">
                         {item.data.image && (
@@ -27,16 +41,22 @@ const levels = (await getCollection('research')).sort((a,b) => a.data.specializa
                         <p class="card-summary">{item.data.description}</p>
                     </a>
 
-                    <div class="faculty-overlay">
-                        <div class="faculty-list">
-                            {item.data.faculties.map(faculty => (
-                                <a href={faculty.url || '#'} class="faculty-link">
-                                    <div class="faculty-name">{faculty.name}</div>
-                                    <div class="faculty-group">{faculty.group}</div>
-                                </a>
-                            ))}
+                    {item.resolvedFaculty.length > 0 && (
+                        <div class="faculty-overlay">
+                            <div class="faculty-list">
+                                {item.resolvedFaculty.map(faculty => (
+                                    <a href={`/people/${faculty.id}`} class="faculty-link">
+                                        {faculty.data && (
+                                            <>
+                                                <div class="faculty-name">{faculty.data.name}</div>
+                                                {faculty.group && <div class="faculty-group">{faculty.group}</div>}
+                                            </>
+                                        )}
+                                    </a>
+                                ))}
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </article>
             ))}
         </div>
@@ -53,6 +73,8 @@ const levels = (await getCollection('research')).sort((a,b) => a.data.specializa
     .research-card {
         position: relative;
         padding: 0.75rem;
+        overflow: hidden;
+        border-radius: 8px;
     }
 
     .card-link {
@@ -72,14 +94,15 @@ const levels = (await getCollection('research')).sort((a,b) => a.data.specializa
     .faculty-overlay {
         position: absolute;
         inset: 0;
-        background: rgba(0, 0, 0, 0.85);
+        background: rgba(0, 0, 0, 0.8);
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 0.5rem;
+        border-radius: 8px;
         opacity: 0;
         transition: opacity 0.3s ease;
         pointer-events: none;
+        z-index: 10;
     }
 
     .research-card:hover .faculty-overlay,
@@ -91,9 +114,9 @@ const levels = (await getCollection('research')).sort((a,b) => a.data.specializa
     .faculty-list {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: 1.2rem;
         width: 100%;
-        padding: 1rem;
+        padding: 1.5rem 1rem;
         text-align: center;
     }
 
@@ -101,22 +124,27 @@ const levels = (await getCollection('research')).sort((a,b) => a.data.specializa
         display: block;
         text-decoration: none;
         color: white;
-        transition: opacity 0.2s ease;
+        transition: all 0.2s ease;
+        padding: 0.5rem;
+        border-radius: 6px;
     }
 
     .faculty-link:hover {
-        opacity: 0.8;
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
     }
 
     .faculty-name {
-        font-weight: bold;
-        margin-bottom: 0.25rem;
+        font-weight: 600;
         font-size: 0.95rem;
+        margin-bottom: 0.4rem;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
     }
 
     .faculty-group {
         font-size: 0.85rem;
-        opacity: 0.9;
+        opacity: 0.95;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
     }
 
     @media (max-width: 64rem) {

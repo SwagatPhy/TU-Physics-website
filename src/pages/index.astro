@@ -47,6 +47,25 @@ const researchPreview = research.slice(0, 3);
 
 	</section>
 
+	<!-- Info bar: Current time and visitor counter -->
+	<section class="info-bar">
+		<div class="container">
+			<div class="info-items">
+				<div class="info-item" id="clock-display">
+					<span class="info-label">Current Time (IST):</span>
+					<span class="info-value">--:-- --</span>
+					<span class="info-detail">Today</span>
+				</div>
+				<div class="info-item">
+					<span class="info-label">Visitors:</span>
+					<!-- CONFIG: Replace this placeholder with your visitor counter data source -->
+					<!-- Options: Database, Analytics API, LocalStorage, CDN counter, etc. -->
+					<span class="info-value">—</span>
+				</div>
+			</div>
+		</div>
+	</section>
+
 	<section class="section highlights">
 		<div class="container">
 			<div class="highlights-grid">
@@ -708,4 +727,97 @@ const researchPreview = research.slice(0, 3);
 		margin-bottom: 2rem;
 		font-size: 1.05rem;
 	}
+
+	/* Info bar: Clock and visitor counter */
+	.info-bar {
+		background: var(--color-accent);
+		border-bottom: 1px solid var(--color-accent-secondary);
+		padding-block: var(--space-sm) var(--space-md);
+	}
+
+	.info-bar .container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.info-items {
+		display: flex;
+		gap: 2rem;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+
+	.info-item {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		font-size: 0.9rem;
+		color: rgba(255, 255, 255, 0.85);
+	}
+
+	.info-label {
+		font-weight: 500;
+		color: rgba(255, 255, 255, 0.75);
+	}
+
+	.info-value {
+		font-family: 'Courier New', monospace;
+		font-weight: 600;
+		color: var(--color-accent-secondary);
+		min-width: 6rem;
+	}
+
+	.info-detail {
+		font-size: 0.8rem;
+		color: rgba(255, 255, 255, 0.6);
+	}
+
+	@media (max-width: 48rem) {
+		.info-items {
+			gap: 1.5rem;
+			font-size: 0.85rem;
+		}
+
+		.info-value {
+			min-width: auto;
+		}
+	}
 </style>
+
+<script>
+	// Update clock with current IST time
+	function updateClock() {
+		const clockDisplay = document.getElementById('clock-display');
+		if (!clockDisplay) return;
+
+		// Get current time in IST (UTC+5:30)
+		const now = new Date();
+		const istTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+
+		// Format time as 12-hour with AM/PM
+		const hours = String(istTime.getHours()).padStart(2, '0');
+		const minutes = String(istTime.getMinutes()).padStart(2, '0');
+		const ampm = istTime.getHours() >= 12 ? 'PM' : 'AM';
+		const timeString = `${hours}:${minutes} ${ampm}`;
+
+		// Format date
+		const dateString = istTime.toLocaleDateString('en-US', {
+			weekday: 'short',
+			month: 'short',
+			day: 'numeric'
+		});
+
+		// Update display
+		const timeValue = clockDisplay.querySelector('.info-value');
+		const dateDetail = clockDisplay.querySelector('.info-detail');
+		if (timeValue) timeValue.textContent = timeString;
+		if (dateDetail) dateDetail.textContent = dateString;
+	}
+
+	// Initialize clock immediately
+	updateClock();
+
+	// Update clock every second
+	setInterval(updateClock, 1000);
+</script>

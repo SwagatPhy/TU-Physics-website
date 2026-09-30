@@ -45,7 +45,7 @@ const programs = (await getCollection('admissions')).sort((a, b) => a.data.order
 	<style>
 		.admissions-nav {
 			border-bottom: 1px solid var(--color-border);
-			background: var(--color-bg-alt, #fafafa);
+			background: var(--color-surface);
 		}
 
 		.nav-tabs {
@@ -60,7 +60,7 @@ const programs = (await getCollection('admissions')).sort((a, b) => a.data.order
 			display: block;
 			padding: 1rem 1.5rem;
 			text-decoration: none;
-			color: var(--color-text-muted);
+			color: var(--color-text);
 			border-bottom: 2px solid transparent;
 			transition: all 0.2s ease;
 			font-weight: 500;

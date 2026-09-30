@@ -1,7 +1,7 @@
 ---
 name: "Swagat Bordoloi"
-supervisor: "Dr. Rupjyoti Gogoi"
-researchArea: "Ultraviolet Astronomy"
+supervisor: "Rupjyoti Gogoi"
+research_area: "Ultraviolet Astronomy"
 email: "swagat.yolo.007@gmail.com"
 photo: ""
 ---

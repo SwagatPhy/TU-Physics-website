@@ -96,7 +96,7 @@ const researchAssistants = defineCollection({
     schema: z.object({
         name: z.string(),
         supervisor: z.string(),
-        researchArea: z.string().optional(),
+        research_area: z.string().optional(),
         email: z.string().optional(),
         photo: z.string().optional(),
     }),

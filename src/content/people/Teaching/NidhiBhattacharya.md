@@ -1,7 +1,9 @@
 ---
-name: "Prof. Nidhi Bhattacharya"
+name: "Nidhi Bhattacharya"
 designation: "Professor"
-email: "[PLACEHOLDER: email]"
+email: "nidhi@tezu.ernet.in"
 phone: ""
-researchAreas: []
+research_areas:
+    - 'Microwave Materials and Technology'
+    - 'Instrumentation'
 ---

@@ -222,9 +222,11 @@ img {
 	font-size: 0.8rem;
 	text-transform: uppercase;
 	letter-spacing: 0.03em;
-	color: var(--color-accent-secondary);
+	color: var(--color-accent);
 	font-weight: 600;
 	margin-bottom: 0.35rem;
+	padding-bottom: 0.35rem;
+	border-bottom: 2px solid var(--color-accent-secondary);
 }
 
 .card-title {

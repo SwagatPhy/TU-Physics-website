@@ -9,9 +9,7 @@ import { researchImage } from '../lib/images';
 // correct as people and research areas are added.
 const teaching = await getCollection('teaching');
 const scholars = await getCollection('researchScholars');
-const research = (await getCollection('research')).sort((a, b) =>
-	a.data.specialization.localeCompare(b.data.specialization),
-);
+const research = (await getCollection('research')).sort((a, b) => a.data.order - b.data.order);
 const programs = (await getCollection('admissions')).sort((a, b) => a.data.order - b.data.order);
 
 const newsEvents = (await getCollection('newsEvents', ({ data }) => !data.draft)).sort(
@@ -26,8 +24,6 @@ const stats = [
 	{ value: research.length, label: 'Research areas' },
 	{ value: programs.length, label: 'Degree programs' },
 ];
-
-const featuredResearch = research.filter((item) => item.data.image).slice(0, 6);
 
 // Visitor counter: set this to a URL that returns JSON like {"count": 1234}
 // to show a live count. While empty, the counter shows a dash.
@@ -134,10 +130,12 @@ const VISITOR_COUNTER_URL = '';
 				<a class="link-arrow" href="/research">All {research.length} research areas <Icon name="arrow-right" /></a>
 			</div>
 			<ul class="grid research-mosaic">
-				{featuredResearch.map((item) => (
+				{research.map((item) => (
 					<li>
-						<a class="research-tile" href={`/research/${item.id}`}>
-							<img src={researchImage(item.data.image!)} alt="" loading="lazy" decoding="async" />
+						<a class={`research-tile ${item.data.image ? '' : 'plain-art'}`} href={`/research/${item.id}`}>
+							{item.data.image && (
+								<img src={researchImage(item.data.image)} alt="" loading="lazy" decoding="async" />
+							)}
 							<span class="research-tile__label">{item.data.specialization}</span>
 						</a>
 					</li>
@@ -431,8 +429,37 @@ const VISITOR_COUNTER_URL = '';
 	}
 
 	/* Research mosaic -------------------------------------------------------- */
+	/* The first area gets a double-width tile, so the areas fill the rows evenly
+	   on 2- and 4-column layouts. */
 	.research-mosaic {
-		grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+		grid-template-columns: 1fr;
+	}
+
+	@media (min-width: 40rem) {
+		.research-mosaic {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		.research-mosaic > li:first-child {
+			grid-column: span 2;
+		}
+
+		.research-mosaic > li:first-child .research-tile {
+			aspect-ratio: 16 / 7;
+		}
+	}
+
+	@media (min-width: 64rem) {
+		.research-mosaic {
+			grid-template-columns: repeat(4, 1fr);
+		}
+
+		/* Two even rows: [wide, 1, 1] then [1, 1, 1, 1] */
+		.research-mosaic .research-tile,
+		.research-mosaic > li:first-child .research-tile {
+			aspect-ratio: auto;
+			height: 15rem;
+		}
 	}
 
 	.research-tile {
@@ -441,7 +468,7 @@ const VISITOR_COUNTER_URL = '';
 		aspect-ratio: 4 / 3;
 		border-radius: var(--radius);
 		overflow: hidden;
-		background: var(--navy);
+		background-color: var(--navy); /* colour only, so .plain-art's pattern shows */
 		text-decoration: none;
 	}
 

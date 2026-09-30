@@ -1,5 +1,6 @@
 ---
-specialization: "Nuclear & Particle Physics"
+specialization: "High Energy Physics"
+order: 7
 faculties: []
 description: "Investigates fundamental forces and constituents of matter through theoretical frameworks and computational methods"
 image: "nuclear-physics.jpg"
@@ -7,7 +8,7 @@ image: "nuclear-physics.jpg"
 
 ## Overview
 
-The Nuclear & Particle Physics group conducts theoretical research on fundamental interactions, nuclear structure, and particle phenomenology, with strong computational and analytical components.
+The High Energy Physics group conducts theoretical research on fundamental interactions, nuclear structure, and particle phenomenology, with strong computational and analytical components.
 
 ## Research Focus
 

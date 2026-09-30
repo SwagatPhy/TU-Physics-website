@@ -1,5 +1,6 @@
 ---
-specialization: "Condensed Matter Physics"
+specialization: "Condensed Matter Physics and Material Science"
+order: 5
 faculties:
 - id: "RupjyotiGogoi"
   group: "Rupjyoti Gogoi group"
@@ -37,3 +38,32 @@ The Condensed Matter Physics group investigates the properties of solid and liqu
 ## Student Opportunities
 
 UG and PG students can participate in materials synthesis, characterization, and computational modeling projects.
+
+## Materials Science
+
+<!-- Merged from the former materials-science.md entry. -->
+
+The Materials Science group develops and studies novel materials with tailored properties for applications in semiconductors, energy storage, catalysis, and environmental remediation.
+
+### Research Focus
+
+- **Nanostructured Materials** — quantum dots, nanoparticles, nanofibers
+- **Energy Materials** — batteries, supercapacitors, solar cells
+- **Functional Ceramics** — ferroelectrics, multiferroics, ionic conductors
+
+### Current Projects
+
+- Sol-gel synthesis of metal oxide nanoparticles
+- Doping and defect engineering in semiconductors
+- Electrochemical characterization of novel battery materials
+
+### Laboratory Equipment
+
+- Chemical synthesis labs with fume hoods
+- UV-Vis spectrometer and Raman spectroscopy
+- Thermal analysis equipment (TGA, DSC)
+
+### Industry Partnerships
+
+- Collaborations with materials manufacturing firms
+- Student internships in R&D divisions

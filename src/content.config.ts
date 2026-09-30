@@ -45,12 +45,13 @@ const research = defineCollection({
     loader: glob({ pattern: '**/*.md', base: './src/content/research'}),
     schema: z.object({
         specialization: z.string(),
+        order: z.number(), // position on the Research page (1 = first)
         faculties: z.array(z.object({
             id: z.string(),
             group: z.string().optional(),
         })).default([]),
         description: z.string(),
-        image: z.string().optional(),
+        image: z.string().optional(), // filename in public/Research-areas/ (needs a web/ copy too)
     })
 });
 

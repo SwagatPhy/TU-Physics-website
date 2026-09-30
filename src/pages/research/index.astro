@@ -4,9 +4,7 @@ import Layout from '../../layouts/Layout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import { researchImage } from '../../lib/images';
 
-const research = (await getCollection('research')).sort((a, b) =>
-	a.data.specialization.localeCompare(b.data.specialization),
-);
+const research = (await getCollection('research')).sort((a, b) => a.data.order - b.data.order);
 
 // Research entries list faculty by file name ("RupjyotiGogoi"); teaching entry
 // ids are the lower-cased file name ("rupjyotigogoi").
@@ -34,11 +32,11 @@ const areas = research.map((item) => ({
 				{areas.map((item) => (
 					<li>
 						<article class="card card--link">
-							{item.data.image && (
-								<div class="card__media">
+							<div class={`card__media ${item.data.image ? '' : 'card__media--plain'}`}>
+								{item.data.image && (
 									<img src={researchImage(item.data.image)} alt="" loading="lazy" decoding="async" />
-								</div>
-							)}
+								)}
+							</div>
 							<div class="card__body">
 								<h2 class="card__title"><a href={`/research/${item.id}`}>{item.data.specialization}</a></h2>
 								{item.data.description && <p class="card__text">{item.data.description}</p>}

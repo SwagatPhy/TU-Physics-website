@@ -9,7 +9,8 @@ Session-note entries for `Session_log/` still go through Notes-manager TU (send 
   - Observatory description, Facilities intro, lab list (Facilities page placeholders)
   - Contact page: building, PIN, phone, email, office contacts, directions
   - Academic rules (all four sections are [PLACEHOLDER])
-  - Research: plasma / soft-matter / electronics descriptions; several areas reuse copy-pasted body text and the same three faculty
+  - Research (now 7 areas, ordered by the `order` field): copy for Soft Matter & Interfacial, Neutrino & Astroparticle, Cosmology, Nonlinear Dynamics (all [PLACEHOLDER]); faculty lists for every area (Astronomy and Condensed Matter still carry the same three copy-pasted faculty); reused body text for Astronomy, Condensed Matter/Material Science and High Energy Physics is unverified starter copy
+  - Several faculty/scholars list research interests outside the 7 areas (plasma, photonics/optics, microwave/antennas, geophysics…) — list sent to Notes-manager TU 2026-09-30
 - Placeholder people data needs real facts:
   - Nidhi Bhattacharya: email is `[PLACEHOLDER: email]`
   - Snigha Sharma: email `xyz@gmail.com` looks fake

@@ -1,5 +1,6 @@
 ---
-specialization: "Astronomy & Space Physics"
+specialization: "Astronomy and Astrophysics"
+order: 3
 faculties:
 - id: "RupjyotiGogoi"
   group: "Rupjyoti Gogoi group"

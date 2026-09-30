@@ -27,7 +27,7 @@ const faculty = faculties
 // Other areas, for the "More research" links at the bottom.
 const otherAreas = (await getCollection('research'))
 	.filter((other) => other.id !== area.id)
-	.sort((a, b) => a.data.specialization.localeCompare(b.data.specialization));
+	.sort((a, b) => a.data.order - b.data.order);
 ---
 
 <Layout title={specialization} description={description || `${specialization} research at the Department of Physics, Tezpur University.`}>

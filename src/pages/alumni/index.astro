@@ -186,7 +186,7 @@ import Layout from '../../layouts/Layout.astro';
 
 	<style>
 		.hero-gradient {
-			background: linear-gradient(135deg, var(--color-accent, #0066cc) 0%, var(--color-accent-dark, #0052a3) 100%);
+			background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-text-muted) 100%);
 			color: white;
 			padding: 4rem 2rem;
 			display: flex;
@@ -238,11 +238,11 @@ import Layout from '../../layouts/Layout.astro';
 
 		.cta-button.primary {
 			background: white;
-			color: var(--color-accent, #0066cc);
+			color: var(--color-accent);
 		}
 
 		.cta-button.primary:hover {
-			background: #f0f0f0;
+			background: rgba(255, 255, 255, 0.9);
 		}
 
 		.cta-button.secondary {
@@ -279,7 +279,7 @@ import Layout from '../../layouts/Layout.astro';
 
 		/* Highlights Grid */
 		.highlights {
-			background: var(--color-bg-alt, #fafafa);
+			background: var(--color-surface);
 		}
 
 		.highlights-grid {
@@ -300,7 +300,7 @@ import Layout from '../../layouts/Layout.astro';
 		.highlight-number {
 			font-size: 2.5rem;
 			font-weight: 700;
-			color: var(--color-accent, #0066cc);
+			color: var(--color-accent);
 			margin-bottom: 0.5rem;
 		}
 
@@ -335,7 +335,7 @@ import Layout from '../../layouts/Layout.astro';
 		.story-image-placeholder {
 			width: 100%;
 			height: 200px;
-			background: var(--color-bg-alt, #fafafa);
+			background: var(--color-surface);
 			border-bottom: 1px solid var(--color-border);
 			display: flex;
 			align-items: center;
@@ -361,7 +361,7 @@ import Layout from '../../layouts/Layout.astro';
 
 		.story-role {
 			font-size: 0.95rem;
-			color: var(--color-accent, #0066cc);
+			color: var(--color-accent);
 			font-weight: 600;
 			margin: 0 0 1rem 0;
 		}
@@ -375,14 +375,15 @@ import Layout from '../../layouts/Layout.astro';
 		}
 
 		.story-link {
-			color: var(--color-accent, #0066cc);
+			color: var(--color-accent);
 			text-decoration: none;
 			font-weight: 600;
 			transition: all 0.2s ease;
 		}
 
 		.story-link:hover {
-			color: var(--color-accent-dark, #0052a3);
+			color: var(--color-accent);
+			text-decoration: underline;
 		}
 
 		/* Network Grid */
@@ -399,7 +400,7 @@ import Layout from '../../layouts/Layout.astro';
 
 		.network-card {
 			padding: 2rem;
-			background: var(--color-bg-alt, #fafafa);
+			background: var(--color-surface);
 			border: 1px solid var(--color-border);
 			border-radius: 0.5rem;
 		}
@@ -419,19 +420,20 @@ import Layout from '../../layouts/Layout.astro';
 
 		.network-link {
 			display: inline-block;
-			color: var(--color-accent, #0066cc);
+			color: var(--color-accent);
 			text-decoration: none;
 			font-weight: 600;
 			transition: all 0.2s ease;
 		}
 
 		.network-link:hover {
-			color: var(--color-accent-dark, #0052a3);
+			color: var(--color-accent);
+			text-decoration: underline;
 		}
 
 		/* Engagement Section */
 		.engagement {
-			background: var(--color-bg-alt, #fafafa);
+			background: var(--color-surface);
 		}
 
 		.engagement-content {
@@ -476,7 +478,7 @@ import Layout from '../../layouts/Layout.astro';
 
 		.submit-button {
 			padding: 0.75rem 1.5rem;
-			background: var(--color-accent, #0066cc);
+			background: var(--color-accent);
 			color: white;
 			border: none;
 			border-radius: 0.375rem;
@@ -486,7 +488,7 @@ import Layout from '../../layouts/Layout.astro';
 		}
 
 		.submit-button:hover {
-			background: var(--color-accent-dark, #0052a3);
+			background: var(--color-text-muted);
 		}
 
 		.contact-info {
@@ -498,7 +500,7 @@ import Layout from '../../layouts/Layout.astro';
 		.contact-info strong {
 			display: block;
 			margin-top: 0.5rem;
-			color: var(--color-accent, #0066cc);
+			color: var(--color-accent);
 		}
 
 		.contact-info br {
@@ -511,7 +513,7 @@ import Layout from '../../layouts/Layout.astro';
 		}
 
 		.directory-placeholder {
-			background: var(--color-bg-alt, #fafafa);
+			background: var(--color-surface);
 			border: 1px dashed var(--color-border);
 			padding: 3rem 2rem;
 			text-align: center;
@@ -571,36 +573,6 @@ import Layout from '../../layouts/Layout.astro';
 			.submit-button {
 				width: 100%;
 			}
-		}
-
-		/* Light/Dark Theme Support */
-		:root {
-			--color-accent: #0066cc;
-			--color-accent-dark: #0052a3;
-			--color-text: #1a1a1a;
-			--color-text-muted: #666;
-			--color-border: #ddd;
-			--color-bg-alt: #fafafa;
-		}
-
-		@media (prefers-color-scheme: dark) {
-			:root:not([data-theme="light"]) {
-				--color-accent: #4d94ff;
-				--color-accent-dark: #66a3ff;
-				--color-text: #f0f0f0;
-				--color-text-muted: #999;
-				--color-border: #333;
-				--color-bg-alt: #1a1a1a;
-			}
-		}
-
-		:root[data-theme="dark"] {
-			--color-accent: #4d94ff;
-			--color-accent-dark: #66a3ff;
-			--color-text: #f0f0f0;
-			--color-text-muted: #999;
-			--color-border: #333;
-			--color-bg-alt: #1a1a1a;
 		}
 	</style>
 </Layout>

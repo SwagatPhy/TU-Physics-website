@@ -18,7 +18,7 @@ const admissions = defineCollection({
 	loader: glob({ pattern: '**/*.md', base: './src/content/admissions' }),
 	schema: z.object({
 		title: z.string(),
-		level: z.enum(['undergraduate', 'postgraduate', 'doctoral']),
+		program: z.enum(['integrated-bsc-msc', 'integrated-bsc-bed', 'msc', 'phd']),
 		tagline: z.string(),
 		duration: z.string(),
 		eligibility: z.array(z.string()),
@@ -46,12 +46,9 @@ const research = defineCollection({
     schema: z.object({
         specialization: z.string(),
         faculties: z.array(z.object({
-            name: z.string(),
-            group: z.string(),
-            url: z.string().optional(),
-            contact: z.string().optional(),
-            email: z.string().optional(),
-        })),
+            id: z.string(),
+            group: z.string().optional(),
+        })).default([]),
         description: z.string(),
         image: z.string().optional(),
     })
@@ -67,7 +64,7 @@ const teaching = defineCollection({
         designation: z.string(),
         email: z.string().optional(),
         phone: z.string().optional(),
-        researchAreas: z.array(z.string()).default([]),
+        research_areas: z.array(z.string()).default([]),
         photo: z.string().optional(),
     }),
 });
@@ -99,7 +96,7 @@ const researchAssistants = defineCollection({
     schema: z.object({
         name: z.string(),
         supervisor: z.string(),
-        researchArea: z.string().optional(),
+        research_area: z.string().optional(),
         email: z.string().optional(),
         photo: z.string().optional(),
     }),

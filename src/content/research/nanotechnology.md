@@ -1,11 +1,6 @@
 ---
 specialization: "Nanoscience and Nanotechnology"
-faculties:
-  - name: "[PLACEHOLDER: Faculty name]"
-    group: "[PLACEHOLDER: Faculty group]"
-    url: "/faculty/placeholder"
-    contact: ""
-    email: ""
+faculties: []
 description: "Focuses on quantum and nonlinear optical phenomena with applications in quantum information and imaging"
 image: "nanoparticle-physics.webp"
 ---

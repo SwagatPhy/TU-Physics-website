@@ -1,5 +1,8 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+
+const programs = (await getCollection('admissions')).sort((a, b) => a.data.order - b.data.order);
 ---
 
 <Layout title="National Admissions" description="Admissions information for national students at the Department of Physics.">
@@ -10,377 +13,32 @@ import Layout from '../../layouts/Layout.astro';
 		</div>
 	</header>
 
-	<!-- Admissions Type Navigation -->
 	<nav class="admissions-nav">
 		<div class="container">
 			<ul class="nav-tabs">
-				<li>
-					<a href="/admissions/national" class="nav-tab active">National</a>
-				</li>
-				<li>
-					<a href="/admissions/international" class="nav-tab">International</a>
-				</li>
+				<li><a href="/admissions/national" class="nav-tab active">National</a></li>
+				<li><a href="/admissions/international" class="nav-tab">International</a></li>
 			</ul>
 		</div>
 	</nav>
 
 	<section class="section">
 		<div class="container">
-			<h2>Select Your Program</h2>
-
-			<!-- Program Tabs -->
-			<div class="program-tabs">
-				<div class="tabs-nav">
-					<button class="tab-button active" data-tab="bsc">
-						<span class="tab-label">B.Sc</span>
-						<span class="tab-subtitle">Bachelor of Science</span>
-					</button>
-					<button class="tab-button" data-tab="msc">
-						<span class="tab-label">M.Sc</span>
-						<span class="tab-subtitle">Master of Science</span>
-					</button>
-					<button class="tab-button" data-tab="integrated-bscmsc">
-						<span class="tab-label">Integrated B.Sc-M.Sc</span>
-						<span class="tab-subtitle">5-Year Program</span>
-					</button>
-					<button class="tab-button" data-tab="integrated-bscbed">
-						<span class="tab-label">Integrated B.Sc-B.Ed</span>
-						<span class="tab-subtitle">5-Year Program</span>
-					</button>
-				</div>
-
-				<!-- B.Sc Tab -->
-				<div class="tab-content active" id="bsc">
-					<div class="program-section">
-						<h3>Program Overview</h3>
-						<ul>
-							<li><strong>Degree Awarded:</strong> B.Sc. Physics (Honours)</li>
-							<li><strong>Duration:</strong> [PLACEHOLDER — 3 years / 6 semesters]</li>
-							<li><strong>Intake:</strong> [PLACEHOLDER — XX seats]</li>
-						</ul>
-					</div>
-
-					<div class="program-section">
-						<h3>Eligibility Requirements</h3>
-						<ul>
-							<li>[PLACEHOLDER — 10+2 / Higher Secondary with Physics, Chemistry, Mathematics]</li>
-							<li>[PLACEHOLDER — minimum XX% marks / CGPA requirement]</li>
-							<li>[PLACEHOLDER — any additional requirement specific to Tezpur University]</li>
-						</ul>
-					</div>
-
-					<div class="program-section">
-						<h3>Application Process</h3>
-						<ol>
-							<li>Visit <strong>[PLACEHOLDER Tezpur University Admissions Portal]</strong></li>
-							<li>Select "BSc Physics"</li>
-							<li>Complete the application form with academic details</li>
-							<li>Upload required documents (see below)</li>
-							<li>Pay application fee: [PLACEHOLDER amount in INR]</li>
-							<li>Submit and save confirmation receipt</li>
-						</ol>
-						<p><strong>Selection Method:</strong> [PLACEHOLDER — Merit-based / Entrance exam / Mixed]</p>
-					</div>
-
-					<div class="program-section">
-						<h3>Timeline & Important Dates</h3>
-						<p><em>Academic Year [PLACEHOLDER YYYY-YYYY]</em></p>
-						<ul>
-							<li><strong>Application Window Opens:</strong> [PLACEHOLDER Month, DD]</li>
-							<li><strong>Application Deadline:</strong> [PLACEHOLDER Month, DD]</li>
-							<li><strong>Merit List / Exam Results:</strong> [PLACEHOLDER Month, DD]</li>
-							<li><strong>Counseling / Admission:</strong> [PLACEHOLDER Month, DD]</li>
-							<li><strong>Semester Start:</strong> [PLACEHOLDER Month, DD]</li>
-						</ul>
-					</div>
-
-					<div class="program-section">
-						<h3>Required Documents</h3>
-						<ul>
-							<li>[PLACEHOLDER] Valid photo ID (Aadhaar, Passport, Voter ID)</li>
-							<li>[PLACEHOLDER] Recent passport-sized photograph (4x6 cm)</li>
-							<li>[PLACEHOLDER] 10+2 marksheet and certificate (official copy)</li>
-							<li>[PLACEHOLDER] Transfer certificate from last school</li>
-							<li>[PLACEHOLDER] Character certificate</li>
-							<li>[PLACEHOLDER] Proof of category/caste (if applicable — SC/ST/OBC/PWD)</li>
-						</ul>
-					</div>
-
-					<div class="program-section">
-						<h3>Fees & Scholarships</h3>
-						<ul>
-							<li><strong>Tuition Fee (per semester):</strong> [PLACEHOLDER ₹XXXX]</li>
-							<li><strong>Merit-based scholarships:</strong> [PLACEHOLDER details]</li>
-							<li><strong>Need-based financial aid:</strong> [PLACEHOLDER details]</li>
-							<li><strong>State scholarships (if applicable):</strong> [PLACEHOLDER details]</li>
-						</ul>
-					</div>
-
-					<div class="program-section">
-						<h3>Contact & Support</h3>
-						<ul>
-							<li><strong>BSc Admissions Coordinator:</strong> [PLACEHOLDER name, email, phone]</li>
-							<li><strong>Department Office:</strong> [PLACEHOLDER location, hours]</li>
-						</ul>
-					</div>
-				</div>
-
-				<!-- M.Sc Tab -->
-				<div class="tab-content" id="msc">
-					<div class="program-section">
-						<h3>Program Overview</h3>
-						<ul>
-							<li><strong>Degree Awarded:</strong> M.Sc. Physics</li>
-							<li><strong>Duration:</strong> [PLACEHOLDER — 2 years / 4 semesters]</li>
-							<li><strong>Intake:</strong> [PLACEHOLDER — XX seats]</li>
-						</ul>
-					</div>
-
-					<div class="program-section">
-						<h3>Eligibility Requirements</h3>
-						<ul>
-							<li>[PLACEHOLDER — B.Sc. in Physics (major/honours) from a recognized university]</li>
-							<li>[PLACEHOLDER — minimum XX% marks / cumulative GPA]</li>
-							<li>[PLACEHOLDER — entrance exam or merit-based selection]</li>
-						</ul>
-					</div>
-
-					<div class="program-section">
-						<h3>Application Process</h3>
-						<ol>
-							<li>Visit <strong>[PLACEHOLDER Tezpur University Admissions Portal]</strong></li>
-							<li>Select "M.Sc. Physics"</li>
-							<li>Fill in academic and professional details</li>
-							<li>Upload required documents</li>
-							<li>Pay application fee: [PLACEHOLDER amount in INR]</li>
-							<li>Submit and retain receipt</li>
-						</ol>
-						<p><strong>Selection Method:</strong> [PLACEHOLDER — Entrance exam (date: XX/XX/YYYY) followed by merit list]</p>
-					</div>
-
-					<div class="program-section">
-						<h3>Timeline & Important Dates</h3>
-						<p><em>Academic Year [PLACEHOLDER YYYY-YYYY]</em></p>
-						<ul>
-							<li><strong>Application Window Opens:</strong> [PLACEHOLDER Month, DD]</li>
-							<li><strong>Application Deadline:</strong> [PLACEHOLDER Month, DD]</li>
-							<li><strong>Entrance Exam Date:</strong> [PLACEHOLDER Month, DD]</li>
-							<li><strong>Result Announcement:</strong> [PLACEHOLDER Month, DD]</li>
-							<li><strong>Counseling / Seat Allotment:</strong> [PLACEHOLDER Month, DD]</li>
-							<li><strong>Semester Start:</strong> [PLACEHOLDER Month, DD]</li>
-						</ul>
-					</div>
-
-					<div class="program-section">
-						<h3>Required Documents</h3>
-						<ul>
-							<li>[PLACEHOLDER] Valid photo ID</li>
-							<li>[PLACEHOLDER] Passport-sized photograph</li>
-							<li>[PLACEHOLDER] Bachelor's degree certificate (official copy)</li>
-							<li>[PLACEHOLDER] Academic transcripts/marksheets (all semesters)</li>
-							<li>[PLACEHOLDER] Rank card or merit certificate (if exam-based)</li>
-							<li>[PLACEHOLDER] Character certificate</li>
-							<li>[PLACEHOLDER] Proof of category (if applicable)</li>
-						</ul>
-					</div>
-
-					<div class="program-section">
-						<h3>Fees & Scholarships</h3>
-						<ul>
-							<li><strong>Tuition Fee (per semester):</strong> [PLACEHOLDER ₹XXXX]</li>
-							<li><strong>UGC National Scholarship:</strong> [PLACEHOLDER eligibility/amount]</li>
-							<li><strong>Merit-based institutional scholarships:</strong> [PLACEHOLDER details]</li>
-							<li><strong>Assistantships (teaching/research):</strong> [PLACEHOLDER details]</li>
-						</ul>
-					</div>
-
-					<div class="program-section">
-						<h3>Contact & Support</h3>
-						<ul>
-							<li><strong>MSc Admissions Coordinator:</strong> [PLACEHOLDER name, email, phone]</li>
-							<li><strong>Exam Cell:</strong> [PLACEHOLDER contact for entrance exam queries]</li>
-						</ul>
-					</div>
-				</div>
-
-				<!-- Integrated B.Sc-M.Sc Tab -->
-				<div class="tab-content" id="integrated-bscmsc">
-					<div class="program-section">
-						<h3>Program Overview</h3>
-						<ul>
-							<li><strong>Degree Awarded:</strong> B.Sc. + M.Sc. in Physics (integrated pathway)</li>
-							<li><strong>Duration:</strong> [PLACEHOLDER — 5 years / 10 semesters]</li>
-							<li><strong>Intake:</strong> [PLACEHOLDER — XX seats]</li>
-							<li><strong>Description:</strong> [PLACEHOLDER — e.g. "Combined undergraduate and postgraduate program, eliminating the need to apply separately to MSc after BSc."]</li>
-						</ul>
-					</div>
-
-					<div class="program-section">
-						<h3>Eligibility Requirements</h3>
-						<ul>
-							<li>[PLACEHOLDER — 10+2 / Higher Secondary with Physics, Chemistry, Mathematics]</li>
-							<li>[PLACEHOLDER — minimum XX% marks / CGPA requirement]</li>
-							<li>[PLACEHOLDER — any additional criteria]</li>
-						</ul>
-					</div>
-
-					<div class="program-section">
-						<h3>Application Process</h3>
-						<ol>
-							<li>Visit <strong>[PLACEHOLDER Tezpur University Admissions Portal]</strong></li>
-							<li>Select "Integrated BSc-MSc Physics"</li>
-							<li>Complete the full application form</li>
-							<li>Upload required documents</li>
-							<li>Pay application fee: [PLACEHOLDER amount in INR]</li>
-							<li>Submit and save receipt</li>
-						</ol>
-						<p><strong>Selection Method:</strong> [PLACEHOLDER — Entrance exam / Merit-based / Mixed]</p>
-					</div>
-
-					<div class="program-section">
-						<h3>Timeline & Important Dates</h3>
-						<p><em>Academic Year [PLACEHOLDER YYYY-YYYY]</em></p>
-						<ul>
-							<li><strong>Application Window Opens:</strong> [PLACEHOLDER Month, DD]</li>
-							<li><strong>Application Deadline:</strong> [PLACEHOLDER Month, DD]</li>
-							<li><strong>Entrance Exam / Merit List:</strong> [PLACEHOLDER Month, DD]</li>
-							<li><strong>Counseling / Admission:</strong> [PLACEHOLDER Month, DD]</li>
-							<li><strong>Semester Start:</strong> [PLACEHOLDER Month, DD]</li>
-						</ul>
-					</div>
-
-					<div class="program-section">
-						<h3>Required Documents</h3>
-						<ul>
-							<li>[PLACEHOLDER] Valid photo ID</li>
-							<li>[PLACEHOLDER] Passport-sized photograph (4x6 cm)</li>
-							<li>[PLACEHOLDER] 10+2 marksheet and certificate</li>
-							<li>[PLACEHOLDER] Transfer certificate from last school</li>
-							<li>[PLACEHOLDER] Character certificate</li>
-							<li>[PLACEHOLDER] Proof of category (if applicable)</li>
-						</ul>
-					</div>
-
-					<div class="program-section">
-						<h3>Fees & Scholarships</h3>
-						<ul>
-							<li><strong>Tuition Fee (per semester):</strong> [PLACEHOLDER ₹XXXX]</li>
-							<li><strong>Merit-based continuation scholarships:</strong> [PLACEHOLDER details]</li>
-							<li><strong>Performance-based awards:</strong> [PLACEHOLDER details]</li>
-							<li><strong>INSPIRE/DST scholarships:</strong> [PLACEHOLDER eligibility]</li>
-						</ul>
-					</div>
-
-					<div class="program-section">
-						<h3>Advantages of Integrated Program</h3>
-						<ul>
-							<li>Seamless progression from BSc to MSc without separate entrance exam</li>
-							<li>[PLACEHOLDER — additional program-specific benefits]</li>
-							<li>Early exposure to research during undergrad coursework</li>
-							<li>Dedicated mentorship and support</li>
-						</ul>
-					</div>
-
-					<div class="program-section">
-						<h3>Contact & Support</h3>
-						<ul>
-							<li><strong>Integrated Program Coordinator:</strong> [PLACEHOLDER name, email, phone]</li>
-							<li><strong>Department Academic Advisor:</strong> [PLACEHOLDER contact]</li>
-						</ul>
-					</div>
-				</div>
-
-				<!-- Integrated B.Sc-B.Ed Tab -->
-				<div class="tab-content" id="integrated-bscbed">
-					<div class="program-section">
-						<h3>Program Overview</h3>
-						<ul>
-							<li><strong>Degree Awarded:</strong> B.Sc. + B.Ed. in Physics (integrated teacher-training pathway)</li>
-							<li><strong>Duration:</strong> [PLACEHOLDER — 5 years / 10 semesters]</li>
-							<li><strong>Intake:</strong> [PLACEHOLDER — XX seats]</li>
-							<li><strong>Description:</strong> [PLACEHOLDER — e.g. "Combined undergraduate and teacher-education program designed to produce qualified physics teachers at the secondary/higher-secondary level."]</li>
-						</ul>
-					</div>
-
-					<div class="program-section">
-						<h3>Eligibility Requirements</h3>
-						<ul>
-							<li>[PLACEHOLDER — 10+2 / Higher Secondary with Physics, Chemistry, Mathematics]</li>
-							<li>[PLACEHOLDER — minimum XX% marks / CGPA requirement]</li>
-							<li>[PLACEHOLDER — pass a teacher-aptitude assessment (if required)]</li>
-							<li>[PLACEHOLDER — any health/fitness requirements specific to teaching profession]</li>
-						</ul>
-					</div>
-
-					<div class="program-section">
-						<h3>Application Process</h3>
-						<ol>
-							<li>Visit <strong>[PLACEHOLDER Tezpur University Admissions Portal]</strong></li>
-							<li>Select "Integrated BSc-BEd Physics"</li>
-							<li>Fill in educational and personal details</li>
-							<li>Upload required documents</li>
-							<li>Pay application fee: [PLACEHOLDER amount in INR]</li>
-							<li>Submit and save receipt</li>
-						</ol>
-						<p><strong>Selection Method:</strong> [PLACEHOLDER — Entrance exam (written + teaching-aptitude component) / Merit-based]</p>
-					</div>
-
-					<div class="program-section">
-						<h3>Timeline & Important Dates</h3>
-						<p><em>Academic Year [PLACEHOLDER YYYY-YYYY]</em></p>
-						<ul>
-							<li><strong>Application Window Opens:</strong> [PLACEHOLDER Month, DD]</li>
-							<li><strong>Application Deadline:</strong> [PLACEHOLDER Month, DD]</li>
-							<li><strong>Entrance Exam Date:</strong> [PLACEHOLDER Month, DD]</li>
-							<li><strong>Result / Merit List Announcement:</strong> [PLACEHOLDER Month, DD]</li>
-							<li><strong>Counseling / Admission:</strong> [PLACEHOLDER Month, DD]</li>
-							<li><strong>Semester Start:</strong> [PLACEHOLDER Month, DD]</li>
-						</ul>
-					</div>
-
-					<div class="program-section">
-						<h3>Required Documents</h3>
-						<ul>
-							<li>[PLACEHOLDER] Valid photo ID</li>
-							<li>[PLACEHOLDER] Passport-sized photograph (4x6 cm)</li>
-							<li>[PLACEHOLDER] 10+2 marksheet and certificate</li>
-							<li>[PLACEHOLDER] Transfer certificate</li>
-							<li>[PLACEHOLDER] Character certificate</li>
-							<li>[PLACEHOLDER] Proof of category (if applicable)</li>
-							<li>[PLACEHOLDER] Medical fitness certificate (standard format for teacher-education programs)</li>
-						</ul>
-					</div>
-
-					<div class="program-section">
-						<h3>Fees & Scholarships</h3>
-						<ul>
-							<li><strong>Tuition Fee (per semester):</strong> [PLACEHOLDER ₹XXXX]</li>
-							<li><strong>Merit-based scholarships for BSc-BEd:</strong> [PLACEHOLDER details]</li>
-							<li><strong>Teacher training scholarships:</strong> [PLACEHOLDER details]</li>
-							<li><strong>Ministry of Education scholarships:</strong> [PLACEHOLDER eligibility]</li>
-						</ul>
-					</div>
-
-					<div class="program-section">
-						<h3>Career Outcomes</h3>
-						<ul>
-							<li>Qualified Physics teacher for secondary/higher-secondary schools</li>
-							<li>Teaching positions in government and private institutions</li>
-							<li>Curriculum development and educational research roles</li>
-							<li>[PLACEHOLDER — other career pathways for physics educators]</li>
-						</ul>
-					</div>
-
-					<div class="program-section">
-						<h3>Contact & Support</h3>
-						<ul>
-							<li><strong>BSc-BEd Program Coordinator:</strong> [PLACEHOLDER name, email, phone]</li>
-							<li><strong>Department Education Cell:</strong> [PLACEHOLDER contact]</li>
-							<li><strong>Teaching Practice Supervisor:</strong> [PLACEHOLDER contact]</li>
-						</ul>
-					</div>
-				</div>
-			</div>
+			<h2>Our Programs</h2>
+			<p>Explore detailed information for each program by selecting from the cards below or visit the individual program pages.</p>
+			<ul class="card-grid">
+				{
+					programs.map((program) => (
+						<li>
+							<a class="card" href={`/admissions/${program.id}`}>
+								<span class="card-eyebrow">{program.data.duration}</span>
+								<h3 class="card-title">{program.data.title}</h3>
+								<p class="card-summary">{program.data.tagline}</p>
+							</a>
+						</li>
+					))
+				}
+			</ul>
 		</div>
 	</section>
 
@@ -417,142 +75,49 @@ import Layout from '../../layouts/Layout.astro';
 			border-bottom-color: var(--color-accent);
 		}
 
-		.program-tabs {
-			margin-top: 2rem;
+		.card-grid {
+			list-style: none;
+			margin: 2rem 0;
+			padding: 0;
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+			gap: 2rem;
 		}
 
-		.tabs-nav {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 0.75rem;
-			margin-bottom: 2rem;
-			border-bottom: 2px solid var(--color-border);
-			padding-bottom: 1rem;
-		}
-
-		.tab-button {
-			padding: 0.75rem 1.25rem;
-			border: none;
-			background: transparent;
-			color: var(--color-text-muted);
-			cursor: pointer;
-			font-size: 0.95rem;
-			font-weight: 500;
-			border-bottom: 3px solid transparent;
-			transition: all 0.2s ease;
-			display: flex;
-			flex-direction: column;
-			align-items: flex-start;
-			gap: 0.25rem;
-		}
-
-		.tab-button:hover {
-			color: var(--color-text);
-		}
-
-		.tab-button.active {
-			color: var(--color-accent);
-			border-bottom-color: var(--color-accent);
-		}
-
-		.tab-label {
+		.card {
 			display: block;
-			font-weight: 600;
-		}
-
-		.tab-subtitle {
-			display: block;
-			font-size: 0.8rem;
-			font-weight: 400;
-			color: var(--color-text-muted);
-		}
-
-		.tab-button.active .tab-subtitle {
-			color: var(--color-accent);
-		}
-
-		.tab-content {
-			display: none;
-		}
-
-		.tab-content.active {
-			display: block;
-		}
-
-		.program-section {
-			margin-bottom: 2rem;
-		}
-
-		.program-section h3 {
-			font-size: 1.2rem;
-			margin-bottom: 1rem;
-			color: var(--color-text);
-		}
-
-		.program-section ul,
-		.program-section ol {
-			margin: 0.5rem 0;
-			padding-left: 1.5rem;
-		}
-
-		.program-section ul li,
-		.program-section ol li {
-			margin-bottom: 0.5rem;
-			line-height: 1.6;
-		}
-
-		.program-section p {
-			margin: 1rem 0;
-			line-height: 1.6;
-		}
-
-		.content-placeholder {
-			padding: 2rem;
-			background: var(--color-bg-alt, #fafafa);
-			border: 1px dashed var(--color-border);
+			padding: 1.5rem;
+			border: 1px solid var(--color-border);
 			border-radius: 0.5rem;
-			color: var(--color-text-muted);
-			text-align: center;
-			font-style: italic;
-			min-height: 4rem;
-			display: flex;
-			align-items: center;
-			justify-content: center;
+			text-decoration: none;
+			transition: all 0.2s ease;
+			background: var(--color-bg);
 		}
 
-		@media (max-width: 48rem) {
-			.tabs-nav {
-				flex-direction: column;
-				gap: 0.5rem;
-			}
+		.card:hover {
+			border-color: var(--color-accent);
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		}
 
-			.tab-button {
-				width: 100%;
-				align-items: center;
-				text-align: center;
-			}
+		.card-eyebrow {
+			display: block;
+			font-size: 0.875rem;
+			font-weight: 600;
+			color: var(--color-accent);
+			margin-bottom: 0.5rem;
+			text-transform: uppercase;
+		}
+
+		.card-title {
+			margin: 0.5rem 0 1rem;
+			font-size: 1.25rem;
+			color: var(--color-text);
+		}
+
+		.card-summary {
+			margin: 0;
+			color: var(--color-text-muted);
+			line-height: 1.6;
 		}
 	</style>
-
-	<script>
-		document.addEventListener('DOMContentLoaded', () => {
-			const tabButtons = document.querySelectorAll('.tab-button');
-
-			tabButtons.forEach(button => {
-				button.addEventListener('click', () => {
-					const tabId = button.getAttribute('data-tab');
-
-					// Remove active class from all buttons and contents
-					tabButtons.forEach(btn => btn.classList.remove('active'));
-					document.querySelectorAll('.tab-content').forEach(content => {
-						content.classList.remove('active');
-					});
-
-					// Add active class to clicked button and corresponding content
-					button.classList.add('active');
-					document.getElementById(tabId).classList.add('active');
-				});
-			});
-		});
-	</script>
 </Layout>

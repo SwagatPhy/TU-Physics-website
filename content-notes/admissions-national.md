@@ -1,268 +1,212 @@
-# Admissions — National / Indian Students
+# Admissions — National (Indian Students)
 
-Choose your program to view specific eligibility, application process, timeline, and document requirements.
+Four programs available: **Integrated BSc-MSc**, **Integrated BSc-BEd**, **MSc**, **PhD**
 
----
-
-## Bachelor of Science (BSc) Physics
-
-### Program Overview
-- **Degree Awarded:** B.Sc. Physics (Honours)
-- **Duration:** [PLACEHOLDER — 3 years / 6 semesters]
-- **Intake:** [PLACEHOLDER — XX seats]
-
-### Eligibility Requirements
-- [PLACEHOLDER — 10+2 / Higher Secondary with Physics, Chemistry, Mathematics]
-- [PLACEHOLDER — minimum XX% marks / CGPA requirement]
-- [PLACEHOLDER — any additional requirement specific to Tezpur University]
-
-### Application Process
-1. Visit **[PLACEHOLDER Tezpur University Admissions Portal](link)**
-2. Select "BSc Physics"
-3. Complete the application form with academic details
-4. Upload required documents (see below)
-5. Pay application fee: [PLACEHOLDER amount in INR]
-6. Submit and save confirmation receipt
-
-**Selection Method:** [PLACEHOLDER — Merit-based / Entrance exam / Mixed]
-
-### Timeline & Key Dates (Academic Year [PLACEHOLDER YYYY-YYYY])
-- **Application Window Opens:** [PLACEHOLDER Month, DD]
-- **Application Deadline:** [PLACEHOLDER Month, DD]
-- **Merit List / Exam Results:** [PLACEHOLDER Month, DD]
-- **Counseling / Admission:** [PLACEHOLDER Month, DD]
-- **Semester Start:** [PLACEHOLDER Month, DD]
-
-### Required Documents
-- [PLACEHOLDER] Valid photo ID (Aadhaar, Passport, Voter ID)
-- [PLACEHOLDER] Recent passport-sized photograph (4x6 cm)
-- [PLACEHOLDER] 10+2 marksheet and certificate (official copy)
-- [PLACEHOLDER] Transfer certificate from last school
-- [PLACEHOLDER] Character certificate
-- [PLACEHOLDER] Proof of category/caste (if applicable — SC/ST/OBC/PWD)
-
-### Fees & Scholarships
-- **Tuition Fee (per semester):** [PLACEHOLDER ₹XXXX]
-- **Scholarships Available:**
-  - Merit-based scholarships: [PLACEHOLDER details]
-  - Need-based financial aid: [PLACEHOLDER details]
-  - State scholarships (if applicable): [PLACEHOLDER details]
-
-### Contact & Support
-- **BSc Admissions Coordinator:** [PLACEHOLDER name, email, phone]
-- **Department Office:** [PLACEHOLDER location, hours]
+**Note:** Existing src/content/admissions/*.md text is starter copy only, not verified facts. This document reflects the restructured programs.
 
 ---
 
-## Master of Science (MSc) Physics
+## Program 1: Integrated BSc-MSc (5 years)
 
-### Program Overview
-- **Degree Awarded:** M.Sc. Physics
-- **Duration:** [PLACEHOLDER — 2 years / 4 semesters]
-- **Intake:** [PLACEHOLDER — XX seats]
+**Tagline:** [PLACEHOLDER — e.g. "Combined undergraduate-postgraduate pathway; seamless progression without separate entrance exam"]
 
-### Eligibility Requirements
-- [PLACEHOLDER — B.Sc. in Physics (major/honours) from a recognized university]
-- [PLACEHOLDER — minimum XX% marks / cumulative GPA]
-- [PLACEHOLDER — entrance exam or merit-based selection]
+**Duration:** [PLACEHOLDER — 5 years / 10 semesters]
 
-### Application Process
-1. Visit **[PLACEHOLDER Tezpur University Admissions Portal](link)**
-2. Select "M.Sc. Physics"
-3. Fill in academic and professional details
-4. Upload required documents
-5. Pay application fee: [PLACEHOLDER amount in INR]
-6. Submit and retain receipt
+**Seats:** [PLACEHOLDER — XX national seats]
 
-**Selection Method:** [PLACEHOLDER — Entrance exam (date: XX/XX/YYYY) followed by merit list]
-
-### Timeline & Key Dates (Academic Year [PLACEHOLDER YYYY-YYYY])
-- **Application Window Opens:** [PLACEHOLDER Month, DD]
-- **Application Deadline:** [PLACEHOLDER Month, DD]
-- **Entrance Exam Date:** [PLACEHOLDER Month, DD]
-- **Result Announcement:** [PLACEHOLDER Month, DD]
-- **Counseling / Seat Allotment:** [PLACEHOLDER Month, DD]
-- **Semester Start:** [PLACEHOLDER Month, DD]
-
-### Required Documents
-- [PLACEHOLDER] Valid photo ID
-- [PLACEHOLDER] Passport-sized photograph
-- [PLACEHOLDER] Bachelor's degree certificate (official copy)
-- [PLACEHOLDER] Academic transcripts/marksheets (all semesters)
-- [PLACEHOLDER] Rank card or merit certificate (if exam-based)
-- [PLACEHOLDER] Character certificate
-- [PLACEHOLDER] Proof of category (if applicable)
-
-### Fees & Scholarships
-- **Tuition Fee (per semester):** [PLACEHOLDER ₹XXXX]
-- **Scholarships Available:**
-  - UGC National Scholarship: [PLACEHOLDER eligibility/amount]
-  - Merit-based institutional scholarships: [PLACEHOLDER details]
-  - Assistantships (teaching/research): [PLACEHOLDER details]
-
-### Contact & Support
-- **MSc Admissions Coordinator:** [PLACEHOLDER name, email, phone]
-- **Exam Cell:** [PLACEHOLDER contact for entrance exam queries]
-
----
-
-## Integrated BSc-MSc (5-Year) Physics
-
-### Program Overview
-- **Degree Awarded:** B.Sc. + M.Sc. in Physics (integrated pathway)
-- **Duration:** [PLACEHOLDER — 5 years / 10 semesters]
-- **Intake:** [PLACEHOLDER — XX seats]
-- **Description:** [PLACEHOLDER — e.g. "Combined undergraduate and postgraduate program, eliminating the need to apply separately to MSc after BSc."]
-
-### Eligibility Requirements
+### Eligibility
 - [PLACEHOLDER — 10+2 / Higher Secondary with Physics, Chemistry, Mathematics]
 - [PLACEHOLDER — minimum XX% marks / CGPA requirement]
 - [PLACEHOLDER — any additional criteria]
 
-### Application Process
-1. Visit **[PLACEHOLDER Tezpur University Admissions Portal](link)**
-2. Select "Integrated BSc-MSc Physics"
-3. Complete the full application form
+### How to Apply
+1. Visit [PLACEHOLDER Tezpur University Admissions Portal]
+2. Select "Integrated BSc-MSc Physics (National)"
+3. Complete application form with academic details
 4. Upload required documents
 5. Pay application fee: [PLACEHOLDER amount in INR]
 6. Submit and save receipt
 
-**Selection Method:** [PLACEHOLDER — Entrance exam / Merit-based / Mixed]
+**Selection:** [PLACEHOLDER — Entrance exam / Merit-based / Mixed]
 
-### Timeline & Key Dates (Academic Year [PLACEHOLDER YYYY-YYYY])
-- **Application Window Opens:** [PLACEHOLDER Month, DD]
-- **Application Deadline:** [PLACEHOLDER Month, DD]
-- **Entrance Exam / Merit List:** [PLACEHOLDER Month, DD]
-- **Counseling / Admission:** [PLACEHOLDER Month, DD]
-- **Semester Start:** [PLACEHOLDER Month, DD]
-
-### Required Documents
-- [PLACEHOLDER] Valid photo ID
-- [PLACEHOLDER] Passport-sized photograph (4x6 cm)
-- [PLACEHOLDER] 10+2 marksheet and certificate
-- [PLACEHOLDER] Transfer certificate from last school
-- [PLACEHOLDER] Character certificate
-- [PLACEHOLDER] Proof of category (if applicable)
-
-### Fees & Scholarships
-- **Tuition Fee (per semester):** [PLACEHOLDER ₹XXXX]
-- **Scholarships Available:**
-  - Merit-based continuation scholarships: [PLACEHOLDER details]
-  - Performance-based awards: [PLACEHOLDER details]
-  - INSPIRE/DST scholarships: [PLACEHOLDER eligibility]
-
-### Advantages of Integrated Program
-- Seamless progression from BSc to MSc without separate entrance exam
-- [PLACEHOLDER — additional program-specific benefits]
-- Early exposure to research during undergrad coursework
-- Dedicated mentorship and support
-
-### Contact & Support
-- **Integrated Program Coordinator:** [PLACEHOLDER name, email, phone]
-- **Department Academic Advisor:** [PLACEHOLDER contact]
+### Key Dates
+- **Application Opens:** [PLACEHOLDER Month DD]
+- **Deadline:** [PLACEHOLDER Month DD]
+- **Selection Result:** [PLACEHOLDER Month DD]
+- **Semester Starts:** [PLACEHOLDER Month DD]
 
 ---
 
-## Integrated BSc-BEd (5-Year) Physics
+## Program 2: Integrated BSc-BEd (5 years)
 
-### Program Overview
-- **Degree Awarded:** B.Sc. + B.Ed. in Physics (integrated teacher-training pathway)
-- **Duration:** [PLACEHOLDER — 5 years / 10 semesters]
-- **Intake:** [PLACEHOLDER — XX seats]
-- **Description:** [PLACEHOLDER — e.g. "Combined undergraduate and teacher-education program designed to produce qualified physics teachers at the secondary/higher-secondary level."]
+**Tagline:** [PLACEHOLDER — e.g. "Teacher-education pathway: earn B.Sc. and B.Ed. in Physics while training to teach at secondary level"]
 
-### Eligibility Requirements
+**Duration:** [PLACEHOLDER — 5 years / 10 semesters]
+
+**Seats:** [PLACEHOLDER — XX national seats]
+
+### Eligibility
 - [PLACEHOLDER — 10+2 / Higher Secondary with Physics, Chemistry, Mathematics]
 - [PLACEHOLDER — minimum XX% marks / CGPA requirement]
-- [PLACEHOLDER — pass a teacher-aptitude assessment (if required)]
-- [PLACEHOLDER — any health/fitness requirements specific to teaching profession]
+- [PLACEHOLDER — pass teacher-aptitude assessment (if required)]
+- [PLACEHOLDER — health/fitness requirements for teaching profession]
 
-### Application Process
-1. Visit **[PLACEHOLDER Tezpur University Admissions Portal](link)**
-2. Select "Integrated BSc-BEd Physics"
-3. Fill in educational and personal details
+### How to Apply
+1. Visit [PLACEHOLDER Tezpur University Admissions Portal]
+2. Select "Integrated BSc-BEd Physics (National)"
+3. Complete application form
 4. Upload required documents
 5. Pay application fee: [PLACEHOLDER amount in INR]
 6. Submit and save receipt
 
-**Selection Method:** [PLACEHOLDER — Entrance exam (written + teaching-aptitude component) / Merit-based]
+**Selection:** [PLACEHOLDER — Entrance exam with teaching-aptitude component / Merit-based]
 
-### Timeline & Key Dates (Academic Year [PLACEHOLDER YYYY-YYYY])
-- **Application Window Opens:** [PLACEHOLDER Month, DD]
-- **Application Deadline:** [PLACEHOLDER Month, DD]
-- **Entrance Exam Date:** [PLACEHOLDER Month, DD]
-- **Result / Merit List Announcement:** [PLACEHOLDER Month, DD]
-- **Counseling / Admission:** [PLACEHOLDER Month, DD]
-- **Semester Start:** [PLACEHOLDER Month, DD]
-
-### Required Documents
-- [PLACEHOLDER] Valid photo ID
-- [PLACEHOLDER] Passport-sized photograph (4x6 cm)
-- [PLACEHOLDER] 10+2 marksheet and certificate
-- [PLACEHOLDER] Transfer certificate
-- [PLACEHOLDER] Character certificate
-- [PLACEHOLDER] Proof of category (if applicable)
-- [PLACEHOLDER] Medical fitness certificate (standard format for teacher-education programs)
-
-### Fees & Scholarships
-- **Tuition Fee (per semester):** [PLACEHOLDER ₹XXXX]
-- **Scholarships & Support:**
-  - Merit-based scholarships for BSc-BEd: [PLACEHOLDER details]
-  - Teacher training scholarships: [PLACEHOLDER details]
-  - Ministry of Education scholarships: [PLACEHOLDER eligibility]
-
-### Career Outcomes
-- Qualified Physics teacher for secondary/higher-secondary schools
-- Teaching positions in government and private institutions
-- Curriculum development and educational research roles
-- [PLACEHOLDER — other career pathways for physics educators]
-
-### Contact & Support
-- **BSc-BEd Program Coordinator:** [PLACEHOLDER name, email, phone]
-- **Department Education Cell:** [PLACEHOLDER contact]
-- **Teaching Practice Supervisor:** [PLACEHOLDER contact]
+### Key Dates
+- **Application Opens:** [PLACEHOLDER Month DD]
+- **Deadline:** [PLACEHOLDER Month DD]
+- **Entrance Exam:** [PLACEHOLDER Month DD]
+- **Selection Result:** [PLACEHOLDER Month DD]
+- **Semester Starts:** [PLACEHOLDER Month DD]
 
 ---
 
-## General Information for All Programs
+## Program 3: Master of Science (MSc Physics) (2 years)
 
-### Fee Payment
-- Application fees (non-refundable): [PLACEHOLDER amount]
-- Tuition fees: Due at the start of each semester
-- Payment methods: [PLACEHOLDER — online portal / bank transfer / DD]
+**Tagline:** [PLACEHOLDER — e.g. "Advanced study in physics with research focus; for B.Sc. Physics graduates"]
+
+**Duration:** [PLACEHOLDER — 2 years / 4 semesters]
+
+**Seats:** [PLACEHOLDER — XX national seats]
+
+### Eligibility
+- [PLACEHOLDER — B.Sc. Physics (major/honours) from a recognized university]
+- [PLACEHOLDER — minimum XX% marks / GPA requirement]
+- [PLACEHOLDER — entrance exam or merit-based selection]
+
+### How to Apply
+1. Visit [PLACEHOLDER Tezpur University Admissions Portal]
+2. Select "M.Sc. Physics (National)"
+3. Fill academic and professional details
+4. Upload required documents
+5. Pay application fee: [PLACEHOLDER amount in INR]
+6. Submit and save receipt
+
+**Selection:** [PLACEHOLDER — Entrance exam / Merit-based]
+
+### Key Dates
+- **Application Opens:** [PLACEHOLDER Month DD]
+- **Deadline:** [PLACEHOLDER Month DD]
+- **Entrance Exam (if applicable):** [PLACEHOLDER Month DD]
+- **Selection Result:** [PLACEHOLDER Month DD]
+- **Semester Starts:** [PLACEHOLDER Month DD]
+
+---
+
+## Program 4: Doctor of Philosophy (PhD)
+
+**Tagline:** [PLACEHOLDER — e.g. "Doctoral research in physics; develop expertise, conduct original research, and contribute to the field"]
+
+**Duration:** [PLACEHOLDER — typically 4–6 years]
+
+**Seats:** [PLACEHOLDER — XX doctoral positions]
+
+### Eligibility
+- [PLACEHOLDER — M.Sc. Physics or equivalent postgraduate degree]
+- [PLACEHOLDER — minimum XX% marks / GPA in postgraduate qualification]
+- [PLACEHOLDER — qualifying exam / interview requirement]
+- [PLACEHOLDER — specific research area preferences]
+
+### How to Apply
+1. Visit [PLACEHOLDER Tezpur University Research/PhD Portal]
+2. Select "PhD Physics (National)"
+3. Identify potential research advisor/lab
+4. Submit research proposal and CV
+5. Upload documents
+6. Pay application fee: [PLACEHOLDER amount in INR]
+7. Await interview notification
+
+**Selection:** [PLACEHOLDER — Research proposal evaluation + interview / entrance exam]
+
+### Key Dates
+- **Application Opens:** [PLACEHOLDER Month DD]
+- **Deadline:** [PLACEHOLDER Month DD]
+- **Interview/Evaluation:** [PLACEHOLDER Month DD]
+- **Result Announcement:** [PLACEHOLDER Month DD]
+- **Registration Opens:** [PLACEHOLDER Month DD]
+
+---
+
+## General Information
 
 ### Admission Portal
-**[PLACEHOLDER Tezpur University Admissions Portal](link)**
-- Open to all applicants for BSc, MSc, and integrated programs
-- Check portal regularly for updates on deadlines and results
-- Save your application number for reference
+[PLACEHOLDER — Tezpur University Admissions Portal URL]
 
-### Contact the Department
+### Fees & Support
+- **Application Fee (all programs):** [PLACEHOLDER amount in INR]
+- **Tuition per Semester:** [PLACEHOLDER amount]
+- **Scholarships:** [PLACEHOLDER — Merit-based / Need-based / UGC-CSIR / DST-INSPIRE / Others]
+
+### Contact
 - **Department of Physics, Tezpur University**
-- [PLACEHOLDER — address, building/block]
-- **Main Office Email:** [PLACEHOLDER physics@tezu.ac.in]
-- **Main Office Phone:** [PLACEHOLDER +91-XXXX-XXXXXX]
+- [PLACEHOLDER — Address/Building location]
+- **Email:** [PLACEHOLDER physics@tezu.ac.in]
+- **Phone:** [PLACEHOLDER +91-XXXX-XXXXXX]
 - **Office Hours:** [PLACEHOLDER Mon–Fri, 10:00 AM – 4:00 PM IST]
 
-### Frequently Asked Questions
+---
 
-**Q: Can I apply to multiple programs simultaneously?**
-A: [PLACEHOLDER — Yes, you may apply to different programs; ensure you meet the eligibility criteria for each.]
+## Department Request List (Facts Needed)
 
-**Q: What is the selection process? Is there an entrance exam?**
-A: [PLACEHOLDER — Selection is based on [method]. An entrance exam is held on [date]. Check the portal for exam syllabus and sample papers.]
+### For Each Program:
 
-**Q: When will I know the result?**
-A: [PLACEHOLDER — Typically 2–3 weeks after the entrance exam. Results are announced on the portal and via email.]
+**Integrated BSc-MSc:**
+- Exact seat allocation (national)
+- Confirmed duration (years/semesters)
+- Eligibility criteria (subjects required, minimum percentage/GPA)
+- Entrance exam: yes/no? (if yes: format, date, syllabus)
+- Application window and deadline dates
+- Selection method details
+- Per-semester tuition fee
+- Scholarships/financial aid available
 
-**Q: Can I defer my admission to the next year?**
-A: [PLACEHOLDER — Refer to Tezpur University admissions regulations; limited deferment may be available with written justification. Contact admissions coordinator.]
+**Integrated BSc-BEd:**
+- Exact seat allocation (national)
+- Confirmed duration (years/semesters)
+- Eligibility criteria (subjects, minimum percentage/GPA)
+- Teacher-aptitude assessment: format, scoring, pass requirement?
+- Health/fitness requirements for teacher-education program
+- Entrance exam details (written + aptitude component format/date)
+- Application window and deadline dates
+- Selection method details
+- Per-semester tuition fee
+- Scholarships/financial aid available
 
-**Q: Are there any scholarships for general category students?**
-A: [PLACEHOLDER — Yes; merit-based scholarships are available. Check the scholarships section under your program.]
+**MSc Physics:**
+- Exact seat allocation (national)
+- Confirmed duration (years/semesters)
+- Eligibility criteria (bachelor's degree requirements, minimum GPA)
+- Entrance exam: yes/no? (if yes: format, date, syllabus, weightage)
+- Application window and deadline dates
+- Selection method details (merit threshold, etc.)
+- Per-semester tuition fee
+- Scholarships/financial aid available (UGC-CSIR, DST-INSPIRE, assistantships)
 
-**Q: What if I have my BSc from another university? Can I apply for MSc?**
-A: [PLACEHOLDER — Yes, if your BSc is from a recognized university with Physics as a major. Submit verified certificates.]
+**PhD:**
+- Exact number of doctoral positions per year
+- Typical duration ranges (4/5/6 years by field)
+- Eligibility (minimum postgraduate GPA, qualifying exam requirement)
+- Research areas/specializations available
+- PhD stipend/fellowship amount (monthly)
+- Application window and deadline dates
+- Interview process details
+- Supervisor assignment process
+
+### Institution-wide:
+- Which School/Faculty each program belongs to
+- Head of Department name and official bio
+- Campus location (specific building/block)
+- Bank details/payment methods for fees
+- Scholarship programs offered
 
 ---
 

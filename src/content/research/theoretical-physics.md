@@ -1,16 +1,6 @@
 ---
 specialization: "Theoretical & Mathematical Physics"
-faculties:
-  - name: "Prof. Deepak Sinha"
-    group: "Deepak Sinha group"
-    url: "/faculty/deepak-sinha"
-    contact: ""
-    email: ""
-  - name: "Dr. Kavya Menon"
-    group: "Kavya Menon group"
-    url: "/faculty/kavya-menon"
-    contact: ""
-    email: ""
+faculties: []
 description: "Develops analytical and computational methods to understand complex physical systems and fundamental theories"
 image: "theoretical-physics.jpg"
 ---

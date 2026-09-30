@@ -5,13 +5,13 @@ import Layout from '../../layouts/Layout.astro';
 const levels = (await getCollection('admissions')).sort((a, b) => a.data.order - b.data.order);
 ---
 
-<Layout title="Admissions" description="Undergraduate, postgraduate, and doctoral admissions for the Department of Physics.">
+<Layout title="Admissions" description="Admissions for the Department of Physics: Integrated BSc-MSc, Integrated BSc-BEd, MSc, and PhD programs.">
 	<header class="page-header">
 		<div class="container">
 			<h1>Admissions</h1>
 			<p>
-				Admissions to the Department of Physics for undergraduate, postgraduate, and doctoral students.
-				Select your applicant category below.
+				Admissions to the Department of Physics. Explore our four programs for Indian nationals and international students.
+				Select your applicant category and program below.
 			</p>
 		</div>
 	</header>
@@ -39,10 +39,10 @@ const levels = (await getCollection('admissions')).sort((a, b) => a.data.order -
 		</div>
 	</section>
 
-	<!-- Program Levels -->
+	<!-- Programs -->
 	<section class="section program-levels">
 		<div class="container">
-			<h2>Explore Programs by Level</h2>
+			<h2>Our Programs</h2>
 			<ul class="card-grid">
 				{
 					levels.map((level) => (

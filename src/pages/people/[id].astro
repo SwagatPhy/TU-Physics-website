@@ -1,0 +1,235 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+    const teaching = await getCollection('teaching');
+    return teaching.map((prof) => ({
+        params: { id: prof.id },
+        props: { prof },
+    }));
+}
+
+const { prof } = Astro.props;
+const { name, designation, email, phone, research_areas, photo } = prof.data;
+
+// Find research works where this faculty is listed
+const research = await getCollection('research');
+const groupWorks = research.filter(tile =>
+    tile.data.faculties && tile.data.faculties.some(f => f.id === prof.id)
+);
+---
+
+<Layout title={`${name} — Research Group`} description={`${name} research group — ${designation}`}>
+    <div class="container group-layout">
+        <header class="group-header">
+            <div class="lead-info">
+                {photo && (
+                    <img src={`/People-photos/${photo}`} alt={name} class="lead-photo" />
+                )}
+                <div class="lead-text">
+                    <h1>{name}</h1>
+                    <p class="lead-designation">{designation}</p>
+                    {email && (
+                        <p class="lead-contact"><a href={`mailto:${email}`}>{email}</a></p>
+                    )}
+                    {phone && (
+                        <p class="lead-phone">{phone}</p>
+                    )}
+                </div>
+            </div>
+
+            {research_areas.length > 0 && (
+                <div class="research-focus">
+                    <h3>Research Focus</h3>
+                    <ul>
+                        {research_areas.map(area => (
+                            <li>{area}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+        </header>
+
+        {groupWorks.length > 0 && (
+            <section class="group-works">
+                <h2>Research Groups & Projects</h2>
+                <div class="works-grid">
+                    {groupWorks.map(tile => {
+                        const groupEntry = tile.data.faculties.find(f => f.id === prof.id);
+                        return (
+                            <article class="work-card">
+                                <h3><a href={`/research/${tile.id}`}>{tile.data.specialization}</a></h3>
+                                {groupEntry?.group && <p class="work-group">{groupEntry.group}</p>}
+                                <p class="work-description">{tile.data.description}</p>
+                            </article>
+                        );
+                    })}
+                </div>
+            </section>
+        )}
+
+        <a href="/research" class="back-link">← Back to Research</a>
+    </div>
+</Layout>
+
+<style>
+    .group-layout {
+        padding: 2rem 0;
+    }
+
+    .group-header {
+        margin-bottom: 3rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .lead-info {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        align-items: start;
+    }
+
+    .lead-photo {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 1px solid var(--color-border);
+    }
+
+    .lead-text h1 {
+        margin: 0 0 0.5rem 0;
+        font-size: 2rem;
+        color: var(--color-text);
+    }
+
+    .lead-designation {
+        margin: 0 0 1rem 0;
+        font-size: 1.1rem;
+        color: var(--color-text-muted);
+    }
+
+    .lead-contact,
+    .lead-phone {
+        margin: 0.5rem 0;
+        font-size: 0.95rem;
+    }
+
+    .lead-contact a {
+        color: var(--color-accent);
+        text-decoration: none;
+    }
+
+    .lead-contact a:hover {
+        text-decoration: underline;
+    }
+
+    .research-focus {
+        background: var(--color-surface);
+        padding: 1.5rem;
+        border-radius: 12px;
+        border: 1px solid var(--color-border);
+    }
+
+    .research-focus h3 {
+        margin: 0 0 1rem 0;
+        font-size: 1.1rem;
+    }
+
+    .research-focus ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .research-focus li {
+        padding: 0.5rem 1rem;
+        background: var(--color-background);
+        border-radius: 6px;
+        font-size: 0.9rem;
+    }
+
+    .group-works {
+        margin-bottom: 2rem;
+    }
+
+    .group-works h2 {
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+    }
+
+    .works-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .work-card {
+        padding: 1.5rem;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 12px;
+        transition: all 0.2s;
+    }
+
+    .work-card:hover {
+        border-color: var(--color-accent);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .work-card h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.1rem;
+    }
+
+    .work-card a {
+        color: var(--color-accent);
+        text-decoration: none;
+    }
+
+    .work-card a:hover {
+        text-decoration: underline;
+    }
+
+    .work-group {
+        margin: 0.5rem 0;
+        font-size: 0.9rem;
+        color: var(--color-text-muted);
+        font-weight: 600;
+    }
+
+    .work-description {
+        margin: 0.75rem 0 0 0;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: var(--color-text-muted);
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-top: 1rem;
+        color: var(--color-accent);
+        text-decoration: none;
+        font-size: 0.95rem;
+    }
+
+    .back-link:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 48rem) {
+        .lead-info {
+            grid-template-columns: 1fr;
+        }
+
+        .works-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

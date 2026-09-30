@@ -1,7 +1,7 @@
 ---
 name: "Snigha Sharma"
-supervisor: "Dr. Rupjyoti Gogoi"
-researchArea: "Infrared Astronomy"
+supervisor: "Rupjyoti Gogoi"
+research_area: "Infrared Astronomy"
 email: "xyz@gmail.com"
 photo: ""
 ---

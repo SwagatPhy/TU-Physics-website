@@ -12,12 +12,38 @@
 8. **Leadership** — photo + short bio of Head of Department
 9. **Departmental reports/newsletters** — links to downloadable reports if applicable
 
-## Placeholder copy
+## Overview + Stats Strip (User choice: narrative + numbers blend)
 
-**Overview options** (pick one — all [PLACEHOLDER], pending sign-off):
-1. *(Current default, formal/institutional)* The Department of Physics is one of the constituent departments of Tezpur University, a central university located in Assam, India. Established in [PLACEHOLDER YEAR], the department offers undergraduate, postgraduate, and doctoral programs in Physics alongside active research programs.
-2. *(Narrative opener, good if About leads with a story rather than a fact sheet)* For [PLACEHOLDER N] years, the Department of Physics has been part of Tezpur University's growth from a young central university into a recognized center for science education in Northeast India. Today it runs undergraduate through doctoral programs and maintains active research groups in [PLACEHOLDER research areas].
-3. *(Numbers-forward, pairs well if the page opens straight into a stats strip)* Established in [PLACEHOLDER YEAR], the Department of Physics today has [PLACEHOLDER N] faculty, [PLACEHOLDER N] research scholars, and [PLACEHOLDER N] active labs — teaching at the undergraduate, postgraduate, and doctoral levels while conducting research in [PLACEHOLDER research areas].
+**Chosen structure:** Narrative opener → stats strip  
+**Actual counts used:** 16 Teaching faculty, 23 research scholars (from src/content/people/)
+
+---
+
+### Variant A (Warmest narrative + lean stats)
+
+> For [PLACEHOLDER N] years, the Department of Physics has been part of Tezpur University's growth into a recognized center for science education in Northeast India. Today it runs undergraduate through doctoral programs alongside active research spanning [PLACEHOLDER research areas].
+
+**Stats strip:** 16 faculty · 23 research scholars · [PLACEHOLDER] active labs · Est. [PLACEHOLDER YEAR]
+
+---
+
+### Variant B (Slightly formal + full context)
+
+> Established in [PLACEHOLDER YEAR], the Department of Physics has grown into one of Tezpur University's vibrant centers for science education and research. With 16 faculty members, 23 research scholars, and [PLACEHOLDER] active research labs, the department teaches undergraduate through doctoral programs while conducting active research across [PLACEHOLDER research areas].
+
+**Stats strip:** 16 faculty · 23 research scholars · [PLACEHOLDER] active labs · Est. [PLACEHOLDER YEAR]
+
+---
+
+### Variant C (Shortest, stats-anchored)
+
+> The Department of Physics at Tezpur University combines rigorous teaching with active research. Since [PLACEHOLDER YEAR], it has grown to 16 faculty, 23 research scholars, and [PLACEHOLDER] active labs, offering undergraduate, postgraduate, and doctoral programs in physics and conducting research in [PLACEHOLDER research areas].
+
+**Stats strip:** 16 faculty · 23 research scholars · [PLACEHOLDER] active labs · Est. [PLACEHOLDER YEAR]
+
+---
+
+**→ Choose variant for About page build.** Stats strip will display prominently below chosen opener paragraph.
 
 **Mission/vision options** (pick one — all [PLACEHOLDER], pending sign-off):
 1. *(Current default)* Our mission is to provide quality physics education at all levels and to conduct research that contributes to the advancement of the discipline, while fostering scientific temper among students in the region.
@@ -35,12 +61,14 @@
 **Leadership placeholder:**
 - [PLACEHOLDER NAME], Head of Department — [PLACEHOLDER — one-line bio, e.g. "Prof. [Name]'s research interests include [area]."]
 
-## Open questions for user
+## Department Request List
 
-- Need: correct founding year of the department and which School/Faculty of Tezpur University it sits under.
-- Need: real institutional history/timeline and any notable milestones to highlight.
-- Need: current Head of Department name and official short bio (with sign-off on public use).
-- Need: accreditation details (NAAC grade, UGC recognition) if the department wants these displayed.
-- Need: list of formal affiliations, MOUs, or collaborating institutions to credit.
-- Need: campus location (building name, block) for a campus map embed — Tezpur University's main campus address.
-- Need: any existing "About" text from official department brochures/university website we should base this on, to avoid duplicating/conflicting info.
+**To complete the About page, please provide:**
+
+1. **Founding year** — When was the Department of Physics established?
+2. **School/Faculty designation** — Which School or Faculty of Tezpur University does Physics belong to?
+3. **Head of Department** — Current HoD name + short bio (1-2 sentences about research interests/background, with sign-off for public use)
+4. **Accreditation** — NAAC accreditation grade, UGC recognition status, or other official accreditations to display
+5. **Affiliations** — Formal affiliations, MOUs, or collaborating institutions to credit
+6. **Campus location** — Building name/block where the department is located (for campus map)
+7. **Existing materials** — Any official "About" text from department brochures or university website to base this on (to avoid duplication)

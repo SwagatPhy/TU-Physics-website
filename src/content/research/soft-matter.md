@@ -1,11 +1,6 @@
 ---
 specialization: "Soft Matter Physics"
-faculties:
-  - name: "[PLACEHOLDER: Faculty name]"
-    group: "[PLACEHOLDER: Faculty group]"
-    url: "/faculty/placeholder"
-    contact: ""
-    email: ""
+faculties: []
 description: "[PLACEHOLDER: Soft Matter Physics description]"
 image: "soft-matter-physics.jpg"
 ---

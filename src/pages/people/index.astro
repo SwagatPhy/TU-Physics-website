@@ -45,17 +45,19 @@ const tabs = [
         {teaching.length === 0 && <p class="empty">Profiles coming soon.</p>}
         <div class="card-grid people-grid">
             {teaching.map(p => (
-                <article class="card">
-                    {p.data.photo && (
-                        <img src={`/People-photos/${p.data.photo}`} alt={p.data.name} class="person-photo" />
-                    )}
-                    <h3 class="card-title">{p.data.name}</h3>
-                    <p class="card-summary">{p.data.designation}</p>
-                    {p.data.researchAreas.length > 0 && (
-                        <p class="card-summary">{p.data.researchAreas.join(', ')}</p>
-                    )}
-                    {p.data.email && <a href={`mailto:${p.data.email}`}>{p.data.email}</a>}
-                </article>
+                <a href={`/people/${p.id}`} class="card-link">
+                    <article class="card">
+                        {p.data.photo && (
+                            <img src={`/People-photos/${p.data.photo}`} alt={p.data.name} class="person-photo" />
+                        )}
+                        <h3 class="card-title">{p.data.name}</h3>
+                        <p class="card-summary">{p.data.designation}</p>
+                        {p.data.research_areas && p.data.research_areas.length > 0 && (
+                            <p class="card-summary">{p.data.research_areas.join(', ')}</p>
+                        )}
+                        {p.data.email && <p class="card-email">{p.data.email}</p>}
+                    </article>
+                </a>
             ))}
         </div>
     </section>
@@ -202,6 +204,12 @@ const tabs = [
     }
 
     .empty { color: var(--color-text-muted); }
+
+    .card-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
 
     .people-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));

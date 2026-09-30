@@ -2,8 +2,6 @@
 import {getCollection, render} from 'astro:content';
 import Layout from '../../layouts/Layout.astro'
 
-// getStaticPaths creates one page for each research entry
-// Transforms each entry into {id: entry.id, props: entry data}
 export async function getStaticPaths() {
     const topics = await getCollection('research');
     return topics.map((topics) => ({
@@ -12,10 +10,20 @@ export async function getStaticPaths() {
     }));
 }
 
-// Extract frontmatter data and render markdown content
 const {topics} = Astro.props;
-const { specialization, faculty, description, contact, email} = topics.data;
+const { specialization, description, faculties } = topics.data;
 const { Content } = await render(topics);
+
+// Fetch teaching collection to look up faculty details
+const teaching = await getCollection('teaching');
+const teachingMap = new Map(teaching.map(p => [p.id, p.data]));
+
+// Resolve faculty IDs to actual faculty data
+const facultyList = faculties.map(f => ({
+    id: f.id,
+    group: f.group,
+    data: teachingMap.get(f.id),
+})).filter(f => !f.id.includes('[PLACEHOLDER'));
 ---
 
 <Layout title={specialization} description={description}>
@@ -25,13 +33,32 @@ const { Content } = await render(topics);
     </header>
 
     <section class="detail-body">
-        <div class="research-details">
-            <p><strong>Faculty Lead:</strong> {faculty}</p>
-            <p><strong>Contact:</strong> {contact}</p>
-            <p><strong>Email:</strong> <a href={`mailto:${email}`}>{email}</a></p>
-        </div>
+        {facultyList.length > 0 && (
+            <div class="faculty-section">
+                <h2>Faculty</h2>
+                <div class="faculty-list">
+                    {facultyList.map(f => (
+                        <div class="faculty-card">
+                            {f.data ? (
+                                <>
+                                    <h3>
+                                        <a href={`/people/${f.id}`}>{f.data.name}</a>
+                                    </h3>
+                                    {f.group && <p class="group-name">{f.group}</p>}
+                                    <p class="designation">{f.data.designation}</p>
+                                    {f.data.email && (
+                                        <p><a href={`mailto:${f.data.email}`}>{f.data.email}</a></p>
+                                    )}
+                                </>
+                            ) : (
+                                <p class="placeholder">{f.id}</p>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            </div>
+        )}
 
-        <!--The content is being stored in the 16th line, the cons { Content} variable-->
         <article class="research-content">
             <Content />
         </article>

@@ -1,0 +1,242 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+    const teaching = await getCollection('teaching');
+    return teaching.map((prof) => ({
+        params: { id: prof.id },
+        props: { prof },
+    }));
+}
+
+const { prof } = Astro.props;
+const { name, designation, email, phone, research_areas, photo } = prof.data;
+
+// Find research tiles that reference this professor
+const research = await getCollection('research');
+const relatedTiles = research.filter(tile =>
+    tile.data.faculties && tile.data.faculties.some(f => f.id === prof.id)
+);
+---
+
+<Layout title={name} description={`${name}, ${designation}`}>
+    <div class="container detail-layout">
+        <div class="profile-sidebar">
+            {photo && (
+                <img src={`/People-photos/${photo}`} alt={name} class="profile-photo" />
+            )}
+            <div class="profile-info">
+                <h1 class="profile-name">{name}</h1>
+                <p class="profile-designation">{designation}</p>
+
+                {email && (
+                    <p class="contact-item">
+                        <strong>Email:</strong> <a href={`mailto:${email}`}>{email}</a>
+                    </p>
+                )}
+
+                {phone && (
+                    <p class="contact-item">
+                        <strong>Phone:</strong> {phone}
+                    </p>
+                )}
+            </div>
+        </div>
+
+        <div class="profile-main">
+            {research_areas.length > 0 && (
+                <section class="research-areas-section">
+                    <h2>Research Areas</h2>
+                    <ul class="areas-list">
+                        {research_areas.map(area => (
+                            <li>{area}</li>
+                        ))}
+                    </ul>
+                </section>
+            )}
+
+            {relatedTiles.length > 0 && (
+                <section class="related-research-section">
+                    <h2>Related Research Groups</h2>
+                    <div class="related-tiles">
+                        {relatedTiles.map(tile => (
+                            <article class="related-tile">
+                                <h3>
+                                    <a href={`/research/${tile.id}`}>{tile.data.specialization}</a>
+                                </h3>
+                                {tile.data.group && <p class="group-name">{tile.data.group}</p>}
+                                <p class="tile-description">{tile.data.description}</p>
+                            </article>
+                        ))}
+                    </div>
+                </section>
+            )}
+
+            <a href="/people" class="back-link">← Back to People</a>
+        </div>
+    </div>
+</Layout>
+
+<style>
+    .detail-layout {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 3rem;
+        padding: 2rem 0;
+    }
+
+    .profile-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        position: sticky;
+        top: 2rem;
+        align-self: start;
+    }
+
+    .profile-photo {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 1px solid var(--color-border);
+    }
+
+    .profile-info {
+        padding: 1rem;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 12px;
+    }
+
+    .profile-name {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.3rem;
+        color: var(--color-text);
+    }
+
+    .profile-designation {
+        margin: 0 0 1rem 0;
+        font-size: 0.95rem;
+        color: var(--color-text-muted);
+    }
+
+    .contact-item {
+        margin: 0.5rem 0;
+        font-size: 0.9rem;
+    }
+
+    .contact-item a {
+        color: var(--color-accent);
+        text-decoration: none;
+    }
+
+    .contact-item a:hover {
+        text-decoration: underline;
+    }
+
+    .profile-main {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .research-areas-section h2,
+    .related-research-section h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+    }
+
+    .areas-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .areas-list li {
+        padding: 0.5rem 0;
+        padding-left: 1.5rem;
+        position: relative;
+    }
+
+    .areas-list li::before {
+        content: '•';
+        position: absolute;
+        left: 0;
+        color: var(--color-accent);
+    }
+
+    .related-tiles {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    .related-tile {
+        padding: 1.5rem;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 12px;
+        transition: border-color 0.2s;
+    }
+
+    .related-tile:hover {
+        border-color: var(--color-accent);
+    }
+
+    .related-tile h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.1rem;
+    }
+
+    .related-tile a {
+        color: var(--color-accent);
+        text-decoration: none;
+    }
+
+    .related-tile a:hover {
+        text-decoration: underline;
+    }
+
+    .group-name {
+        margin: 0.5rem 0;
+        font-size: 0.9rem;
+        color: var(--color-text-muted);
+        font-style: italic;
+    }
+
+    .tile-description {
+        margin: 0.75rem 0 0 0;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: var(--color-text-muted);
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-top: 1rem;
+        color: var(--color-accent);
+        text-decoration: none;
+        font-size: 0.95rem;
+    }
+
+    .back-link:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 48rem) {
+        .detail-layout {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .profile-sidebar {
+            position: static;
+        }
+
+        .related-tiles {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

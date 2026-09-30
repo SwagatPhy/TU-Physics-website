@@ -1,11 +1,8 @@
 ---
 specialization: "Plasma Physics"
 faculties:
-  - name: "[PLACEHOLDER: Faculty name]"
-    group: "[PLACEHOLDER: Faculty group]"
-    url: "/faculty/placeholder"
-    contact: ""
-    email: ""
+  - id: "[PLACEHOLDER: Faculty]"
+
 description: "[PLACEHOLDER: Plasma Physics description]"
 image: "plasma-physics.jpg"
 ---

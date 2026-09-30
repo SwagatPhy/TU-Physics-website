@@ -1,16 +1,11 @@
 ---
 specialization: "Optics & Photonics"
 faculties:
-  - name: "Prof. Amit Sharma"
+  - id: "[PLACEHOLDER: AmitSharma]"
     group: "Amit Sharma group"
-    url: "/faculty/amit-sharma"
-    contact: ""
-    email: ""
-  - name: "Dr. Anita Mishra"
+  - id: "[PLACEHOLDER: AnitaMishra]"
     group: "Anita Mishra group"
-    url: "/faculty/anita-mishra"
-    contact: ""
-    email: ""
+
 description: "Focuses on quantum and nonlinear optical phenomena with applications in quantum information and imaging"
 image: "optics-and-photonics.jpeg"
 ---

@@ -1,16 +1,11 @@
 ---
 specialization: "Materials Science & Engineering"
 faculties:
-  - name: "Dr. Neha Verma"
+  - id: "[PLACEHOLDER: NehaVerma]"
     group: "Neha Verma group"
-    url: "/faculty/neha-verma"
-    contact: ""
-    email: ""
-  - name: "Prof. Suresh Rao"
+  - id: "[PLACEHOLDER: SureshRao]"
     group: "Suresh Rao group"
-    url: "/faculty/suresh-rao"
-    contact: ""
-    email: ""
+
 description: "Explores synthesis, characterization, and applications of advanced materials for electronics and energy storage"
 image: "material-science-and-engineering.jpg"
 ---

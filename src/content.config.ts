@@ -46,11 +46,8 @@ const research = defineCollection({
     schema: z.object({
         specialization: z.string(),
         faculties: z.array(z.object({
-            name: z.string(),
-            group: z.string(),
-            url: z.string().optional(),
-            contact: z.string().optional(),
-            email: z.string().optional(),
+            id: z.string(),
+            group: z.string().optional(),
         })),
         description: z.string(),
         image: z.string().optional(),
@@ -67,7 +64,7 @@ const teaching = defineCollection({
         designation: z.string(),
         email: z.string().optional(),
         phone: z.string().optional(),
-        researchAreas: z.array(z.string()).default([]),
+        research_areas: z.array(z.string()).default([]),
         photo: z.string().optional(),
     }),
 });

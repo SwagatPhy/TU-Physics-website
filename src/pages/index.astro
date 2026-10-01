@@ -129,7 +129,7 @@ const VISITOR_COUNTER_URL = '';
 				</div>
 				<a class="link-arrow" href="/research">All {research.length} research areas <Icon name="arrow-right" /></a>
 			</div>
-			<ul class="grid research-mosaic">
+			<ul class={`grid research-mosaic ${research.length % 2 === 1 ? 'research-mosaic--odd' : ''}`}>
 				{research.map((item) => (
 					<li>
 						<a class={`research-tile ${item.data.image ? '' : 'plain-art'}`} href={`/research/${item.id}`}>
@@ -429,8 +429,8 @@ const VISITOR_COUNTER_URL = '';
 	}
 
 	/* Research mosaic -------------------------------------------------------- */
-	/* The first area gets a double-width tile, so the areas fill the rows evenly
-	   on 2- and 4-column layouts. */
+	/* 1 column on phones, 2 on tablets, 4 on desktop. With an odd number of
+	   areas the first tile is double-width so the rows still fill evenly. */
 	.research-mosaic {
 		grid-template-columns: 1fr;
 	}
@@ -440,11 +440,11 @@ const VISITOR_COUNTER_URL = '';
 			grid-template-columns: repeat(2, 1fr);
 		}
 
-		.research-mosaic > li:first-child {
+		.research-mosaic--odd > li:first-child {
 			grid-column: span 2;
 		}
 
-		.research-mosaic > li:first-child .research-tile {
+		.research-mosaic--odd > li:first-child .research-tile {
 			aspect-ratio: 16 / 7;
 		}
 	}
@@ -454,9 +454,8 @@ const VISITOR_COUNTER_URL = '';
 			grid-template-columns: repeat(4, 1fr);
 		}
 
-		/* Two even rows: [wide, 1, 1] then [1, 1, 1, 1] */
 		.research-mosaic .research-tile,
-		.research-mosaic > li:first-child .research-tile {
+		.research-mosaic--odd > li:first-child .research-tile {
 			aspect-ratio: auto;
 			height: 15rem;
 		}

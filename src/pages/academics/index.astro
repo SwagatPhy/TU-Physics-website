@@ -24,7 +24,7 @@ const courses = (await getCollection('courses')).sort((a, b) => a.data.code.loca
 					<p>For eligibility and how to apply, see <a href="/admissions">Admissions</a>.</p>
 				</div>
 			</div>
-			<ul class="grid">
+			<ul class="grid grid--fill">
 				{programs.map((program) => (
 					<li>
 						<a class="card" href={`/admissions/${program.id}`}>

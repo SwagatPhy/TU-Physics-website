@@ -16,7 +16,7 @@ howToApply:
   - "Submit and retain receipt"
 applicationDeadline: "[PLACEHOLDER]"
 contactEmail: "admissions@tezu.ac.in"
-order: 3
+order: 2
 ---
 
 **Degree Awarded:** M.Sc. Physics

@@ -1,6 +1,6 @@
 ---
 // Shared body of /admissions/national and /admissions/international:
-// the National | International switch, the four program cards, and
+// the National | International switch, the program cards, and
 // audience-specific information blocks passed in by the page.
 import { getCollection } from 'astro:content';
 import PageHeader from './PageHeader.astro';
@@ -48,7 +48,7 @@ const switches = [
 				<p>Each program page lists eligibility, how to apply and the application deadline.</p>
 			</div>
 		</div>
-		<ul class="grid">
+		<ul class="grid grid--fill">
 			{programs.map((program) => (
 				<li>
 					<a class="card" href={`/admissions/${program.id}`}>

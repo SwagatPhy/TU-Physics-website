@@ -24,11 +24,11 @@ const audiences = [
 ] as const;
 ---
 
-<Layout title="Admissions" description="Admissions to the Department of Physics, Tezpur University: Integrated BSc-MSc, Integrated BSc-BEd, MSc and PhD.">
+<Layout title="Admissions" description="Admissions to the Department of Physics, Tezpur University: Integrated BSc-MSc, MSc and PhD.">
 	<PageHeader
 		title="Admissions"
 		eyebrow="Join the department"
-		lead="Admissions to the Department of Physics. Explore our four programs for Indian nationals and international students — start by choosing your applicant category."
+		lead="Admissions to the Department of Physics. Explore our three programs for Indian nationals and international students — start by choosing your applicant category."
 	/>
 
 	<section class="section">
@@ -59,7 +59,7 @@ const audiences = [
 					<h2>Our programs</h2>
 				</div>
 			</div>
-			<ul class="grid">
+			<ul class="grid grid--fill">
 				{programs.map((program, i) => (
 					<li>
 						<a class="card" href={`/admissions/${program.id}`}>

@@ -15,7 +15,7 @@ howToApply:
   - "Submit application"
 applicationDeadline: "[PLACEHOLDER]"
 contactEmail: "admissions@tezu.ac.in"
-order: 4
+order: 3
 ---
 
 **Degree Awarded:** PhD in Physics

@@ -664,6 +664,11 @@ hr {
 	grid-template-columns: repeat(auto-fill, minmax(min(100%, 24rem), 1fr));
 }
 
+/* Short lists (e.g. the three programs): cards stretch to fill the row */
+.grid--fill {
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+}
+
 .grid--wide {
 	grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
 }

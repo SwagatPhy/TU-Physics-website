@@ -4,6 +4,7 @@ import Layout from '../layouts/Layout.astro';
 import Icon from '../components/Icon.astro';
 import { formatDate } from '../lib/date';
 import { researchImage } from '../lib/images';
+import { withBase } from '../lib/url';
 
 // Headline numbers are counted from the content collections, so they stay
 // correct as people and research areas are added.
@@ -35,7 +36,7 @@ const VISITOR_COUNTER_URL = '';
 	<section class="hero">
 		<img
 			class="hero__image"
-			src="/Dept-photos/web/dept_pho1.jpg"
+			src={withBase('/Dept-photos/web/dept_pho1.jpg')}
 			alt="The Department of Physics building, Tezpur University"
 			fetchpriority="high"
 		/>
@@ -47,9 +48,9 @@ const VISITOR_COUNTER_URL = '';
 				frontiers of research since its commencement in January 1998.
 			</p>
 			<div class="btn-row">
-				<a class="btn btn--primary" href="/research">Explore research <Icon name="arrow-right" /></a>
-				<a class="btn btn--on-dark" href="/admissions">Admissions</a>
-				<a class="btn btn--on-dark" href="/about">About the department</a>
+				<a class="btn btn--primary" href={withBase('/research')}>Explore research <Icon name="arrow-right" /></a>
+				<a class="btn btn--on-dark" href={withBase('/admissions')}>Admissions</a>
+				<a class="btn btn--on-dark" href={withBase('/about')}>About the department</a>
 			</div>
 		</div>
 
@@ -79,7 +80,7 @@ const VISITOR_COUNTER_URL = '';
 					Nanoscience &amp; Technology, High Energy Physics, Electronics, Photonics, Plasma Physics and
 					Astrophysics.
 				</p>
-				<a class="link-arrow" href="/about">More about the department <Icon name="arrow-right" /></a>
+				<a class="link-arrow" href={withBase('/about')}>More about the department <Icon name="arrow-right" /></a>
 			</div>
 			<ul class="stats">
 				{stats.map((stat) => (
@@ -100,12 +101,12 @@ const VISITOR_COUNTER_URL = '';
 					<p class="eyebrow">Study with us</p>
 					<h2>Programs</h2>
 				</div>
-				<a class="link-arrow" href="/admissions">Admissions <Icon name="arrow-right" /></a>
+				<a class="link-arrow" href={withBase('/admissions')}>Admissions <Icon name="arrow-right" /></a>
 			</div>
 			<ul class="grid grid--fill">
 				{programs.map((program, i) => (
 					<li>
-						<a class="card program-card" href={`/admissions/${program.id}`}>
+						<a class="card program-card" href={withBase(`/admissions/${program.id}`)}>
 							<div class="card__body">
 								<span class="program-card__index">0{i + 1}</span>
 								<h3 class="card__title">{program.data.title}</h3>
@@ -127,7 +128,7 @@ const VISITOR_COUNTER_URL = '';
 					<p class="eyebrow">Research</p>
 					<h2>Areas of research</h2>
 				</div>
-				<a class="link-arrow" href="/research">All {research.length} research areas <Icon name="arrow-right" /></a>
+				<a class="link-arrow" href={withBase('/research')}>All {research.length} research areas <Icon name="arrow-right" /></a>
 			</div>
 			<ul class={`grid research-mosaic ${research.length % 2 === 1 ? 'research-mosaic--odd' : ''}`}>
 				{research.map((item) => (
@@ -135,7 +136,7 @@ const VISITOR_COUNTER_URL = '';
 						<a
 							class={`research-tile ${item.data.image ? 'fit-media' : 'plain-art'}`}
 							style={item.data.image ? `--fit-img: url(${researchImage(item.data.image)})` : undefined}
-							href={`/research/${item.id}`}
+							href={withBase(`/research/${item.id}`)}
 						>
 							{item.data.image && (
 								<img src={researchImage(item.data.image)} alt="" loading="lazy" decoding="async" />
@@ -154,13 +155,13 @@ const VISITOR_COUNTER_URL = '';
 			<div class="feature-photos">
 				<img
 					class="feature-photos__main"
-					src="/Facilities-photos/Resources/web/Dome.jpg"
+					src={withBase('/Facilities-photos/Resources/web/Dome.jpg')}
 					alt="The Tezpur University Observatory dome on a rooftop"
 					loading="lazy"
 				/>
 				<img
 					class="feature-photos__inset"
-					src="/Facilities-photos/Resources/web/Telescope.jpg"
+					src={withBase('/Facilities-photos/Resources/web/Telescope.jpg')}
 					alt="The observatory telescope inside the dome"
 					loading="lazy"
 				/>
@@ -173,7 +174,7 @@ const VISITOR_COUNTER_URL = '';
 					University Observatory.
 				</p>
 				<div class="btn-row">
-					<a class="btn btn--primary" href="/facilities">See the facilities <Icon name="arrow-right" /></a>
+					<a class="btn btn--primary" href={withBase('/facilities')}>See the facilities <Icon name="arrow-right" /></a>
 				</div>
 			</div>
 		</div>
@@ -187,7 +188,7 @@ const VISITOR_COUNTER_URL = '';
 					<p class="eyebrow">What's happening</p>
 					<h2>News &amp; events</h2>
 				</div>
-				<a class="link-arrow" href="/news-events">All news &amp; events <Icon name="arrow-right" /></a>
+				<a class="link-arrow" href={withBase('/news-events')}>All news &amp; events <Icon name="arrow-right" /></a>
 			</div>
 
 			<div class="news-layout">
@@ -201,7 +202,7 @@ const VISITOR_COUNTER_URL = '';
 									<time class="news-item__date" datetime={item.data.date.toISOString()}>
 										{formatDate(item.data.date)}
 									</time>
-									<h4><a href={`/news-events/${item.id}`}>{item.data.title}</a></h4>
+									<h4><a href={withBase(`/news-events/${item.id}`)}>{item.data.title}</a></h4>
 									<p>{item.data.summary}</p>
 								</article>
 							</li>
@@ -223,7 +224,7 @@ const VISITOR_COUNTER_URL = '';
 										</span>
 									</div>
 									<div>
-										<h4><a href={`/news-events/${item.id}`}>{item.data.title}</a></h4>
+										<h4><a href={withBase(`/news-events/${item.id}`)}>{item.data.title}</a></h4>
 										<p class="event-item__meta">
 											<span class="visually-hidden">{formatDate(item.data.date)} · </span>
 											{item.data.location}
@@ -247,8 +248,8 @@ const VISITOR_COUNTER_URL = '';
 					<p>Explore our admissions process and start your physics journey with us.</p>
 				</div>
 				<div class="btn-row">
-					<a class="btn btn--primary" href="/admissions">View admissions <Icon name="arrow-right" /></a>
-					<a class="btn btn--on-dark" href="/contact">Contact the department</a>
+					<a class="btn btn--primary" href={withBase('/admissions')}>View admissions <Icon name="arrow-right" /></a>
+					<a class="btn btn--on-dark" href={withBase('/contact')}>Contact the department</a>
 				</div>
 			</div>
 		</div>

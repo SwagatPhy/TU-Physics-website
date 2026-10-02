@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import Icon from '../../components/Icon.astro';
+import { withBase } from '../../lib/url';
 
 export async function getStaticPaths() {
 	const programs = await getCollection('admissions');
@@ -49,7 +50,7 @@ const otherPrograms = (await getCollection('admissions'))
 				</ol>
 			</article>
 
-			<a class="back-link" href="/admissions"><Icon name="arrow-left" /> All admissions</a>
+			<a class="back-link" href={withBase('/admissions')}><Icon name="arrow-left" /> All admissions</a>
 		</div>
 
 		<aside>
@@ -62,14 +63,14 @@ const otherPrograms = (await getCollection('admissions'))
 			<div class="aside-card">
 				<h2>Applicant category</h2>
 				<ul class="aside-links">
-					<li><a href="/admissions/national">Indian nationals</a></li>
-					<li><a href="/admissions/international">International students</a></li>
+					<li><a href={withBase('/admissions/national')}>Indian nationals</a></li>
+					<li><a href={withBase('/admissions/international')}>International students</a></li>
 				</ul>
 			</div>
 			<div class="aside-card">
 				<h2>Other programs</h2>
 				<ul class="aside-links">
-					{otherPrograms.map((other) => <li><a href={`/admissions/${other.id}`}>{other.data.title}</a></li>)}
+					{otherPrograms.map((other) => <li><a href={withBase(`/admissions/${other.id}`)}>{other.data.title}</a></li>)}
 				</ul>
 			</div>
 		</aside>

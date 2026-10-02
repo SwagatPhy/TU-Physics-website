@@ -4,6 +4,7 @@ import Layout from '../../layouts/Layout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import PersonCard from '../../components/PersonCard.astro';
 import Icon from '../../components/Icon.astro';
+import { withBase } from '../../lib/url';
 
 const byName = (a: { data: { name: string } }, b: { data: { name: string } }) => a.data.name.localeCompare(b.data.name);
 const teaching = (await getCollection('teaching')).sort(byName);
@@ -74,7 +75,7 @@ const researcherCard = (p: (typeof scholars)[number] | (typeof assistants)[numbe
 								topics={p.data.research_areas}
 								email={p.data.email}
 								photo={p.data.photo}
-								href={`/people/${p.id}`}
+								href={withBase(`/people/${p.id}`)}
 							/>
 						</li>
 					))}

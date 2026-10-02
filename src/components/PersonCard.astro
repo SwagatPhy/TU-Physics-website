@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../lib/url';
 // One person in the People directory. Shows the photo when there is one,
 // otherwise a circle with the person's initials.
 
@@ -29,7 +30,7 @@ const showEmail = email && email.includes('@') && !email.includes('PLACEHOLDER')
 <article class={`card person-card ${href ? 'card--link' : ''}`} data-person={`${name} ${role ?? ''} ${topics.join(' ')}`.toLowerCase()}>
 	<div class="person-card__top">
 		<div class="avatar">
-			{photo ? <img src={`/People-photos/${photo}`} alt="" loading="lazy" decoding="async" /> : initials}
+			{photo ? <img src={withBase(`/People-photos/${photo}`)} alt="" loading="lazy" decoding="async" /> : initials}
 		</div>
 		<div>
 			<h3 class="card__title person-card__name">

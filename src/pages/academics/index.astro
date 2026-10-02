@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import Icon from '../../components/Icon.astro';
+import { withBase } from '../../lib/url';
 
 const programs = (await getCollection('admissions')).sort((a, b) => a.data.order - b.data.order);
 const courses = (await getCollection('courses')).sort((a, b) => a.data.code.localeCompare(b.data.code));
@@ -21,13 +22,13 @@ const courses = (await getCollection('courses')).sort((a, b) => a.data.code.loca
 				<div>
 					<p class="eyebrow">Degrees</p>
 					<h2>Programs</h2>
-					<p>For eligibility and how to apply, see <a href="/admissions">Admissions</a>.</p>
+					<p>For eligibility and how to apply, see <a href={withBase('/admissions')}>Admissions</a>.</p>
 				</div>
 			</div>
 			<ul class="grid grid--fill">
 				{programs.map((program) => (
 					<li>
-						<a class="card" href={`/admissions/${program.id}`}>
+						<a class="card" href={withBase(`/admissions/${program.id}`)}>
 							<div class="card__body">
 								<span class="card__eyebrow">{program.data.duration}</span>
 								<h3 class="card__title">{program.data.title}</h3>
@@ -48,12 +49,12 @@ const courses = (await getCollection('courses')).sort((a, b) => a.data.code.loca
 					<h2>Courses</h2>
 					<p>Courses offered by the department, undergraduate and postgraduate.</p>
 				</div>
-				<a class="link-arrow" href="/academics/courses">Full course catalog <Icon name="arrow-right" /></a>
+				<a class="link-arrow" href={withBase('/academics/courses')}>Full course catalog <Icon name="arrow-right" /></a>
 			</div>
 			<ul class="course-list">
 				{courses.map((course) => (
 					<li>
-						<a class="course-row" href={`/academics/courses/${course.id}`}>
+						<a class="course-row" href={withBase(`/academics/courses/${course.id}`)}>
 							<span class="course-row__code">{course.data.code}</span>
 							<span class="course-row__main">
 								<strong>{course.data.title}</strong>
@@ -73,7 +74,7 @@ const courses = (await getCollection('courses')).sort((a, b) => a.data.code.loca
 
 	<section class="section">
 		<div class="container grid grid--2">
-			<a class="card" href="/academics/rules">
+			<a class="card" href={withBase('/academics/rules')}>
 				<div class="card__body">
 					<span class="card__eyebrow">Policies</span>
 					<h3 class="card__title">Rules &amp; regulations</h3>
@@ -81,7 +82,7 @@ const courses = (await getCollection('courses')).sort((a, b) => a.data.code.loca
 					<span class="card__footer link-arrow">Read the rules <Icon name="arrow-right" /></span>
 				</div>
 			</a>
-			<a class="card" href="/Resources-files/program_objectives.pdf">
+			<a class="card" href={withBase('/Resources-files/program_objectives.pdf')}>
 				<div class="card__body">
 					<span class="card__eyebrow">Document · PDF</span>
 					<h3 class="card__title">Program objectives</h3>

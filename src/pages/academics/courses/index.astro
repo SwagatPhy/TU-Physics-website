@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Layout from '../../../layouts/Layout.astro';
 import PageHeader from '../../../components/PageHeader.astro';
 import Icon from '../../../components/Icon.astro';
+import { withBase } from '../../../lib/url';
 
 const courses = (await getCollection('courses')).sort((a, b) => a.data.code.localeCompare(b.data.code));
 
@@ -29,7 +30,7 @@ const levels = [
 				<ul class="grid grid--wide">
 					{level.courses.map((course) => (
 						<li>
-							<a class="card" href={`/academics/courses/${course.id}`}>
+							<a class="card" href={withBase(`/academics/courses/${course.id}`)}>
 								<div class="card__body">
 									<span class="card__eyebrow">{course.data.code} · {course.data.credits} credits</span>
 									<h3 class="card__title">{course.data.title}</h3>
@@ -45,6 +46,6 @@ const levels = [
 	))}
 
 	<div class="container">
-		<a class="back-link" href="/academics"><Icon name="arrow-left" /> Academics</a>
+		<a class="back-link" href={withBase('/academics')}><Icon name="arrow-left" /> Academics</a>
 	</div>
 </Layout>

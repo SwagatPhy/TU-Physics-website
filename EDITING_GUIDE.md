@@ -631,7 +631,7 @@ Code block
 ```bash
 npm run dev
 ```
-Then open http://localhost:4321 in your browser
+Then open http://localhost:4321/dphy/ in your browser
 
 If a new content file doesn't show up (especially the first file in a previously empty folder), stop the server and run `npm run dev` again.
 

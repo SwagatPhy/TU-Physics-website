@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import Icon from '../../components/Icon.astro';
+import { withBase } from '../../lib/url';
 
 // The department's actual policies are still pending. Each section keeps a
 // [PLACEHOLDER] until the real text arrives via Notes-manager.
@@ -24,7 +25,7 @@ const sections = [
 					<p>{section.text}</p>
 				</section>
 			))}
-			<a class="back-link" href="/academics"><Icon name="arrow-left" /> Academics</a>
+			<a class="back-link" href={withBase('/academics')}><Icon name="arrow-left" /> Academics</a>
 		</div>
 
 		<aside>

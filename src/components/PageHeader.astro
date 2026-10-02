@@ -1,6 +1,8 @@
 ---
 // Header band at the top of every inner page: breadcrumb, title, optional lead.
 // Extra content (badges, buttons) can be passed through the default slot.
+// Crumb hrefs are site paths like '/research'; the base is added here.
+import { withBase } from '../lib/url';
 
 interface Crumb {
 	label: string;
@@ -22,7 +24,7 @@ const trail: Crumb[] = [{ label: 'Home', href: '/' }, ...crumbs];
 	<div class="container">
 		<nav class="breadcrumb" aria-label="Breadcrumb">
 			<ol>
-				{trail.map((crumb) => <li>{crumb.href ? <a href={crumb.href}>{crumb.label}</a> : crumb.label}</li>)}
+				{trail.map((crumb) => <li>{crumb.href ? <a href={withBase(crumb.href)}>{crumb.label}</a> : crumb.label}</li>)}
 				<li aria-current="page">{title}</li>
 			</ol>
 		</nav>

@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import Icon from '../../components/Icon.astro';
+import { withBase } from '../../lib/url';
 
 export async function getStaticPaths() {
 	const teaching = await getCollection('teaching');
@@ -71,7 +72,7 @@ const hasEmail = email && email.includes('@');
 									<article class="card card--link">
 										<div class="card__body">
 											{entry?.group && <span class="card__eyebrow">{entry.group}</span>}
-											<h3 class="card__title"><a href={`/research/${area.id}`}>{area.data.specialization}</a></h3>
+											<h3 class="card__title"><a href={withBase(`/research/${area.id}`)}>{area.data.specialization}</a></h3>
 											{area.data.description && <p class="card__text">{area.data.description}</p>}
 										</div>
 									</article>
@@ -101,19 +102,19 @@ const hasEmail = email && email.includes('@');
 					<h2>Courses</h2>
 					<ul class="scholar-list">
 						{courses.map((c) => (
-							<li><a href={`/academics/courses/${c.id}`}>{c.data.code}: {c.data.title}</a></li>
+							<li><a href={withBase(`/academics/courses/${c.id}`)}>{c.data.code}: {c.data.title}</a></li>
 						))}
 					</ul>
 				</section>
 			)}
 
-			<a class="back-link" href="/people"><Icon name="arrow-left" /> All people</a>
+			<a class="back-link" href={withBase('/people')}><Icon name="arrow-left" /> All people</a>
 		</div>
 
 		<aside>
 			<div class="aside-card profile-card">
 				<div class="avatar avatar--lg">
-					{photo ? <img src={`/People-photos/${photo}`} alt={name} /> : initials}
+					{photo ? <img src={withBase(`/People-photos/${photo}`)} alt={name} /> : initials}
 				</div>
 				<h2>Contact</h2>
 				<ul class="icon-list">

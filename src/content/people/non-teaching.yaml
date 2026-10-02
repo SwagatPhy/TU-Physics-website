@@ -1,0 +1,52 @@
+# Non-teaching staff.
+# This file can be generated from the Google Sheet. Columns = the keys below.
+# Every entry needs a unique `id`. Empty values may be left as "".
+- id: bijuboro
+  name: Biju Boro
+  designation: Laboratory Assistant
+  office: Department of Physics
+  email: bbiju@tezu.ernet.in
+  contact: +91-9706307708
+  photo: ""
+- id: dhurbadeka
+  name: Dhurba Deka
+  designation: Laboratory Assistant
+  office: Department of Physics
+  email: ddeka@tezu.ernet.in
+  contact: ""
+  photo: ""
+- id: mrinmoygohain
+  name: Mrinmoy Gohain
+  designation: Laboratory Assistant
+  office: Department of Physics
+  email: mgohain@tezu.ernet.in
+  contact: +91-9707506461
+  photo: ""
+- id: narayansharma
+  name: Narayan Sharma
+  designation: Office Staff
+  office: Department of Physics
+  email: narayan2@tezu.ernet.in
+  contact: ""
+  photo: ""
+- id: palashdutta
+  name: Palash Dutta
+  designation: Technical Assistant
+  office: Department of Physics
+  email: duttapk@tezu.ernet.in
+  contact: ""
+  photo: ""
+- id: sumansharma
+  name: Suman Sharma
+  designation: Office Staff
+  office: Department of Physics
+  email: ssumans@tezu.ernet.in
+  contact: +91-8472088793
+  photo: ""
+- id: sweetybiswas
+  name: Sweety Biswas
+  designation: Office Assistant
+  office: Department of Physics
+  email: ""
+  contact: ""
+  photo: ""

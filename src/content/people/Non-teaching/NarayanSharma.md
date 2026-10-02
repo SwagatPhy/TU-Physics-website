@@ -1,8 +1,0 @@
----
-name: "Narayan Sharma"
-designation: "Office Staff"
-office: "Department of Physics"
-email: "narayan2@tezu.ernet.in"
-contact: ""
-photo: ""
----

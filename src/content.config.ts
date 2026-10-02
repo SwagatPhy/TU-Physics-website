@@ -1,6 +1,5 @@
 import { defineCollection } from 'astro:content';
 import { glob, file } from 'astro/loaders';
-import YAML from 'yaml';
 import { z } from 'astro/zod';
 
 const courses = defineCollection({
@@ -58,13 +57,11 @@ const research = defineCollection({
 
 
 
-// People: all four sections live in ONE file, src/content/people.yaml (test version).
-// `photo` is relative to /People-photos/
-const peopleList = (section: string) =>
-    file('src/content/people.yaml', { parser: (text) => YAML.parse(text)[section] });
+// People: one YAML file per section in src/content/people/ (can be generated from the Google Sheet).
+// Each entry needs a unique lowercase `id`. `photo` is relative to /People-photos/
 
 const teaching = defineCollection({
-    loader: peopleList('teaching'),
+    loader: file('src/content/people/teaching.yaml'),
     schema: z.object({
         name: z.string(),
         designation: z.string(),
@@ -76,7 +73,7 @@ const teaching = defineCollection({
 });
 
 const nonTeaching = defineCollection({
-    loader: peopleList('nonTeaching'),
+    loader: file('src/content/people/non-teaching.yaml'),
     schema: z.object({
         name: z.string(),
         designation: z.string(),
@@ -88,7 +85,7 @@ const nonTeaching = defineCollection({
 });
 
 const researchScholars = defineCollection({
-    loader: peopleList('researchScholars'),
+    loader: file('src/content/people/research-scholars.yaml'),
     schema: z.object({
         name: z.string(),
         supervisor: z.string(),
@@ -99,7 +96,7 @@ const researchScholars = defineCollection({
 });
 
 const researchAssistants = defineCollection({
-    loader: peopleList('researchAssistants'),
+    loader: file('src/content/people/research-assistants.yaml'),
     schema: z.object({
         name: z.string(),
         supervisor: z.string(),

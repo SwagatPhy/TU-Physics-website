@@ -25,6 +25,7 @@ internal links as site paths wrapped in `withBase()` from `src/lib/url.ts`, e.g.
 | I want to… | Read |
 |---|---|
 | Add people, news, research areas, pages | [EDITING_GUIDE.md](EDITING_GUIDE.md) |
+| Update the live site (build and upload to `/dphy/`) | [DEPLOY.md](DEPLOY.md) |
 | Follow the contribution rules | [CONTRIBUTING.md](CONTRIBUTING.md) |
 | Understand the team roles (Claude Code sessions) | [CLAUDE.md](CLAUDE.md) |
 | See page copy drafts | `content-notes/` |

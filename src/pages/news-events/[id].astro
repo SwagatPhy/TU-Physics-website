@@ -4,6 +4,7 @@ import Layout from '../../layouts/Layout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import Icon from '../../components/Icon.astro';
 import { formatDate } from '../../lib/date';
+import { withBase } from '../../lib/url';
 
 export async function getStaticPaths() {
 	const items = await getCollection('newsEvents', ({ data }) => import.meta.env.DEV || !data.draft);
@@ -31,7 +32,7 @@ const { Content } = await render(item);
 			<article class="prose">
 				<Content />
 			</article>
-			<a class="back-link" href="/news-events"><Icon name="arrow-left" /> All news &amp; events</a>
+			<a class="back-link" href={withBase('/news-events')}><Icon name="arrow-left" /> All news &amp; events</a>
 		</div>
 
 		<aside>

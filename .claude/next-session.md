@@ -20,6 +20,7 @@ Session-note entries for `Session_log/` still go through Notes-manager TU (send 
 - Visitor counter on the home page needs a data source: set `VISITOR_COUNTER_URL` in `src/pages/index.astro` (expects JSON `{"count": n}`).
 
 ## Remember
+- Site is served from https://www.tezu.ernet.in/dphy/ (`base: '/dphy'`, `trailingSlash: 'always'`). Wrap every internal link/asset path in `withBase()` (src/lib/url.ts); `npm run check-links` after a build catches any that miss it. Deploy = upload contents of dist/ into /dphy/ (README, "How to update and deploy").
 - Design tokens (DESIGN.md palette) live at the top of `src/styles/global.css`; pages use semantic `--color-*` tokens. Run `node scripts/contrast-check.js` after palette changes.
 - Shared components: `src/components/` (Icon, PageHeader, PersonCard, PhotoGallery, AdmissionsAudience).
 - Research-area images: pages use resized copies in `public/Research-areas/web/` (see `src/lib/images.ts`). Add a web copy when adding an image.

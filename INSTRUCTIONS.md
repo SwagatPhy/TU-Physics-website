@@ -13,10 +13,10 @@
 npm run dev --background
 
 # Make changes (edit files)
-# Server auto-reloads at localhost:4321
+# Server auto-reloads at localhost:4321/dphy/
 
 # Test your changes
-# Visit localhost:4321 in browser
+# Visit localhost:4321/dphy/ in browser
 
 # Build & verify
 npm run build
@@ -162,7 +162,7 @@ const myData = await getCollection('my-collection');
 4. **Test:**
 ```bash
 npm run dev
-# Visit localhost:4321
+# Visit localhost:4321/dphy/
 # Verify section appears
 ```
 
@@ -258,7 +258,7 @@ Before approving changes:
 npm run dev
 
 # Open browser
-# Visit http://localhost:4321
+# Visit http://localhost:4321/dphy/
 
 # Check:
 # - Click all links

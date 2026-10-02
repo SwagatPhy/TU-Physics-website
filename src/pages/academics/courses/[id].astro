@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import Layout from '../../../layouts/Layout.astro';
 import PageHeader from '../../../components/PageHeader.astro';
 import Icon from '../../../components/Icon.astro';
+import { withBase } from '../../../lib/url';
 
 export async function getStaticPaths() {
 	const courses = await getCollection('courses');
@@ -33,7 +34,7 @@ const { Content } = await render(course);
 			<article class="prose">
 				<Content />
 			</article>
-			<a class="back-link" href="/academics/courses"><Icon name="arrow-left" /> All courses</a>
+			<a class="back-link" href={withBase('/academics/courses')}><Icon name="arrow-left" /> All courses</a>
 		</div>
 
 		<aside>

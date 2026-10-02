@@ -43,6 +43,14 @@ npm run build
 This creates the `dist/` folder, which is the complete website. If the build prints an error,
 fix it before going on. Do not upload a failed build.
 
+Then check that every link and image in the build points inside `/dphy/` and to a file that exists:
+
+```sh
+npm run check-links
+```
+
+If it reports a problem, do not upload.
+
 Optional: `npm run preview` serves the finished `dist/` folder locally so you can check the
 real result before uploading.
 
@@ -56,6 +64,10 @@ old files.
 - Upload method: [PLACEHOLDER — FTP/SFTP/other and login details, to be confirmed by the
   university IT team]
 - Before replacing anything, download a copy of the current `/dphy/` folder as a backup.
+- Uploading does not delete old files. If you removed a page, photo or PDF, delete it from
+  `/dphy/` on the server too, or the old copy stays reachable.
+- Some FTP programs hide files that start with a dot. Turn on "show hidden files" if you
+  later add a `.htaccess` file.
 
 ### 5. Check the live site
 

@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
 import PhotoGallery from '../components/PhotoGallery.astro';
 import Icon from '../components/Icon.astro';
+import { withBase } from '../lib/url';
 
 // Every image in public/Facilities-photos/Facilities/ is shown in the gallery,
 // so adding a photo there is enough to publish it. The glob is only used to
@@ -10,23 +11,23 @@ import Icon from '../components/Icon.astro';
 // Captions are pending from the department (see content-notes/facilities.md).
 const labPhotoFiles = Object.keys(import.meta.glob('/public/Facilities-photos/Facilities/*.{jpg,jpeg,png,webp}'));
 const labPhotos = labPhotoFiles.sort().map((file, i) => ({
-	src: file.replace(/^\/public/, ''),
+	src: withBase(file.replace(/^\/public/, '')),
 	alt: `Laboratory equipment, photo ${i + 1}`,
 }));
 
 const observatoryPhotos = [
 	{
-		src: '/Facilities-photos/Resources/web/Dome.jpg',
+		src: withBase('/Facilities-photos/Resources/web/Dome.jpg'),
 		alt: 'The Tezpur University Observatory dome on a rooftop',
 		caption: 'Tezpur University Observatory',
 	},
 	{
-		src: '/Facilities-photos/Resources/web/Telescope.jpg',
+		src: withBase('/Facilities-photos/Resources/web/Telescope.jpg'),
 		alt: 'The observatory telescope inside the dome',
 		caption: 'The observatory telescope',
 	},
 	{
-		src: '/Facilities-photos/Resources/web/Dome_a.jpg',
+		src: withBase('/Facilities-photos/Resources/web/Dome_a.jpg'),
 		alt: 'A group of students at the observatory telescope at night',
 		caption: 'Students at the observatory',
 	},

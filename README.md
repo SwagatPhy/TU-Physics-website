@@ -9,10 +9,16 @@ Built with [Astro](https://astro.build). Plain HTML/CSS, no Tailwind.
 
 ```sh
 npm install
-npm run dev       # http://localhost:4321
-npm run build     # production build into dist/
-npm run preview   # serve the last build
+npm run dev         # http://localhost:4321/dphy/
+npm run build       # production build into dist/
+npm run preview     # serve the last build at http://localhost:4321/dphy/
+npm run check-links # after a build: every internal link must start with /dphy/ and exist
 ```
+
+The site lives in a subfolder, **https://www.tezu.ernet.in/dphy/**, so every page and
+file URL starts with `/dphy/` (set by `base` in `astro.config.mjs`). In code, write
+internal links as site paths wrapped in `withBase()` from `src/lib/url.ts`, e.g.
+`href={withBase('/people')}`, never a bare `href="/people"`.
 
 ## Where to look
 

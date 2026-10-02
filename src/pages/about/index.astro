@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import Icon from '../../components/Icon.astro';
+import { withBase } from '../../lib/url';
 
 const teaching = await getCollection('teaching');
 const scholars = await getCollection('researchScholars');
@@ -126,7 +127,7 @@ const objectives = [
 			</div>
 			<aside class="aside-card">
 				<h2>Documents</h2>
-				<a class="doc-link" href="/Resources-files/program_objectives.pdf">
+				<a class="doc-link" href={withBase('/Resources-files/program_objectives.pdf')}>
 					<Icon name="file" />
 					<span>
 						<strong>Program objectives</strong>
@@ -140,9 +141,9 @@ const objectives = [
 
 	<section class="section section--navy section--tight">
 		<div class="container next-links">
-			<a href="/people"><span class="eyebrow">Next</span> Meet the people <Icon name="arrow-right" /></a>
-			<a href="/research"><span class="eyebrow">Next</span> Explore research <Icon name="arrow-right" /></a>
-			<a href="/facilities"><span class="eyebrow">Next</span> See the facilities <Icon name="arrow-right" /></a>
+			<a href={withBase('/people')}><span class="eyebrow">Next</span> Meet the people <Icon name="arrow-right" /></a>
+			<a href={withBase('/research')}><span class="eyebrow">Next</span> Explore research <Icon name="arrow-right" /></a>
+			<a href={withBase('/facilities')}><span class="eyebrow">Next</span> See the facilities <Icon name="arrow-right" /></a>
 		</div>
 	</section>
 </Layout>

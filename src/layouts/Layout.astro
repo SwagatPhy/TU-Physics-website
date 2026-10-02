@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import Icon from '../components/Icon.astro';
+import { withBase } from '../lib/url';
 
 interface Props {
 	title: string;
@@ -22,8 +23,9 @@ const navLinks = [
 ];
 
 // Highlight the nav item for the section we're in (e.g. /people/xyz → People).
+// (withBase gives "/dphy/people/", so a prefix match covers sub-pages too.)
 const path = Astro.url.pathname;
-const isCurrent = (href: string) => path === href || path.startsWith(`${href}/`);
+const isCurrent = (href: string) => path.startsWith(withBase(href));
 
 const pageTitle = title === 'Home' ? 'Department of Physics | Tezpur University' : `${title} | Department of Physics, Tezpur University`;
 ---
@@ -36,8 +38,8 @@ const pageTitle = title === 'Home' ? 'Department of Physics | Tezpur University'
 		<meta name="description" content={description} />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="theme-color" content="#00254e" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
+		<link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+		<link rel="icon" href={withBase('/favicon.ico')} />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
@@ -51,7 +53,7 @@ const pageTitle = title === 'Home' ? 'Department of Physics | Tezpur University'
 
 		<header class="site-header">
 			<div class="container site-header__inner">
-				<a class="brand" href="/" aria-label="Department of Physics, Tezpur University — home">
+				<a class="brand" href={withBase('/')} aria-label="Department of Physics, Tezpur University — home">
 					<svg class="brand__mark" viewBox="0 0 48 48" aria-hidden="true">
 						<circle cx="24" cy="24" r="23" fill="#00254e" />
 						<g fill="none" stroke="#c7dce5" stroke-width="1.6">
@@ -77,7 +79,7 @@ const pageTitle = title === 'Home' ? 'Department of Physics | Tezpur University'
 					<ul>
 						{navLinks.map((link) => (
 							<li>
-								<a href={link.href} aria-current={isCurrent(link.href) ? 'page' : undefined}>
+								<a href={withBase(link.href)} aria-current={isCurrent(link.href) ? 'page' : undefined}>
 									{link.label}
 								</a>
 							</li>
@@ -94,7 +96,7 @@ const pageTitle = title === 'Home' ? 'Department of Physics | Tezpur University'
 		<footer class="site-footer">
 			<div class="container footer-grid">
 				<div>
-					<a class="brand" href="/">
+					<a class="brand" href={withBase('/')}>
 						<svg class="brand__mark" viewBox="0 0 48 48" aria-hidden="true">
 							<circle cx="24" cy="24" r="23" fill="#ffffff" fill-opacity="0.08" />
 							<g fill="none" stroke="#c7dce5" stroke-width="1.6">
@@ -118,29 +120,29 @@ const pageTitle = title === 'Home' ? 'Department of Physics | Tezpur University'
 				<div>
 					<p class="footer-heading">Explore</p>
 					<ul class="footer-list">
-						<li><a href="/about">About the department</a></li>
-						<li><a href="/research">Research areas</a></li>
-						<li><a href="/facilities">Facilities &amp; observatory</a></li>
-						<li><a href="/people">Faculty &amp; scholars</a></li>
+						<li><a href={withBase('/about')}>About the department</a></li>
+						<li><a href={withBase('/research')}>Research areas</a></li>
+						<li><a href={withBase('/facilities')}>Facilities &amp; observatory</a></li>
+						<li><a href={withBase('/people')}>Faculty &amp; scholars</a></li>
 					</ul>
 				</div>
 
 				<div>
 					<p class="footer-heading">Students</p>
 					<ul class="footer-list">
-						<li><a href="/admissions">Admissions</a></li>
-						<li><a href="/academics">Academics &amp; courses</a></li>
-						<li><a href="/news-events">News &amp; events</a></li>
-						<li><a href="/alumni">Alumni</a></li>
+						<li><a href={withBase('/admissions')}>Admissions</a></li>
+						<li><a href={withBase('/academics')}>Academics &amp; courses</a></li>
+						<li><a href={withBase('/news-events')}>News &amp; events</a></li>
+						<li><a href={withBase('/alumni')}>Alumni</a></li>
 					</ul>
 				</div>
 
 				<div>
 					<p class="footer-heading">Resources</p>
 					<ul class="footer-list">
-						<li><a href="/Resources-files/program_objectives.pdf">Program objectives (PDF)</a></li>
+						<li><a href={withBase('/Resources-files/program_objectives.pdf')}>Program objectives (PDF)</a></li>
 						<li><a href="https://www.tezu.ernet.in" rel="noopener">Tezpur University website</a></li>
-						<li><a href="/contact">Contact &amp; directions</a></li>
+						<li><a href={withBase('/contact')}>Contact &amp; directions</a></li>
 					</ul>
 				</div>
 			</div>

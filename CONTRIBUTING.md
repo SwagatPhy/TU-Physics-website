@@ -25,7 +25,7 @@ git remote add upstream https://github.com/SwagatPhy/TU-Physics-website.git
 git fetch upstream && git checkout -b my-topic upstream/main
 
 # 3. Make your change, then check it
-npm run dev      # preview at http://localhost:4321
+npm run dev      # preview at http://localhost:4321/dphy/
 npm run build    # must finish with no errors
 
 # 4. Commit and push to your fork, then open a Pull Request on GitHub

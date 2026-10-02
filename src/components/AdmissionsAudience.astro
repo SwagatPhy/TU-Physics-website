@@ -5,6 +5,7 @@
 import { getCollection } from 'astro:content';
 import PageHeader from './PageHeader.astro';
 import Icon from './Icon.astro';
+import { withBase } from '../lib/url';
 
 interface InfoBlock {
 	title: string;
@@ -32,7 +33,7 @@ const switches = [
 		<ul class="tabs audience-switch">
 			{switches.map((item) => (
 				<li>
-					<a class="tab" href={item.href} aria-current={item.id === audience ? 'page' : undefined}>{item.label}</a>
+					<a class="tab" href={withBase(item.href)} aria-current={item.id === audience ? 'page' : undefined}>{item.label}</a>
 				</li>
 			))}
 		</ul>
@@ -51,7 +52,7 @@ const switches = [
 		<ul class="grid grid--fill">
 			{programs.map((program) => (
 				<li>
-					<a class="card" href={`/admissions/${program.id}`}>
+					<a class="card" href={withBase(`/admissions/${program.id}`)}>
 						<div class="card__body">
 							<span class="card__eyebrow">{program.data.duration}</span>
 							<h3 class="card__title">{program.data.title}</h3>

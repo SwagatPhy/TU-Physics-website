@@ -4,6 +4,7 @@ import Layout from '../../layouts/Layout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import Icon from '../../components/Icon.astro';
 import { researchImage } from '../../lib/images';
+import { withBase } from '../../lib/url';
 
 export async function getStaticPaths() {
 	const areas = await getCollection('research');
@@ -41,7 +42,7 @@ const otherAreas = (await getCollection('research'))
 			<article class="prose">
 				<Content />
 			</article>
-			<a class="back-link" href="/research"><Icon name="arrow-left" /> All research areas</a>
+			<a class="back-link" href={withBase('/research')}><Icon name="arrow-left" /> All research areas</a>
 		</div>
 
 		<aside>
@@ -51,7 +52,7 @@ const otherAreas = (await getCollection('research'))
 				<ul class="faculty-list">
 					{faculty.map((f) => (
 						<li>
-							<a href={`/people/${f.id}`}>{f.person!.name}</a>
+							<a href={withBase(`/people/${f.id}`)}>{f.person!.name}</a>
 							<span class="text-muted">{f.group ?? f.person!.designation}</span>
 						</li>
 					))}
@@ -61,7 +62,7 @@ const otherAreas = (await getCollection('research'))
 				<h2>More research</h2>
 				<ul class="other-areas">
 					{otherAreas.map((other) => (
-						<li><a href={`/research/${other.id}`}>{other.data.specialization}</a></li>
+						<li><a href={withBase(`/research/${other.id}`)}>{other.data.specialization}</a></li>
 					))}
 				</ul>
 			</div>

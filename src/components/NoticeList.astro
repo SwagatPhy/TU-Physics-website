@@ -1,0 +1,126 @@
+---
+// List of notices with an "Open" and a "Download" link for each attachment.
+// Used on the home page (latest few) and on /notices (all).
+import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+import { formatDate } from '../lib/date';
+import { publicUrl, fileTypeLabel } from '../lib/uploads.js';
+
+interface Props {
+	notices: CollectionEntry<'notices'>[];
+	headingLevel?: 'h2' | 'h3';
+}
+
+const { notices, headingLevel: Heading = 'h3' } = Astro.props;
+---
+
+<ul class="notice-list">
+	{notices.map(({ data }) => {
+		const url = publicUrl(data.attachment);
+		const type = fileTypeLabel(data.attachment);
+		return (
+			<li class="notice">
+				<time class="notice__date" datetime={data.date.toISOString()}>{formatDate(data.date)}</time>
+				<div class="notice__main">
+					<Heading class="notice__title">
+						{data.pinned && <span class="badge badge--amber">Pinned</span>}
+						{data.draft && <span class="badge">Draft</span>}
+						<a href={url} target="_blank" rel="noopener">{data.title}</a>
+					</Heading>
+					{data.description && <p class="notice__text">{data.description}</p>}
+				</div>
+				<div class="notice__actions">
+					<a class="notice__action" href={url} target="_blank" rel="noopener">
+						<Icon name="file" /> Open {type}<span class="visually-hidden"> (opens in a new tab)</span>
+					</a>
+					<a class="notice__action" href={url} download>
+						<Icon name="download" /> Download<span class="visually-hidden">: {data.title}</span>
+					</a>
+				</div>
+			</li>
+		);
+	})}
+</ul>
+
+<style>
+	.notice-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		border-top: 1px solid var(--color-border-strong);
+	}
+
+	.notice {
+		display: grid;
+		grid-template-columns: 9rem minmax(0, 1fr) auto;
+		gap: var(--space-xs) var(--space-md);
+		align-items: start;
+		padding-block: var(--space-md);
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.notice__date {
+		padding-top: 0.15rem;
+		font-size: 0.9rem;
+		font-weight: 600;
+		color: var(--color-text-muted);
+	}
+
+	.notice__title {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.5rem;
+		margin: 0;
+		font-size: 1.15rem;
+	}
+
+	.notice__title a {
+		text-decoration: none;
+	}
+
+	.notice__title a:hover {
+		text-decoration: underline;
+	}
+
+	.notice__text {
+		margin: 0.3rem 0 0;
+		font-size: 0.97rem;
+	}
+
+	.notice__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+
+	.notice__action {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		min-height: 2.5rem;
+		padding: 0.4rem 0.9rem;
+		border: 1px solid var(--color-border-strong);
+		border-radius: var(--radius-pill);
+		font-size: 0.9rem;
+		font-weight: 600;
+		text-decoration: none;
+		white-space: nowrap;
+		transition: border-color 0.2s var(--ease), background-color 0.2s var(--ease);
+	}
+
+	.notice__action:hover {
+		border-color: var(--navy);
+		background: var(--color-bg-soft);
+	}
+
+	@media (max-width: 48rem) {
+		.notice {
+			grid-template-columns: 1fr;
+		}
+
+		.notice__date {
+			padding: 0;
+		}
+	}
+</style>

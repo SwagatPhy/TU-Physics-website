@@ -1,0 +1,136 @@
+# Decap CMS settings for the office-staff content manager at /admin/.
+# Docs: https://decapcms.org/docs/configuration-options/
+#
+# Upload rules here must match src/lib/uploads.js (the build re-checks them
+# with scripts/check-uploads.js, so a mismatch fails the build rather than
+# publishing a bad file).
+
+backend:
+  name: github
+  repo: SwagatPhy/TU-Physics-website
+  branch: main
+  # Login: GitHub OAuth needs a small auth endpoint. Which one depends on
+  # where the site is hosted (Netlify, a self-hosted OAuth proxy, or Decap's
+  # hosted login). Set it here once decided:
+  # base_url: https://[PLACEHOLDER — OAuth endpoint]
+  # auth_endpoint: auth
+
+# main is protected on GitHub, so every change goes through a pull request:
+# staff save a draft, mark it "Ready", and Publish merges the pull request.
+publish_mode: editorial_workflow
+
+# Lets you try the editor on your own computer without logging in:
+# run `npm run cms` in one terminal and `npm run dev` in another,
+# then open http://localhost:4321/admin/index.html
+# (Locally, changes are written straight to your files with a single
+# "Publish" button; the review workflow only applies on GitHub.)
+local_backend: true
+
+# Default upload folder for the shared media library.
+media_folder: public/Resources-files
+public_folder: /Resources-files
+
+# Clean entry and upload file names: ASCII only, accents removed,
+# anything unsafe replaced with "-".
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+  - name: notices
+    label: Notices
+    label_singular: Notice
+    description: Notices appear on the Notices page, newest first. Pinned notices stay at the top. The home page shows the first four.
+    folder: src/content/notices
+    create: true
+    delete: true
+    extension: md
+    format: frontmatter
+    slug: "{{fields.date}}-{{slug}}"
+    summary: "{{date | date('DD MMM YYYY')}} — {{title}}"
+    sortable_fields: [date, title]
+    media_folder: /public/Notices-files
+    public_folder: /Notices-files
+    fields:
+      - { name: title, label: Title, widget: string }
+      - name: date
+        label: Date
+        widget: datetime
+        format: YYYY-MM-DD
+        date_format: DD MMM YYYY
+        time_format: false
+        picker_utc: true
+        default: "{{now}}" # today, can be changed
+      - name: description
+        label: Short description
+        widget: text
+        required: false
+        hint: Optional. One or two sentences shown under the title.
+      - name: attachment
+        label: Notice file
+        widget: file
+        choose_url: false
+        hint: PDF (or a JPG/PNG image), up to 10 MB.
+        pattern: ['\.(pdf|PDF|jpg|JPG|jpeg|JPEG|png|PNG)$', 'Please upload a PDF, JPG or PNG file.']
+        media_library:
+          config:
+            max_file_size: 10485760 # 10 MB
+      - name: pinned
+        label: Pin to top
+        widget: boolean
+        default: false
+        required: false
+      - name: draft
+        label: Hide from website
+        widget: boolean
+        default: false
+        required: false
+        hint: Tick to keep this notice saved but not shown on the site.
+
+  - name: files
+    label: Files
+    label_singular: File
+    description: Forms, circulars and other documents. They are listed on the Downloads page.
+    folder: src/content/files
+    create: true
+    delete: true
+    extension: md
+    format: frontmatter
+    slug: "{{slug}}"
+    summary: "{{title}}"
+    sortable_fields: [title]
+    media_folder: /public/Resources-files
+    public_folder: /Resources-files
+    fields:
+      - { name: title, label: Title, widget: string }
+      - name: description
+        label: Short description
+        widget: text
+        required: false
+      - name: file
+        label: File
+        widget: file
+        choose_url: false
+        hint: PDF, DOC, DOCX, JPG, PNG or ZIP, up to 10 MB.
+        pattern:
+          [
+            '\.(pdf|PDF|doc|DOC|docx|DOCX|jpg|JPG|jpeg|JPEG|png|PNG|zip|ZIP)$',
+            'Please upload a PDF, DOC, DOCX, JPG, PNG or ZIP file.',
+          ]
+        media_library:
+          config:
+            max_file_size: 10485760 # 10 MB
+      - name: date
+        label: Date
+        widget: datetime
+        format: YYYY-MM-DD
+        date_format: DD MMM YYYY
+        time_format: false
+        picker_utc: true
+        required: false
+      - name: draft
+        label: Hide from website
+        widget: boolean
+        default: false
+        required: false

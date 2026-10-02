@@ -2,7 +2,9 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import Icon from '../components/Icon.astro';
+import NoticeList from '../components/NoticeList.astro';
 import { formatDate } from '../lib/date';
+import { getNotices } from '../lib/notices';
 import { researchImage } from '../lib/images';
 
 // Headline numbers are counted from the content collections, so they stay
@@ -17,6 +19,9 @@ const newsEvents = (await getCollection('newsEvents', ({ data }) => !data.draft)
 );
 const news = newsEvents.filter((item) => item.data.type === 'news').slice(0, 3);
 const events = newsEvents.filter((item) => item.data.type === 'event').slice(0, 3);
+
+// Pinned notices first, then newest; the home page shows the top few.
+const latestNotices = (await getNotices()).slice(0, 4);
 
 const stats = [
 	{ value: teaching.length, label: 'Faculty members' },
@@ -89,6 +94,22 @@ const VISITOR_COUNTER_URL = '';
 					</li>
 				))}
 			</ul>
+		</div>
+	</section>
+
+	<!-- Latest notices (added by office staff through /admin) -->
+	<section class="section section--tight">
+		<div class="container">
+			<div class="section-head">
+				<div>
+					<p class="eyebrow">Notices</p>
+					<h2>Latest notices</h2>
+				</div>
+				<a class="link-arrow" href="/notices">All notices <Icon name="arrow-right" /></a>
+			</div>
+			{latestNotices.length === 0
+				? <p class="empty-state">No notices at the moment.</p>
+				: <NoticeList notices={latestNotices} />}
 		</div>
 	</section>
 

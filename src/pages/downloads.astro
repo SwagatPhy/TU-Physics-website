@@ -1,0 +1,98 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Icon from '../components/Icon.astro';
+import { publicUrl, fileTypeLabel } from '../lib/uploads.js';
+
+// Forms, circulars and other documents, added by office staff through the
+// CMS at /admin ("Files"). Listed alphabetically.
+const files = (await getCollection('files', ({ data }) => import.meta.env.DEV || !data.draft)).sort((a, b) =>
+	a.data.title.localeCompare(b.data.title),
+);
+---
+
+<Layout title="Downloads" description="Forms, circulars and documents from the Department of Physics, Tezpur University.">
+	<PageHeader
+		title="Downloads"
+		eyebrow="Forms & documents"
+		lead="[PLACEHOLDER — short intro for the Downloads page]"
+	/>
+
+	<section class="section">
+		<div class="container container--narrow">
+			{files.length === 0 && <p class="empty-state">No documents yet.</p>}
+			<ul class="file-list">
+				{files.map(({ data }) => (
+					<li>
+						<a class="file-row" href={publicUrl(data.file)} download>
+							<span class="file-row__type">{fileTypeLabel(data.file)}</span>
+							<span class="file-row__main">
+								<strong>{data.title}</strong>
+								{data.description && <span class="text-muted">{data.description}</span>}
+							</span>
+							<Icon name="download" />
+						</a>
+					</li>
+				))}
+			</ul>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.file-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: var(--space-sm);
+	}
+
+	.file-row {
+		display: flex;
+		align-items: center;
+		gap: var(--space-md);
+		padding: var(--space-md);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius);
+		color: inherit;
+		text-decoration: none;
+		transition: border-color 0.2s var(--ease), background-color 0.2s var(--ease);
+	}
+
+	.file-row:hover {
+		border-color: var(--color-border-strong);
+		background: var(--color-bg-soft);
+	}
+
+	.file-row__type {
+		display: grid;
+		place-items: center;
+		width: 3.25rem;
+		height: 3.25rem;
+		flex-shrink: 0;
+		border-radius: var(--radius-sm);
+		background: var(--navy);
+		color: var(--color-on-dark);
+		font-size: 0.75rem;
+		font-weight: 700;
+		letter-spacing: 0.06em;
+	}
+
+	.file-row__main {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		min-width: 0;
+	}
+
+	.file-row__main strong {
+		color: var(--navy);
+		font-weight: 600;
+	}
+
+	.file-row .icon {
+		color: var(--slate);
+	}
+</style>

@@ -19,7 +19,10 @@ Session-note entries for `Session_log/` still go through Notes-manager TU (send 
   - Narayan Sharma (Non-teaching): email empty
 - Visitor counter on the home page needs a data source: set `VISITOR_COUNTER_URL` in `src/pages/index.astro` (expects JSON `{"count": n}`).
 
+- Notices + CMS (branch notices-cms): CMS login is not live until hosting is decided — set `backend.base_url` (GitHub OAuth endpoint) in `public/admin/config.yml`. Notices/Downloads page intros are [PLACEHOLDER].
+
 ## Remember
+- CMS: Decap at /admin (`public/admin/config.yml`). Staff edit `src/content/notices/` and `src/content/files/`; uploads go to `public/Notices-files/` and `public/Resources-files/`. Upload rules live in `src/lib/uploads.js` (keep config.yml in sync); `npm run build` runs `scripts/check-uploads.js` and clears Astro's content cache first. Try it locally: `npm run cms` + `npm run dev`, open /admin/index.html.
 - Design tokens (DESIGN.md palette) live at the top of `src/styles/global.css`; pages use semantic `--color-*` tokens. Run `node scripts/contrast-check.js` after palette changes.
 - Shared components: `src/components/` (Icon, PageHeader, PersonCard, PhotoGallery, AdmissionsAudience).
 - Research-area images: pages use resized copies in `public/Research-areas/web/` (see `src/lib/images.ts`). Add a web copy when adding an image.

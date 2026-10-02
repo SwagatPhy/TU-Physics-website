@@ -1,6 +1,7 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { UPLOAD_FOLDERS, hasAllowedExtension } from './lib/uploads.js';
 
 const courses = defineCollection({
 	loader: glob({ pattern: '**/*.md', base: './src/content/courses' }),
@@ -37,6 +38,35 @@ const newsEvents = defineCollection({
 		date: z.date(),
 		summary: z.string(),
 		location: z.string().optional(),
+		draft: z.boolean().default(false),
+	}),
+});
+
+// Notices and Files are edited by office staff through the CMS at /admin
+// (public/admin/config.yml). Attachment paths are relative to public/.
+const notices = defineCollection({
+	loader: glob({ pattern: '**/*.md', base: './src/content/notices' }),
+	schema: z.object({
+		title: z.string(),
+		date: z.coerce.date(),
+		description: z.string().optional(),
+		attachment: z.string().refine((path) => hasAllowedExtension(path, UPLOAD_FOLDERS.notices.extensions), {
+			message: `Notice attachments must be one of: ${UPLOAD_FOLDERS.notices.extensions.join(', ')}`,
+		}),
+		pinned: z.boolean().default(false),
+		draft: z.boolean().default(false),
+	}),
+});
+
+const files = defineCollection({
+	loader: glob({ pattern: '**/*.md', base: './src/content/files' }),
+	schema: z.object({
+		title: z.string(),
+		description: z.string().optional(),
+		file: z.string().refine((path) => hasAllowedExtension(path, UPLOAD_FOLDERS.files.extensions), {
+			message: `Files must be one of: ${UPLOAD_FOLDERS.files.extensions.join(', ')}`,
+		}),
+		date: z.coerce.date().optional(),
 		draft: z.boolean().default(false),
 	}),
 });
@@ -105,6 +135,6 @@ const researchAssistants = defineCollection({
 });
 
 export const collections = {
-    courses, admissions, newsEvents, research,
+    courses, admissions, newsEvents, notices, files, research,
     teaching, nonTeaching, researchScholars, researchAssistants,
 };

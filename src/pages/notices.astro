@@ -1,0 +1,25 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import NoticeList from '../components/NoticeList.astro';
+import { getNotices } from '../lib/notices';
+
+// Notices are added by office staff through the CMS at /admin.
+const notices = await getNotices();
+---
+
+<Layout title="Notices" description="Official notices of the Department of Physics, Tezpur University.">
+	<PageHeader
+		title="Notices"
+		eyebrow="Announcements"
+		lead="[PLACEHOLDER — short intro for the Notices page]"
+	/>
+
+	<section class="section">
+		<div class="container">
+			{notices.length === 0
+				? <p class="empty-state">No notices at the moment.</p>
+				: <NoticeList notices={notices} headingLevel="h2" />}
+		</div>
+	</section>
+</Layout>

@@ -32,7 +32,10 @@ const areas = research.map((item) => ({
 				{areas.map((item) => (
 					<li>
 						<article class="card card--link">
-							<div class={`card__media ${item.data.image ? '' : 'card__media--plain'}`}>
+							<div
+								class={`card__media ${item.data.image ? 'fit-media' : 'card__media--plain'}`}
+								style={item.data.image ? `--fit-img: url(${researchImage(item.data.image)})` : undefined}
+							>
 								{item.data.image && (
 									<img src={researchImage(item.data.image)} alt="" loading="lazy" decoding="async" />
 								)}

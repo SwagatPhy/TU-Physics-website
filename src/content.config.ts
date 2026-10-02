@@ -77,6 +77,7 @@ const nonTeaching = defineCollection({
         designation: z.string(),
         office: z.string().optional(),
         email: z.string().optional(),
+        contact: z.string().optional(),
         photo: z.string().optional(),
     }),
 });

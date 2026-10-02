@@ -132,7 +132,11 @@ const VISITOR_COUNTER_URL = '';
 			<ul class={`grid research-mosaic ${research.length % 2 === 1 ? 'research-mosaic--odd' : ''}`}>
 				{research.map((item) => (
 					<li>
-						<a class={`research-tile ${item.data.image ? '' : 'plain-art'}`} href={`/research/${item.id}`}>
+						<a
+							class={`research-tile ${item.data.image ? 'fit-media' : 'plain-art'}`}
+							style={item.data.image ? `--fit-img: url(${researchImage(item.data.image)})` : undefined}
+							href={`/research/${item.id}`}
+						>
 							{item.data.image && (
 								<img src={researchImage(item.data.image)} alt="" loading="lazy" decoding="async" />
 							)}
@@ -474,7 +478,7 @@ const VISITOR_COUNTER_URL = '';
 	.research-tile img {
 		width: 100%;
 		height: 100%;
-		object-fit: cover;
+		object-fit: contain; /* show the whole photo; .fit-media fills the gaps */
 		transition: transform 0.6s var(--ease);
 	}
 

@@ -707,6 +707,27 @@ a.card:hover,
 	transition: transform 0.5s var(--ease);
 }
 
+/* Show a photo whole (no cropping). The gaps beside it are filled with a
+   blurred, darkened copy of the same photo; set --fit-img: url(...) inline. */
+.fit-media {
+	position: relative;
+	background-color: var(--navy);
+	overflow: hidden;
+}
+
+.fit-media::before {
+	content: '';
+	position: absolute;
+	inset: -12%;
+	background: var(--fit-img) center / cover no-repeat;
+	filter: blur(18px) brightness(0.7);
+}
+
+.fit-media img {
+	position: relative;
+	object-fit: contain;
+}
+
 /* Stand-in artwork for items without a photo: navy with faint orbit rings */
 .card__media--plain,
 .plain-art {

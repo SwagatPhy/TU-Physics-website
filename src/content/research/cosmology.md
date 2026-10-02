@@ -3,6 +3,7 @@ specialization: "Cosmology"
 order: 4
 faculties: []
 description: "[PLACEHOLDER: Cosmology description]"
+image: "cosmology.png"
 ---
 
 ## Overview

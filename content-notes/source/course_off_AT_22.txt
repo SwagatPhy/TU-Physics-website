@@ -1,0 +1,705 @@
+---PAGE 1
+ 
+DEPARTMENT OF PHYSICS 
+ 
+For upload in Web-Site(Dept.) 
+Programme: M.Sc. in Physics 
+List of Courses offered by the Department for Autumn Semester, 2022 for 
+ 
+FIRST SEMESTER 
+ 
+    
+Code 
+Course Name 
+L-T-P 
+Credit Core/ Elective/CBCT 
+PH-405 
+Semiconductor Devices 
+2-1-0 
+3 
+Core 
+PH-408 
+Electromagnetic Theory I 
+2-1-0 
+3 
+Core 
+PH-416 
+Condensed Matter Physics and Material 
+Science  
+2-1-0 
+3 
+Core 
+PH-417 
+Advanced Classical Mechanics  
+2-1-0 
+3 
+Core 
+PH-418 
+Quantum Mechanics-I 
+2-1-0 
+3 
+Core  
+ 
+PH-400 
+Physics and Computational Lab. 
+0-1-3 
+4 
+Core 
+PH-498 
+Physics Laboratory-I 
+0-0-4 
+4 
+Core 
+ 
+THIRD SEMESTER 
+ 
+Code 
+Course Name 
+L-T-P 
+Credit 
+Core/Elective/CBCT 
+?? 
+Open Elective: 
+2-1-0 
+3 
+CBCT 
+?? 
+Elective I 
+2-1-0 
+3 
+Elective 
+?? 
+Elective II 
+2-1-0 
+3 
+Elective 
+PH-553 
+Atomic and Molecular Spectroscopy 
+2-1-0 
+3 
+Core 
+PH-415 
+Nuclear and Particle Physics 
+2-1-0 
+3 
+Core 
+PH-500 
+Project–I  
+0-0-6 
+6 
+Core 
+ 
+Elective Courses: 
+Combination 
+Papers in M.Sc. Sem III(Course Code with Name) 
+ 
+1. (CMP+Nanoscience) 
+PH-539: Advanced Condensed Matter Physics and 
+Materials Science  
+PH-562: Quantum Effects in low dimensional systems 
+2. (CMP+Photonics) 
+PH-539: Advanced Condensed Matter Physics and 
+Materials Science  
+PH-557: Photonics  
+3. (HEP+Astrophysics) 
+PH-519: Quantum Field Theory 
+PH-564: Introductory Astrophysics  
+4. (Astrophysics +Plasma Physics) 
+PH-564: Introductory Astrophysics  
+PH-545: Fundamental of Plasma Physics 
+5. (Plasma Physics +HEP) 
+PH-545: Fundamental of Plasma Physics  
+PH-519: Quantum Field Theory 
+6. (Electronics+ Communication) 
+PH-524: Digital Signal Processing 
+PH-523: Microwave Systems and Antenna Propagation 
+7. (Electronics + Photonics) 
+PH-524: Digital Signal Processing 
+PH-557: Photonics 
+            
+
+---PAGE 2
+DEPARTMENT OF PHYSICS 
+ 
+Programme: Integrated M.Sc in Physics 
+ 
+List of Courses offered by the Department for Autumn Semester, 2022 for 
+ 
+FIRST SEMESTER 
+ 
+Code 
+      Name 
+L-T-P 
+Credit 
+Core/Elective/ CBCT 
+PI-103 
+General Physics-I 
+2-1-0 
+3 
+CORE 
+CI-101 
+Chemistry-I 
+3-0-0 
+3 
+GE 
+MI-101 
+Mathematics-I 
+2-1-0 
+3 
+GE 
+BI-101 
+Biology-I 
+2-1-0 
+3 
+GE 
+PI-197 
+Physics Lab -I 
+0-0-3 
+3 
+CORE for Physics Major, GE 
+for Non-Major(Chemistry & 
+Biology) 
+BI-107 
+Biology Laboratory 
+0-0-3 
+3 
+GE 
+EG-110 
+Communicative English  
+3-0-0 
+3 
+AEC 
+ 
+For Non-Major Students:  
+Code 
+      Name 
+L-T-P 
+Credit 
+Core/ Electives/CBCT 
+PI-101 
+Physics-I 
+2-1-0 
+3 
+GE 
+ 
+THIRD SEMESTER 
+                 
+Code 
+      Name 
+L-T-P 
+Credit 
+Core/ Electives/CBCT 
+PI-203 
+Classical Mechanics  
+2-1-0 
+3 
+Core 
+PI-217 
+Mathematical Physics-I 
+2-1-0 
+3 
+Core 
+PI-297 
+Physics Lab-III  
+0-0-4 
+4 
+Core 
+CI-201 
+Chemistry III 
+3-0-0 
+3 
+GE 
+MI-219 
+Mathematics III 
+2-1-0 
+3 
+GE  
+NS-106 
+National Service Scheme 
+0-0-2 
+2 
+SEC 
+CS-535 
+Introduction to Scientific Computing 
+2-0-1 
+3 
+AEC 
+ 
+ 
+For Non-Major Students:  
+Code 
+      Name 
+L-T-P      Credit 
+Core/ Electives/CBCT 
+PI-201 
+Physics III 
+2-1-0 
+3 
+Core 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+---PAGE 3
+FIFTH SEMESTER 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+      
+Code 
+      Name                                        
+L-T-P 
+Credit 
+Core/ Elective/CBCT 
+PI-202 
+Introductory Quantum Mechanics 
+2-1-0 
+3 
+Core 
+PI-204 
+Atomic & Nuclear Physics 
+2-0-1 
+3 
+Core 
+PI-303 
+Physical and Geometrical Optics 
+2-1-0 
+3 
+Core 
+PI-315 
+Mathematical Physics II 
+2-0-1 
+3 
+Core 
+PI-309 
+Analog Electronics and 
+Communications 
+2-1-0 
+3 
+Core 
+PI-308 
+Laser Physics 
+2-1-0 
+3 
+DSE 
+ 
+PI-399 
+Physics Laboratory-V 
+0-0-4 
+4 
+Core 
+ 
+ 
+SEVENTH SEMESTER 
+ 
+ 
+Code 
+      Name                                        
+L-T-P 
+Credit 
+Core/Elective/CBCT 
+PI-403 
+Electromagnetic Theory I 
+2-1-0 
+3 
+Core 
+PI-405 
+Semiconductor Devices 
+2-1-0 
+3 
+Core 
+PI-413 
+Advanced Classical Mechanics 
+2-1-0 
+3 
+Core 
+PI-414 
+Quantum Mechanics I 
+2-1-0 
+3 
+Core 
+PI-416 
+Condensed Matter Physics and 
+Material Science I 
+2-1-0 
+3 
+Core 
+PI-499 
+Physics and Computational 
+Laboratory-VI 
+0-1-5 
+4 
+Core 
+PI-400 
+Physics Laboratory-VII 
+0-0-4 
+4 
+Core 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+---PAGE 4
+ 
+NINTH SEMESTER 
+ 
+Code 
+Course Name 
+L-T-P 
+Credit 
+Core/Elective/CBCT 
+?? 
+Open Elective: 
+2-1-0 
+3 
+CBCT 
+?? 
+Elective I 
+2-1-0 
+3 
+Elective 
+?? 
+Elective II 
+2-1-0 
+3 
+Elective 
+PI-553 
+Atomic and Molecular Spectroscopy 
+2-1-0 
+3 
+Core 
+PI-402 
+Nuclear and Particle Physics 
+2-1-0 
+3 
+Core 
+PI-599 
+Project–I  
+0-0-6 
+       6 
+Core 
+ 
+ 
+Elective Courses 
+ 
+Combination 
+Int. M. Sc. Sem IX (Course Code with Name) 
+1. (CMP+Nanoscience) 
+PI-510: Advanced Condensed Matter Physics and Materials Science  
+PI-562: Quantum Effects in Low Dimensional Systems 
+2. (CMP+Photonics) 
+PI-510: Advanced Condensed Matter Physics and Materials Science  
+PI-557: Photonics  
+3. (HEP+Astrophysics) 
+PI-501: Quantum Field Theory 
+PI-564: Introductory Astrophysics  
+4. (Astrophysics +Plasma 
+Physics) 
+PI-564: Introductory Astrophysics  
+PI-521: Fundamental of Plasma Physics  
+5. (Plasma Physics +HEP) 
+PI-521: Fundamental of Plasma Physics  
+PI-501: Quantum Field Theory 
+6. (Electronics+ 
+Communication) 
+PI-507: Digital Signal Processing 
+PI-517: Microwave Systems and Antenna Propagation 
+7. (Electronics + Photonics) 
+PI-507: Digital Signal Processing 
+PI-557: Photonics 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+             Head, 
+Department of Physics 
+
+---PAGE 5
+ 
+DEPARTMENT OF PHYSICS 
+ 
+Programme: Integrated B.Sc.B.Ed  in Physics 
+ 
+List of Courses offered by the Department for Autumn Semester, 2022 for 
+ 
+ 
+FIRST SEMESTER 
+ 
+Code 
+      Course Name 
+L-T-P 
+Credit 
+Core/Elective/CBCT 
+PD-103 
+General Physics-I 
+2-1-0 
+3 
+Core 
+CD-101 
+Chemistry-I 
+3-0-0 
+3 
+GE 
+MD-101 
+Mathematics-I 
+2-1-0 
+3 
+GE 
+PD-197 
+Physics Lab-I 
+0-0-3 
+3 
+CORE for Physics Major, 
+GE 
+for 
+Non-Major 
+(Chemistry & Biology) 
+ED-106 
+Education: An Evolutionary Perspective 
+2-0-1 
+3 
+Core 
+ 
+ED-104 
+Communicative English  
+3-0-0 
+3 
+Core 
+ED-105 
+Basics in Computer Applications  
+2-0-1 
+3 
+CBCT 
+ 
+For Non-Major Students:  
+Code 
+      Course Name 
+L-T-P 
+Credit 
+Core/ Electives/CBCT 
+PD-101 
+Physics-I 
+2-1-0 
+3 
+GE 
+ 
+THIRD SEMESTER 
+                 
+Code 
+      Course Name 
+L-T-P 
+Credit 
+Core/ Electives/CBCT 
+???? 
+CBCT/OPEN ELECTIVE- I 
+2-1-0 
+3 
+CBCT 
+PD-203 
+Classical Mechanics  
+2-1-0 
+3 
+Core 
+PD-301 
+Mathematical Physics-I 
+2-1-0 
+3 
+Core 
+CD-201 
+Chemistry-III 
+3-0-0 
+3 
+GE 
+ED-201 
+Environmental Education  
+2-0-1 
+3 
+Core 
+ED-202 
+Learner and Learning  
+2-0-1 
+3 
+Core 
+MD-219 
+Mathematics-III 
+2-1-0 
+3 
+GE 
+PD-297 
+Physics Lab. III 
+0-0-4 
+4 
+Core 
+ 
+For Non-Major Students:  
+Code 
+      Course Name 
+L-T-P 
+Credit 
+Core/ Electives/CBCT 
+PD-201 
+Physics III 
+2-1-0 
+3 
+Core 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+---PAGE 6
+ 
+FIFTH SEMESTER 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+      
+Code 
+      Course Name                                    
+L-T-P 
+Credit 
+Core/ Elective/CBCT 
+PD-202 
+Introductory Quantum Mechanics 
+2-1-0 
+3 
+Core 
+PD-303 
+Physical and Geometrical Optics 
+2-1-0 
+3 
+Core 
+PD-315 
+Mathematical Physics II 
+2-1-0 
+3 
+Core 
+PD-309 
+Analog Electronics and 
+Communications 
+2-0-1 
+3 
+DSE 
+PD-204 
+Atomic and Nuclear Physics 
+2-1-0 
+3 
+Core 
+ED-301 
+Teaching Approaches and Strategies 
+2-0-1 
+3 
+Core 
+ED-302 
+Classroom Organization and 
+Management 
+2-0-1 
+3 
+Core 
+PD-399 
+Physics Lab-V 
+0-0-3 
+3 
+Core 
+ 
+   
+SEVENTH SEMESTER  
+ 
+ 
+Code 
+      Course Name                                     
+L-T-P 
+Credit 
+Core/Elective/CBCT 
+???? 
+CBCT/OPEN ELECTIVE- II 
+2-1-0 
+3 
+CBCT  
+PD-308 
+Laser Physics 
+2-1-0 
+3 
+Core 
+ED-408 
+Pedagogy A: Physical Science II 
+2-0-1 
+3 
+Core 
+ED-407  
+or 
+ED-409 
+Pedagogy B: Mathematics II 
+or 
+Pedagogy B: Bio Science II 
+2-0-1 
+3 
+Core 
+ED-404 
+Initial School Experience/ School 
+Internship-I 
+0-0-4 
+4 
+Core 
+PD-400 
+Laboratory-VII 
+0-0-4 
+4 
+Core 
+ 
+ 
+ 
+ 
+ 
+             Head, 
+Department of Physics 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

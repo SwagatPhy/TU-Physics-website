@@ -10,7 +10,9 @@ const items = (await getCollection('newsEvents', ({ data }) => import.meta.env.D
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 
-// "Upcoming" is decided at build time (the site is static), so rebuild to move events into "Past".
+// "Upcoming" is first decided at build time (so the page also works without JavaScript).
+// The script at the bottom re-decides it in the visitor's browser, so an event moves from
+// "Upcoming" to "Past" on its own once its date has gone by, with no rebuild.
 const today = new Date().toISOString().slice(0, 10);
 type Item = (typeof items)[number];
 const isUpcoming = (item: Item) => item.data.type === 'event' && item.data.date.toISOString().slice(0, 10) >= today;
@@ -40,19 +42,19 @@ const badgeFor = { news: 'News', upcoming: 'Upcoming', past: 'Past event' };
 			<div class="tabs" role="tablist" aria-label="Filter news and events">
 				{tabs.map((tab, i) => (
 					<button type="button" role="tab" class="tab" data-filter={tab.id} aria-selected={i === 0 ? 'true' : 'false'}>
-						{tab.label} <span class="tab__count">{tab.count}</span>
+						{tab.label} <span class="tab__count" data-count-for={tab.id}>{tab.count}</span>
 					</button>
 				))}
 			</div>
 
 			<ol class="timeline">
 				{items.map((item) => (
-					<li class="entry" data-group={groupOf(item)}>
+					<li class="entry" data-group={groupOf(item)} data-type={item.data.type} data-date={item.data.date.toISOString().slice(0, 10)}>
 						<time class="entry__date" datetime={item.data.date.toISOString()}>{formatDate(item.data.date)}</time>
 						<article class="card card--link entry__card">
 							<div class="card__body">
 								<div class="entry__meta">
-									<span class={`badge ${groupOf(item) === 'upcoming' ? 'badge--mint' : ''}`}>{badgeFor[groupOf(item)]}</span>
+									<span class={`badge entry__badge ${groupOf(item) === 'upcoming' ? 'badge--mint' : ''}`}>{badgeFor[groupOf(item)]}</span>
 									{item.data.location && (
 										<span class="text-muted entry__location"><Icon name="map-pin" /> {item.data.location}</span>
 									)}
@@ -71,10 +73,33 @@ const badgeFor = { news: 'News', upcoming: 'Upcoming', past: 'Past event' };
 </Layout>
 
 <script>
-	// Show only the entries whose data-group matches the chosen tab ("all" shows everything).
+	// Filter the entries by tab, and keep "Upcoming" / "Past" correct for today's date.
 	const filters = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
 	const entries = document.querySelectorAll<HTMLElement>('.entry');
 	const empty = document.querySelector<HTMLElement>('.empty-state');
+
+	const badgeText = { news: 'News', upcoming: 'Upcoming', past: 'Past event' };
+
+	// Today as YYYY-MM-DD in the visitor's own time zone.
+	// For testing, open the page with ?today=2027-03-01 to pretend it is that date.
+	const override = new URLSearchParams(location.search).get('today');
+	const today = override && /^\d{4}-\d{2}-\d{2}$/.test(override) ? override : new Date().toLocaleDateString('en-CA');
+
+	// News is always 'news'. An event is 'upcoming' until its date has passed (the day itself still counts as upcoming).
+	function updateGroups() {
+		const counts: Record<string, number> = { all: entries.length, news: 0, upcoming: 0, past: 0 };
+		entries.forEach((e) => {
+			const group = e.dataset.type === 'news' ? 'news' : e.dataset.date! >= today ? 'upcoming' : 'past';
+			e.dataset.group = group;
+			counts[group]++;
+			const badge = e.querySelector<HTMLElement>('.entry__badge');
+			if (badge) {
+				badge.textContent = badgeText[group];
+				badge.classList.toggle('badge--mint', group === 'upcoming');
+			}
+		});
+		document.querySelectorAll<HTMLElement>('[data-count-for]').forEach((c) => (c.textContent = String(counts[c.dataset.countFor!])));
+	}
 
 	function showGroup(id: string) {
 		let visible = 0;
@@ -84,14 +109,16 @@ const badgeFor = { news: 'News', upcoming: 'Upcoming', past: 'Past event' };
 			if (!e.hidden) visible++;
 		});
 		if (empty) empty.hidden = visible > 0;
-		history.replaceState(null, '', id === 'all' ? location.pathname : `#${id}`);
+		// Keep ?today=... (if used) when the tab changes.
+		history.replaceState(null, '', id === 'all' ? location.pathname + location.search : `${location.search}#${id}`);
 	}
 
+	updateGroups();
 	filters.forEach((f) => f.addEventListener('click', () => showGroup(f.dataset.filter!)));
 
 	// Open the tab named in the URL (e.g. /news-events#upcoming), if any.
 	const fromUrl = location.hash.slice(1);
-	if (document.querySelector(`[data-filter="${fromUrl}"]`)) showGroup(fromUrl);
+	showGroup(document.querySelector(`[data-filter="${fromUrl}"]`) ? fromUrl : 'all');
 </script>
 
 <style>

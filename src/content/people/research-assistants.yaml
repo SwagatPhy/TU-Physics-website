@@ -1,9 +1,0 @@
-# Research assistants.
-# This file can be generated from the Google Sheet. Columns = the keys below.
-# Every entry needs a unique `id`. Empty values may be left as "".
-- id: victoria
-  name: Victoria
-  supervisor: Prof. Mrinal Kr. Das
-  email: ""
-  photo: ""
-  research_area: ""

@@ -57,11 +57,11 @@ const research = defineCollection({
 
 
 
-// People: one YAML file per section in src/content/people/ (can be generated from the Google Sheet).
+// People: one JSON file per section in src/content/people/ (can be generated from the Google Sheet).
 // Each entry needs a unique lowercase `id`. `photo` is relative to /People-photos/
 
 const teaching = defineCollection({
-    loader: file('src/content/people/teaching.yaml'),
+    loader: file('src/content/people/teaching.json'),
     schema: z.object({
         name: z.string(),
         designation: z.string(),
@@ -73,7 +73,7 @@ const teaching = defineCollection({
 });
 
 const nonTeaching = defineCollection({
-    loader: file('src/content/people/non-teaching.yaml'),
+    loader: file('src/content/people/non-teaching.json'),
     schema: z.object({
         name: z.string(),
         designation: z.string(),
@@ -85,7 +85,7 @@ const nonTeaching = defineCollection({
 });
 
 const researchScholars = defineCollection({
-    loader: file('src/content/people/research-scholars.yaml'),
+    loader: file('src/content/people/research-scholars.json'),
     schema: z.object({
         name: z.string(),
         supervisor: z.string(),
@@ -96,7 +96,7 @@ const researchScholars = defineCollection({
 });
 
 const researchAssistants = defineCollection({
-    loader: file('src/content/people/research-assistants.yaml'),
+    loader: file('src/content/people/research-assistants.json'),
     schema: z.object({
         name: z.string(),
         supervisor: z.string(),

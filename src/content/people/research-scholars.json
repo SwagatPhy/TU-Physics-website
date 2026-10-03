@@ -1,0 +1,186 @@
+[
+  {
+    "id": "abinashhazarika",
+    "name": "Abinash Hazarika",
+    "supervisor": "Moon Moon Devi",
+    "research_area": "Neutrino Physics",
+    "email": "abinashhazarika66@gmail.com",
+    "photo": ""
+  },
+  {
+    "id": "achuytbharalee",
+    "name": "Achuyt Bharalee",
+    "supervisor": "Nidhi Bhattacharya",
+    "research_area": "Metasurface, Transmittarray and Reflectarray Antenna, Beamforming, OAM Beam",
+    "email": "achuytb@tezu.ernet.in",
+    "photo": ""
+  },
+  {
+    "id": "anjandaimari",
+    "name": "Anjan Daimari",
+    "supervisor": "Diana Thongjaomayum",
+    "research_area": "Disordered Systems, Quantum Chaos",
+    "email": "danjan7@tezu.ernet.in",
+    "photo": ""
+  },
+  {
+    "id": "anujkumarmaurya",
+    "name": "Anuj Kumar Maurya",
+    "supervisor": "Dambarudhar Mohanta",
+    "research_area": "Nanomaterials; Membrane Electrophysiology; Cancer Biophysics",
+    "email": "anujkumarmaurya1a@gmail.com",
+    "photo": ""
+  },
+  {
+    "id": "arushrutiphukon",
+    "name": "Arushruti Phukon",
+    "supervisor": "Dambarudhar Mohanta",
+    "research_area": "Currently doing course work.",
+    "email": "arushrutiphukon094@gmail.com",
+    "photo": ""
+  },
+  {
+    "id": "bedantakumardeka",
+    "name": "Bedanta Kumar Deka",
+    "supervisor": "Nilakshi Das",
+    "research_area": "Complex Plasma",
+    "email": "bkdekatu@gmail.com",
+    "photo": ""
+  },
+  {
+    "id": "bhaswatikalita",
+    "name": "Bhaswati Kalita",
+    "supervisor": "Mrinal Kumar Das",
+    "research_area": "Neutrino Physics and BSM Physics",
+    "email": "bhaswatik@tezu.ernet.in",
+    "photo": ""
+  },
+  {
+    "id": "bikashkumardas",
+    "name": "Bikash Kumar Das",
+    "supervisor": "Dambarudhar Mohanta",
+    "research_area": "Nanobiophotonics, Interfacial Wettability and Droplet impact, Biomimicking",
+    "email": "bikashdas525@gmail.com",
+    "photo": ""
+  },
+  {
+    "id": "dipankarray",
+    "name": "Dipankar Ray",
+    "supervisor": "Pralay Kumar Karmakar",
+    "research_area": "Plasma Physics, Astrophysics",
+    "email": "dipankarray056@gmail.com",
+    "photo": ""
+  },
+  {
+    "id": "hemenchamuah",
+    "name": "Hemen Chamuah",
+    "supervisor": "Nidhi Bhattacharya",
+    "research_area": "Frequency Selective Surface, Metasurfaces, Radome design",
+    "email": "hemench@tezu.ernet.in",
+    "photo": ""
+  },
+  {
+    "id": "hritwikbora",
+    "name": "Hritwik Bora",
+    "supervisor": "Rupjyoti Gogoi",
+    "research_area": "Astronomy and Astrophysics",
+    "email": "hritwikbora@gmail.com",
+    "photo": ""
+  },
+  {
+    "id": "jonmonidutta",
+    "name": "Jonmoni Dutta",
+    "supervisor": "Pralay Kumar Karmakar",
+    "research_area": "Astrophysical plasma physics",
+    "email": "jonmonirupshi@gmail.com",
+    "photo": ""
+  },
+  {
+    "id": "khwairakpamdhanishsingha",
+    "name": "Khwairakpam Dhanish Singha",
+    "supervisor": "Pralay Kumar Karmakar",
+    "research_area": "Astrophysical plasma",
+    "email": "php25115@tezu.ernet.in",
+    "photo": ""
+  },
+  {
+    "id": "nikhilkumardaimari",
+    "name": "Nikhil Kumar Daimari",
+    "supervisor": "Rajib Biswas",
+    "research_area": "Material Science, Nanostructures, Environmental Pollutants Sensing and Remediation",
+    "email": "nikhil.daimari@gmail.com",
+    "photo": ""
+  },
+  {
+    "id": "ningthoujamusharanidevi",
+    "name": "Ningthoujam Usharani Devi",
+    "supervisor": "Pralay Kumar Karmakar",
+    "research_area": "Solar plasma teacher",
+    "email": "php25006@tezu.ac.in",
+    "photo": ""
+  },
+  {
+    "id": "niranjangogoi",
+    "name": "Niranjan Gogoi",
+    "supervisor": "Nilakshi Das",
+    "research_area": "Complex plasma",
+    "email": "ngogoi.phy@gmail.com",
+    "photo": ""
+  },
+  {
+    "id": "prankrishnaborgohain",
+    "name": "Prankrishna Borgohain",
+    "supervisor": "Ritupan Sarmah",
+    "research_area": "Theoretical Materials Science, Dynamical Systems, Condensed Matter (Theory)",
+    "email": "prankrishna@tezu.ernet.in",
+    "photo": ""
+  },
+  {
+    "id": "priyankushdeka",
+    "name": "Priyankush Deka",
+    "supervisor": "Moon Moon Devi",
+    "research_area": "Neutrino physics, Machine Learning",
+    "email": "pdekaph@tezu.ernet.in",
+    "photo": ""
+  },
+  {
+    "id": "rishadas",
+    "name": "Risha Das",
+    "supervisor": "Dambarudhar Mohanta",
+    "research_area": "Auxetic materials",
+    "email": "risha24das@gmail.com",
+    "photo": ""
+  },
+  {
+    "id": "sagarsamirkalita",
+    "name": "Sagar Samir Kalita",
+    "supervisor": "Nilakshi Das",
+    "research_area": "Plasma Physics",
+    "email": "sagarsamirkalita@gmail.com",
+    "photo": ""
+  },
+  {
+    "id": "snighasharma",
+    "name": "Snigha Sharma",
+    "supervisor": "Rupjyoti Gogoi",
+    "research_area": "Infrared Astronomy",
+    "email": "xyz@gmail.com",
+    "photo": ""
+  },
+  {
+    "id": "swagatbordoloi",
+    "name": "Swagat Bordoloi",
+    "supervisor": "Rupjyoti Gogoi",
+    "research_area": "Ultraviolet Astronomy",
+    "email": "swagat.yolo.007@gmail.com",
+    "photo": ""
+  },
+  {
+    "id": "tribenideuri",
+    "name": "Tribeni Deuri",
+    "supervisor": "Rupjyoti Gogoi",
+    "research_area": "Gamma Ray Bursts",
+    "email": "deuritribeni5@gmail.com",
+    "photo": ""
+  }
+]

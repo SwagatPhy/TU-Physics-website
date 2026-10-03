@@ -167,6 +167,12 @@ hr {
 	white-space: nowrap;
 }
 
+/* The `hidden` attribute must always win, even over rules like `display: grid`
+   (used by the News & Events and People filters). */
+[hidden] {
+	display: none !important;
+}
+
 /* 3. Layout helpers -------------------------------------------------------- */
 .container {
 	width: 100%;

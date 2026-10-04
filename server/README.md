@@ -20,9 +20,18 @@ cd server
 npm install
 cp .env.example .env     # local settings; never commit .env
 npm run seed             # creates data/portal.sqlite with FAKE users, courses and roster rows
+# or: npm run seed:people -- --fresh   # trial DB from the website's people (see below)
 npm start                # http://localhost:4400/dphy/api/health
 npm test                 # automated tests (use an in-memory database)
 ```
+
+**`npm run seed:people`** builds a trial database from the people on the website
+(`src/content/people/*.json`, never modified) and the course catalogue: real names and
+designations, generated logins `<website id>@trial.test`, made-up roll numbers `PHD99001…`
+for research scholars, an admin and four pending sign-ups; made-up values are marked
+`TRIAL` in `users.admin_note`. It refuses `NODE_ENV=production`, any mail mode other than
+`outbox`, and any database outside `server/data/`, and prints problems found in the JSON.
+The owner's walkthrough uses it: [docs/portal-trial/TRY_IT.md](../docs/portal-trial/TRY_IT.md).
 
 **Seeded accounts** (all fake, `.test` domain), all with `SEED_PASSWORD` from `.env`:
 `admin@example.test`, `faculty.a@example.test`, `faculty.b@example.test`,

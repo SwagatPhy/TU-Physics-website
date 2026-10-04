@@ -1,126 +1,110 @@
-# Try the portal trial on your computer
+# Try the portal (trial)
 
-Everything here uses **fake data** (`.test` email addresses, `example.com` links). Nothing is
-sent by email: emails are saved as text files you open yourself (`server/data/outbox/`).
+This trial uses the **people already on the department website** (names and job titles from
+the People page) plus a few made-up sign-ups. It runs only on this computer: **no email is ever
+sent**, and nothing here is on the live site.
 
-## One-time setup
+**Password for every account:** `trial-password-123`
+**Login emails** are made up from the website: the person's id + `@trial.test`
+(for example Rupjyoti Gogoi → `rupjyotigogoi@trial.test`). The login page has a yellow
+**Trial accounts** box with a *Use* button for each one, so you don't have to type them.
 
-Needs **Node.js 24** or newer and this repository checked out on the `portal-trial` branch.
+## Six steps
 
-```sh
-npm install                      # website (run in the repository folder)
-cd server
-npm install                      # portal API
-cp .env.example .env             # local settings
-npm run seed                     # creates server/data/portal.sqlite with fake people, courses and sign-ups
-cd ..
-```
+1. **Open the login page:** <http://localhost:4331/dphy/login/>
+   You see the login form and, under it, the yellow *Trial accounts* box.
 
-## Every time: start the two parts
+2. **Log in as a student — Swagat Bordoloi** (PhD research scholar).
+   You see your course **PHY 101 Classical Mechanics** with a *TRIAL class link* and
+   *TRIAL notes*. You only see courses you are enrolled in. Click *Log out*.
 
-Open **two terminals** in the repository folder.
+3. **Log in as a teacher — Rupjyoti Gogoi** (teaches PHY 101).
+   You see PHY 101 and how many students are enrolled. Add a link: type a title (e.g.
+   *Week 1 notes*), an address such as `https://example.com/week1`, and click the add button.
+   Log out, log in as Swagat Bordoloi again: the new link is there.
 
-```sh
-# Terminal 1 — the portal API (http://localhost:4400)
-cd server
-npm start
-```
+4. **Log in as someone who just signed up — Trial Applicant One.**
+   You only see a "waiting for approval" message — no courses, nothing else.
 
-```sh
-# Terminal 2 — the website, with the portal pages
-npm run dev
-```
+5. **Log in as the administrator — Trial Admin.**
+   You land on **Sign-up approvals** with four people waiting. You can correct a name or roll
+   number (*Save*), then *Approve* or *Reject* one, or tick several and *Approve selected*.
+   Approve Trial Applicant One, log out, log in as Trial Applicant One: the portal now opens
+   (their course list is empty, because enrolling people in courses is still done by hand).
 
-Open the address Terminal 2 prints, followed by `login/` — usually
-**http://localhost:4321/dphy/login/**. (If you use a different port, set `SITE_URL` in
-`server/.env` to match, so the links in emails point to the right place.)
+6. **Sign up as a new person.** On the login page choose *create your account*. Pick
+   *student*, fill in a name, any email ending in `.test` (e.g. `me@trial.test`), a roll number
+   starting with `PHM` or `PHD` (e.g. `PHM24099`) and a phone number. Instead of an email, the
+   link is saved as a text file: open the newest file in `server/data/outbox/`, copy the link
+   into the browser and choose a password. Your account now waits for the administrator
+   (step 5).
 
-## Logins
+Wording in `[PLACEHOLDER — …]` brackets is waiting for the final text.
 
-All seeded accounts start with the password **`trial-password-123`**.
+## What is real and what is made up
 
-| Account | What happens |
+| Real (from the website) | Made up for the trial |
 |---|---|
-| `admin@example.test` | Must choose a new password, then lands on **Sign-up approvals**. |
-| `faculty.a@example.test`, `faculty.b@example.test` | New password first, then the faculty dashboard (their courses and links). |
-| `student01@example.test` … `student10@example.test` | New password first, then their courses and links. |
-| `pending01@example.test` … `pending03@example.test`, `pending.staff@example.test` | Signed up but **waiting for approval**: they can log in and see only the waiting message. |
+| Names and job titles of faculty, staff, research scholars and the research assistant | Every login email (`…@trial.test`) and the password |
+| Course codes, titles and teachers (from the course catalogue) | Scholars' roll numbers (`PHD99001`, `PHD99002`, …) |
+| | Which scholars are enrolled in which course (a teacher's own scholars), all links, the admin and the four applicants |
 
-## Things to click through
+Every made-up item is marked `TRIAL` in the database (`users.admin_note`).
 
-| Try this | How |
-|---|---|
-| **Student sees only their courses** | `student01` sees PHY 101 and PHY 540; `student08` sees PHY 210 and PHY 540 — never PHY 101. |
-| **Faculty manage links** | As `faculty.a`, add, edit and delete a link in PHY 101. A `javascript:` or non-web address is refused. Log in as `student01` to see the change. |
-| **Sign up as a new student** | *Sign up* from the login page: choose *student*, any name, email (e.g. `me@example.test`), roll number such as `PHM24099`, a phone number. Open the newest file in `server/data/outbox/`, copy the link into the browser, choose a password. The account now **waits for approval**. |
-| **Approve it** | Log in as `admin`. The new sign-up is in the table with the seeded ones: correct the name if you like (*Save*), then *Approve* — or tick several and *Approve selected*. *Reject* asks for confirmation. Each decision writes an email to the outbox. |
-| **After approval** | Log in as the new student: the portal opens (no courses yet — enrolment is a manual step for now). |
-| **Rejected** | A rejected account can't log in (it gets the same answer as a wrong password). |
-| **Roster match is approved at once** | Sign up as a student with `roster.student01@example.test` and roll number `PHD22011` (from `server/sample-roster.csv`). After choosing a password the account is approved immediately. |
-| **Department member** | Choose *faculty / scholar / staff*: no roll number is asked; the account always waits for the admin. |
-| **Bad roll number** | A roll number that doesn't start with a known prefix (`PHD`, `PHM` — temporary, see `server/programmes.conf`) is refused on the form. |
-| **Email already used** | Signing up again with an existing email looks exactly the same on screen; the outbox gets a "you already have an account" note instead of a link. |
-| **Forgot password** | From the login page. Open the newest outbox file and follow the link. |
-| **Link only works once** | Open the same sign-up or reset link again: it is refused. |
-| **Portal offline** | Stop Terminal 1 (Ctrl+C) and reload: the page says the portal isn't available; the rest of the website keeps working. |
-| **Lockout** | 5 wrong passwords for one account block it for 15 minutes. |
+## Starting it, or starting again
 
-**Start over:** stop Terminal 1, delete the folder `server/data`, run `npm run seed` in `server/`,
-start again.
+The trial normally runs already. To start it yourself, open two terminals in the repository
+folder:
 
-**Wording:** text in `[PLACEHOLDER — …]` brackets is waiting for the final copy from
-Notes-manager TU. All of it lives in `src/lib/portal-copy.ts` (pages) and
-`server/src/mail-templates.js` (emails).
+```sh
+cd server && npm start                       # terminal 1: the portal API
+npx astro dev --port 4331                    # terminal 2: the website
+```
+
+**Start again with clean data:** stop terminal 1 (Ctrl+C), then
+`cd server && npm run seed:people -- --fresh`, then start terminal 1 again.
+The command also lists problems it found in the website's people files (for example two
+people sharing one email), so they can be fixed there.
+
+(`npm run seed` instead creates an older set of purely fake accounts, used by the developers.)
 
 ## Look at the database
 
-Everything the portal stores is in one file: **`server/data/portal.sqlite`** (SQLite).
+Everything the portal stores is in one file: **`server/data/portal.sqlite`**.
 
-- **DB Browser for SQLite** (free app, <https://sqlitebrowser.org>): *Open Database Read Only…* →
-  choose `server/data/portal.sqlite` → *Browse Data* tab, pick a table.
-- **Terminal** (`sqlite3` comes with macOS): from the repository folder run
-  `sqlite3 -readonly -header -column server/data/portal.sqlite`, then type queries; `.tables`
-  lists the tables, `.quit` leaves.
+- **DB Browser for SQLite** (free app, <https://sqlitebrowser.org>): *Open Database Read Only…*,
+  choose that file, then the *Browse Data* tab and pick a table (`users`, `courses`, …).
+- **Terminal:** `sqlite3 -readonly -header -column server/data/portal.sqlite`, then type a query;
+  `.tables` lists the tables, `.quit` leaves.
 
-Open it **read-only** while the API is running; change data through the portal pages (or
-delete `server/data` and re-seed). Passwords are stored only as argon2id hashes and session
-or link tokens only as SHA-256 hashes, so nothing in the file can be used to log in.
-
-Example read-only queries:
+Open it read-only while the portal is running. Passwords are stored only as scrambled hashes,
+so nothing in the file can be used to log in.
 
 ```sql
--- Everyone, with their status
-SELECT id, name, email, role, status, roll_number, programme, phone, created_at
-FROM users ORDER BY id;
+-- Everyone
+SELECT name, email, role, status, designation, roll_number, programme FROM users ORDER BY role, name;
 
 -- Sign-ups waiting for approval
-SELECT id, name, email, roll_number, programme, phone, created_at
-FROM users WHERE status = 'pending' ORDER BY created_at;
+SELECT name, email, roll_number, programme, phone, created_at FROM users WHERE status = 'pending';
 
--- Courses and their links
-SELECT c.code, c.title, f.name AS faculty, r.kind, r.title AS link, r.url, r.visible_from
-FROM courses c
-LEFT JOIN users f ON f.id = c.faculty_id
-LEFT JOIN resources r ON r.course_id = c.id
-ORDER BY c.code, r.kind;
+-- Courses, teachers and links
+SELECT c.code, c.title, t.name AS teacher, r.kind, r.title AS link, r.url
+FROM courses c LEFT JOIN users t ON t.id = c.faculty_id LEFT JOIN resources r ON r.course_id = c.id
+ORDER BY c.code;
 
 -- Who is enrolled where
-SELECT c.code, u.name, u.email
-FROM enrollments e JOIN courses c ON c.id = e.course_id JOIN users u ON u.id = e.user_id
-ORDER BY c.code, u.name;
+SELECT c.code, u.name FROM enrollments e
+JOIN courses c ON c.id = e.course_id JOIN users u ON u.id = e.user_id ORDER BY c.code, u.name;
 
 -- The last 20 things that happened (logins, sign-ups, approvals, link changes)
-SELECT a.at, u.email AS who, a.action, a.target
-FROM audit_log a LEFT JOIN users u ON u.id = a.actor_id
-ORDER BY a.id DESC LIMIT 20;
-
--- The optional roster and whether each row has been used
-SELECT email, name, roll_number, role, programme, claimed FROM roster;
+SELECT a.at, u.name AS who, a.action, a.target
+FROM audit_log a LEFT JOIN users u ON u.id = a.actor_id ORDER BY a.id DESC LIMIT 20;
 ```
 
-## Checks the developers run
+## For developers
 
-```sh
-cd server && npm test            # automated API tests
-cd .. && npm run build && npm run check-links && node scripts/contrast-check.js
-```
+- First-time setup: `npm install`, then `cd server && npm install && cp .env.example .env`.
+  `SITE_URL` in `server/.env` must match the website address (here `http://localhost:4331`)
+  so the links in the outbox emails open the right place.
+- Checks: `cd server && npm test`; then `npm run build && npm run check-links && node scripts/contrast-check.js`.
+- More detail on the API, sign-up rules and security: [server/README.md](../../server/README.md).

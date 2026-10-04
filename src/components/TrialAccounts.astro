@@ -1,0 +1,93 @@
+---
+// DEVELOPMENT ONLY. A list of trial logins on the login page, each with a
+// button that fills in the email and password. login.astro only renders this
+// when running `npm run dev` (import.meta.env.DEV), and the script is inline,
+// so nothing of it ends up in a production build.
+// The accounts come from `npm run seed:people` (server/scripts/seed-people.js);
+// the password is SEED_PASSWORD's default from server/.env.example.
+
+const password = 'trial-password-123';
+const accounts = [
+	{ role: 'Admin', name: 'Trial Admin', email: 'admin@example.test', note: 'approves sign-ups' },
+	{ role: 'Faculty', name: 'Rupjyoti Gogoi', email: 'rupjyotigogoi@trial.test', note: 'teaches PHY 101' },
+	{ role: 'Student (PhD scholar)', name: 'Swagat Bordoloi', email: 'swagatbordoloi@trial.test', note: 'enrolled in PHY 101' },
+	{ role: 'Staff', name: 'Narayan Sharma', email: 'narayansharma@trial.test', note: 'no courses' },
+	{ role: 'Waiting for approval', name: 'Trial Applicant One', email: 'trial.applicant1@trial.test', note: 'pending sign-up' },
+];
+---
+
+<aside class="trial-accounts" aria-label="Trial accounts (development only)">
+	<p class="trial-accounts__title">Trial accounts — development only, not shown on the live site</p>
+	<ul>
+		{accounts.map((account) => (
+			<li>
+				<button type="button" class="btn btn--outline trial-accounts__button" data-email={account.email} data-password={password}>
+					Use
+				</button>
+				<span>
+					<strong>{account.role}:</strong> {account.name} <span class="trial-accounts__email">{account.email}</span> — {account.note}
+				</span>
+			</li>
+		))}
+	</ul>
+	<p class="trial-accounts__hint">Password for all: <code>{password}</code> (unless SEED_PASSWORD in server/.env was changed).</p>
+</aside>
+
+<script is:inline>
+	document.querySelectorAll('.trial-accounts__button').forEach((button) => {
+		button.addEventListener('click', () => {
+			document.getElementById('login-email').value = button.dataset.email;
+			document.getElementById('login-password').value = button.dataset.password;
+			document.querySelector('#login-form button[type="submit"]').focus();
+		});
+	});
+</script>
+
+<style>
+	.trial-accounts {
+		max-width: 44rem;
+		margin: var(--space-lg) auto 0;
+		padding: var(--space-md);
+		border: 2px dashed var(--amber);
+		border-radius: var(--radius);
+		background: var(--color-bg);
+		font-size: 0.93rem;
+	}
+
+	.trial-accounts__title {
+		margin: 0 0 var(--space-sm);
+		font-weight: 700;
+		color: var(--navy);
+	}
+
+	.trial-accounts ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.5rem;
+	}
+
+	.trial-accounts li {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+
+	.trial-accounts__button {
+		min-height: 2.2rem;
+		padding: 0.25rem 0.9rem;
+		font-size: 0.88rem;
+		flex-shrink: 0;
+	}
+
+	.trial-accounts__email {
+		color: var(--color-text-muted);
+		overflow-wrap: anywhere;
+	}
+
+	.trial-accounts__hint {
+		margin: var(--space-sm) 0 0;
+		color: var(--color-text-muted);
+	}
+</style>

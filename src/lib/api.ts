@@ -58,4 +58,5 @@ export const portalPages = {
 	forgotPassword: withBase('/forgot-password'),
 	changePassword: withBase('/change-password'),
 	portal: withBase('/portal'),
+	faculty: withBase('/faculty'),
 };

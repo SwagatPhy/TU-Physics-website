@@ -1,6 +1,7 @@
 ---
 // Student portal: the student's courses with their class and notes links.
-// States: loading → unavailable | not-logged-in | not-student | courses | empty.
+// States: loading → unavailable | not-logged-in | courses | empty.
+// Faculty and admin who open this page are sent to /faculty/.
 // Course data comes from GET /api/my-courses after login; nothing private is in
 // this static page itself.
 import Layout from '../layouts/Layout.astro';
@@ -26,9 +27,6 @@ const text = copy.portal;
 				<div data-state="not-logged-in" hidden>
 					<p>{text.notLoggedIn}</p>
 					<a class="btn btn--navy" href={portalPages.login}>{text.loginLink}</a>
-				</div>
-				<div data-state="not-student" hidden>
-					<p>{text.notStudent}</p>
 				</div>
 				<div data-state="empty" hidden>
 					<p>{text.empty}</p>
@@ -110,12 +108,12 @@ const text = copy.portal;
 
 		document.getElementById('portal-name')!.textContent = me.data!.user.name;
 		document.getElementById('portal-account')!.hidden = false;
-		if (me.data!.user.role !== 'student') return showState('not-student');
+		if (me.data!.user.role !== 'student') return void (location.href = portalPages.faculty);
 
 		const result = await api<{ courses: Course[] }>('my-courses');
 		if (result.error === 'unavailable') return showState('unavailable');
 		if (result.error === 'not_logged_in') return showState('not-logged-in');
-		if (!result.ok) return showState('not-student');
+		if (!result.ok) return showState('not-logged-in');
 		if (result.data!.courses.length === 0) return showState('empty');
 		renderCourses(result.data!.courses);
 		showState('courses');

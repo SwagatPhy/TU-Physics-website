@@ -1,0 +1,356 @@
+---
+// Faculty dashboard: the courses I teach (admin: all courses) and their class
+// and notes links — add, edit, delete.
+// States: loading → unavailable | not-logged-in | courses | empty.
+// Students who open this page are sent to /portal/.
+// Course cards are cloned from the <template>s below; every value from the
+// database is set with textContent, never as HTML.
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import PortalPanel from '../components/PortalPanel.astro';
+import { copy } from '../lib/portal-copy';
+import { portalPages } from '../lib/api';
+
+const text = copy.faculty;
+const kinds = copy.portal.kinds;
+---
+
+<Layout title={text.title} noindex>
+	<PageHeader title={text.title} lead={text.intro} />
+
+	<section class="section">
+		<div class="container">
+			<div class="portal-account" id="portal-account" hidden>
+				<p>{text.signedInAs} <strong id="portal-name"></strong></p>
+				<button class="btn btn--outline" type="button" id="logout-button">{text.logout}</button>
+			</div>
+
+			<PortalPanel>
+				<div data-state="not-logged-in" hidden>
+					<p>{text.notLoggedIn}</p>
+					<a class="btn btn--navy" href={portalPages.login}>{text.loginLink}</a>
+				</div>
+				<div data-state="empty" hidden>
+					<p>{text.noCourses}</p>
+				</div>
+				<div data-state="courses" hidden>
+					<p class="portal-message portal-message--error forward-reminder">{text.forwardReminder}</p>
+					<ul class="fcourse-list" id="course-list"></ul>
+				</div>
+			</PortalPanel>
+		</div>
+	</section>
+
+	<template id="course-template">
+		<li class="fcourse">
+			<h2 class="fcourse__title" data-field="title"></h2>
+			<p class="fcourse__meta"><span data-field="students"></span> {text.students}</p>
+			<p class="portal-message" role="status" aria-live="polite" data-field="status" hidden></p>
+			<p class="fcourse__none" data-field="none">{text.noLinks}</p>
+			<ul class="fcourse__links" data-field="links"></ul>
+
+			<form class="portal-form fcourse__form" novalidate>
+				<input type="hidden" name="resourceId" />
+				<div class="fcourse__row">
+					<label class="portal-field">
+						{text.kindLabel}
+						<select name="kind">
+							<option value="class_link">{kinds.class_link}</option>
+							<option value="notes">{kinds.notes}</option>
+							<option value="other">{kinds.other}</option>
+						</select>
+					</label>
+					<label class="portal-field">
+						{text.linkTitle}
+						<input name="title" type="text" maxlength="200" required />
+					</label>
+				</div>
+				<label class="portal-field">
+					{text.url}
+					<input name="url" type="url" maxlength="2000" required placeholder="https://" />
+					<span class="portal-field__hint">{text.urlHint}</span>
+				</label>
+				<label class="portal-field">
+					{text.visibleFrom}
+					<input name="visibleFrom" type="date" />
+					<span class="portal-field__hint">{text.visibleFromHint}</span>
+				</label>
+				<div class="btn-row">
+					<button class="btn btn--navy" type="submit" data-field="submit">{text.add}</button>
+					<button class="btn btn--outline" type="button" data-action="cancel" hidden>{text.cancel}</button>
+				</div>
+			</form>
+		</li>
+	</template>
+
+	<template id="link-template">
+		<li class="flink">
+			<span class="badge" data-field="kind"></span>
+			<a data-field="link" target="_blank" rel="noopener noreferrer"></a>
+			<span class="flink__note" data-field="note"></span>
+			<span class="flink__actions">
+				<button class="btn btn--outline flink__button" type="button" data-action="edit">{text.edit}</button>
+				<button class="btn btn--outline flink__button" type="button" data-action="delete">{text.delete}</button>
+			</span>
+		</li>
+	</template>
+</Layout>
+
+<script>
+	import { api, portalPages } from '../lib/api';
+	import { copy, errorMessage } from '../lib/portal-copy';
+	import { showState, portalIsAvailable } from '../lib/portal-ui';
+
+	interface Link { id: number; kind: string; title: string; url: string; visibleFrom: string | null }
+	interface Course { id: number; code: string; title: string; semester: string; studentCount: number; resources: Link[] }
+
+	const text = copy.faculty;
+	const kinds = copy.portal.kinds;
+	const list = document.getElementById('course-list')!;
+	const courseTemplate = document.getElementById('course-template') as HTMLTemplateElement;
+	const linkTemplate = document.getElementById('link-template') as HTMLTemplateElement;
+
+	const field = (root: ParentNode, name: string) => root.querySelector<HTMLElement>(`[data-field="${name}"]`)!;
+
+	function setStatus(courseElement: Element, message: string, isError = false) {
+		const status = field(courseElement, 'status');
+		status.textContent = message;
+		status.classList.toggle('portal-message--error', isError);
+		status.hidden = !message;
+	}
+
+	// Puts the form back into "add a new link" mode.
+	function resetForm(form: HTMLFormElement) {
+		form.reset();
+		(form.elements.namedItem('resourceId') as HTMLInputElement).value = '';
+		field(form, 'submit').textContent = text.add;
+		form.querySelector<HTMLElement>('[data-action="cancel"]')!.hidden = true;
+	}
+
+	function startEditing(form: HTMLFormElement, link: Link) {
+		const value = (name: string, v: string) => ((form.elements.namedItem(name) as HTMLInputElement).value = v);
+		value('resourceId', String(link.id));
+		value('kind', link.kind);
+		value('title', link.title);
+		value('url', link.url);
+		value('visibleFrom', link.visibleFrom ? link.visibleFrom.slice(0, 10) : '');
+		field(form, 'submit').textContent = text.save;
+		form.querySelector<HTMLElement>('[data-action="cancel"]')!.hidden = false;
+		form.querySelector<HTMLInputElement>('input[name="title"]')!.focus();
+	}
+
+	function renderCourse(course: Course): HTMLElement {
+		const element = (courseTemplate.content.cloneNode(true) as DocumentFragment).firstElementChild as HTMLElement;
+		element.dataset.courseId = String(course.id);
+		field(element, 'title').textContent = `${course.code} — ${course.title}`;
+		field(element, 'students').textContent = String(course.studentCount);
+		field(element, 'none').hidden = course.resources.length > 0;
+
+		const form = element.querySelector('form')!;
+		const links = field(element, 'links');
+		for (const link of course.resources) {
+			const row = (linkTemplate.content.cloneNode(true) as DocumentFragment).firstElementChild as HTMLElement;
+			field(row, 'kind').textContent = kinds[link.kind] ?? kinds.other;
+			const anchor = field(row, 'link') as HTMLAnchorElement;
+			anchor.href = link.url; // the API only stores http(s) links
+			anchor.textContent = link.title;
+			field(row, 'note').textContent = link.visibleFrom ? `${text.visibleFromNote} ${link.visibleFrom.slice(0, 10)}` : '';
+			row.querySelector('[data-action="edit"]')!.addEventListener('click', () => startEditing(form, link));
+			row.querySelector('[data-action="delete"]')!.addEventListener('click', () => deleteLink(course.id, link.id));
+			links.append(row);
+		}
+
+		form.querySelector('[data-action="cancel"]')!.addEventListener('click', () => resetForm(form));
+		form.addEventListener('submit', (event) => {
+			event.preventDefault();
+			saveLink(course.id, form);
+		});
+		return element;
+	}
+
+	// Reloads every course and, optionally, shows a message on one of them.
+	async function load(message?: { courseId: number; text: string; isError?: boolean }) {
+		const result = await api<{ courses: Course[] }>('teaching');
+		if (result.error === 'unavailable') return showState('unavailable');
+		if (result.error === 'not_logged_in') return showState('not-logged-in');
+		if (!result.ok) return showState('not-logged-in');
+		if (result.data!.courses.length === 0) return showState('empty');
+
+		list.replaceChildren(...result.data!.courses.map(renderCourse));
+		showState('courses');
+		if (message) {
+			const element = list.querySelector(`[data-course-id="${message.courseId}"]`);
+			if (element) setStatus(element, message.text, message.isError);
+		}
+	}
+
+	async function saveLink(courseId: number, form: HTMLFormElement) {
+		const button = field(form, 'submit') as HTMLButtonElement;
+		button.disabled = true;
+		const values = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
+		const body = { kind: values.kind, title: values.title, url: values.url, visibleFrom: values.visibleFrom || null };
+		const result = values.resourceId
+			? await api(`resources/${values.resourceId}`, { method: 'PUT', body })
+			: await api('resources', { method: 'POST', body: { courseId, ...body } });
+		button.disabled = false;
+
+		if (result.error === 'unavailable') return showState('unavailable');
+		if (!result.ok) return setStatus(form.closest('.fcourse')!, errorMessage(result.error!), true);
+		await load({ courseId, text: values.resourceId ? text.saved : text.added });
+	}
+
+	async function deleteLink(courseId: number, linkId: number) {
+		if (!confirm(text.confirmDelete)) return;
+		const result = await api(`resources/${linkId}`, { method: 'DELETE' });
+		if (result.error === 'unavailable') return showState('unavailable');
+		if (!result.ok) return load({ courseId, text: errorMessage(result.error!), isError: true });
+		await load({ courseId, text: text.deleted });
+	}
+
+	document.getElementById('logout-button')!.addEventListener('click', async () => {
+		await api('logout', { method: 'POST' });
+		location.href = portalPages.login;
+	});
+
+	async function start() {
+		if (!(await portalIsAvailable())) return;
+		const me = await api<{ user: { name: string; role: string; mustChangePassword: boolean } }>('me');
+		if (!me.ok) return showState('not-logged-in');
+		if (me.data!.user.mustChangePassword) return void (location.href = portalPages.changePassword);
+		if (me.data!.user.role === 'student') return void (location.href = portalPages.portal);
+
+		document.getElementById('portal-name')!.textContent = me.data!.user.name;
+		document.getElementById('portal-account')!.hidden = false;
+		await load();
+	}
+	start();
+</script>
+
+<style>
+	.portal-account {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-sm);
+		max-width: 52rem;
+		margin: 0 auto var(--space-md);
+	}
+
+	.portal-account p {
+		margin: 0;
+	}
+
+	section :global(.portal-panel) {
+		max-width: 52rem;
+	}
+
+	.fcourse-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: var(--space-lg);
+	}
+
+	:global(.fcourse) {
+		padding-top: var(--space-lg);
+		border-top: 1px solid var(--color-border);
+	}
+
+	:global(.fcourse__title) {
+		font-size: 1.3rem;
+		margin-bottom: 0.2rem;
+	}
+
+	:global(.fcourse__meta),
+	:global(.fcourse__none) {
+		margin: 0 0 var(--space-sm);
+		color: var(--color-text-muted);
+	}
+
+	:global(.fcourse__links) {
+		list-style: none;
+		margin: 0 0 var(--space-md);
+		padding: 0;
+		display: grid;
+		gap: 0.6rem;
+	}
+
+	:global(.flink) {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.4rem 0.75rem;
+		padding: 0.6rem 0;
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	:global(.flink__note) {
+		font-size: 0.88rem;
+		color: var(--color-text-muted);
+	}
+
+	:global(.flink__actions) {
+		display: flex;
+		gap: 0.4rem;
+		margin-left: auto;
+	}
+
+	:global(.flink__button) {
+		min-height: 2.4rem;
+		padding: 0.35rem 0.9rem;
+		font-size: 0.9rem;
+	}
+
+	:global(.fcourse__form) {
+		padding: var(--space-md);
+		border-radius: var(--radius-sm);
+		background: var(--color-bg-soft);
+	}
+
+	:global(.fcourse__form .btn) {
+		width: auto;
+	}
+
+	:global(.fcourse__row) {
+		display: grid;
+		gap: var(--space-md);
+		grid-template-columns: minmax(10rem, 1fr) 2fr;
+	}
+
+	@media (max-width: 40rem) {
+		:global(.fcourse__row) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	:global(label.portal-field) {
+		font-weight: 600;
+		color: var(--navy);
+	}
+
+	:global(label.portal-field input),
+	:global(label.portal-field select) {
+		font-weight: 400;
+	}
+
+	:global(.portal-field select) {
+		width: 100%;
+		min-height: 2.9rem;
+		padding: 0.6rem 0.85rem;
+		border: 1px solid var(--color-border-strong);
+		border-radius: var(--radius-sm);
+		background: var(--color-bg);
+		color: var(--color-text);
+		font: inherit;
+	}
+
+	:global(label.portal-field .portal-field__hint) {
+		font-weight: 400;
+	}
+
+	.forward-reminder {
+		margin-bottom: var(--space-md);
+	}
+</style>

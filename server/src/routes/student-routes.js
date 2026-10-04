@@ -7,14 +7,7 @@
 import { Router } from 'express';
 import { toDbTime } from '../db.js';
 import { requireLogin, requirePasswordChanged } from '../auth.js';
-
-function isWebLink(url) {
-	try {
-		return ['http:', 'https:'].includes(new URL(url).protocol);
-	} catch {
-		return false;
-	}
-}
+import { isWebLink } from '../validate.js';
 
 export function studentRoutes({ db }) {
 	const router = Router();

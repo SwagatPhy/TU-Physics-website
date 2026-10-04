@@ -8,6 +8,7 @@ import { createMailer } from './mail.js';
 import { authRoutes } from './routes/auth-routes.js';
 import { registerRoutes } from './routes/register-routes.js';
 import { studentRoutes } from './routes/student-routes.js';
+import { facultyRoutes } from './routes/faculty-routes.js';
 
 export function createApp({
 	db,
@@ -63,6 +64,7 @@ export function createApp({
 	api.use(authRoutes({ db, config, loginLimiter }));
 	api.use(registerRoutes({ db, config, mailer, loginLimiter, linkRequestLimiter, runInBackground }));
 	api.use(studentRoutes({ db }));
+	api.use(facultyRoutes({ db }));
 
 	api.use((req, res) => res.status(404).json({ error: 'not_found' }));
 

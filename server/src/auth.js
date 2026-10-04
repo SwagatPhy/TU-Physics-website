@@ -145,6 +145,14 @@ export function requirePasswordChanged(req, res, next) {
 	next();
 }
 
+// Allows only the given roles, e.g. requireRole('faculty', 'admin').
+export function requireRole(...roles) {
+	return (req, res, next) => {
+		if (!roles.includes(req.user?.role)) return res.status(403).json({ error: 'not_allowed' });
+		next();
+	};
+}
+
 // Cross-site forms can't send "Content-Type: application/json" without the
 // browser asking first (a CORS preflight, which this API never approves), so
 // requiring that header on every state-changing request blocks cross-site

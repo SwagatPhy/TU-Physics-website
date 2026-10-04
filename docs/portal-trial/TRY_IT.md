@@ -39,6 +39,7 @@ Open **http://localhost:4321/dphy/login/** in your browser.
 |---|---|
 | **First login** (seeded account) | Log in as `student01@example.test`, password `trial-password-123`. You must choose a new password first; then you see your courses (PHY 101 and PHY 540) with fake class and notes links. |
 | **Another student sees different courses** | Log out, log in as `student08@example.test` (same starting password): PHY 210 and PHY 540 only — never PHY 101. |
+| **Faculty: manage links** | Log in as `faculty.a@example.test` (change the password first). You see PHY 101 and PHY 210: add a link, edit it, delete one. A `javascript:` or non-web address is refused. Log in as a PHY 101 student to see the change. `faculty.b@example.test` only ever sees PHY 540. |
 | **Register yourself** (roster) | Go to *register* from the login page. Email `roster.student01@example.test`, roll number `PHD22011`. Then open the newest file in `server/data/outbox/`, copy the link into the browser, and choose a password. New accounts have no courses yet, so the portal shows the "no courses" message. |
 | **Faculty register by email only** | Register with `roster.faculty@example.test` and leave the roll number empty. |
 | **Wrong roll number** | Register with `roster.student02@example.test` and roll number `PHD99999`. The page answers the same, but no email file appears. |
@@ -49,7 +50,7 @@ Open **http://localhost:4321/dphy/login/** in your browser.
 
 Other seeded logins (all start with `trial-password-123` and must change it): `admin@example.test`,
 `faculty.a@example.test`, `faculty.b@example.test`, `student01` … `student10@example.test`.
-Faculty and admin pages come in later phases; for now faculty stay on the login page.
+Faculty and admin go to the faculty dashboard after logging in (admin sees every course).
 
 **Start over:** stop Terminal 1, delete the folder `server/data`, run `npm run seed` in `server/`, start again.
 
@@ -60,6 +61,6 @@ Notes-manager TU. All of it lives in `src/lib/portal-copy.ts` (pages) and
 ## Checks the developers run
 
 ```sh
-cd server && npm test            # 55 automated API tests
+cd server && npm test            # automated API tests
 cd .. && npm run build && npm run check-links && node scripts/contrast-check.js
 ```

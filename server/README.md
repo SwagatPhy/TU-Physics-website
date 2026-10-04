@@ -73,6 +73,8 @@ choose a new password. That signs out every existing session.
 | `src/routes/auth-routes.js` | `/login`, `/logout`, `/me`, `/change-password` |
 | `src/routes/register-routes.js` | `/register/…`, `/password-reset/…` |
 | `src/routes/student-routes.js` | `/my-courses` |
+| `src/routes/faculty-routes.js` | `/teaching`, `/resources` |
+| `src/validate.js` | Input checks shared by routes (links must be http/https) |
 | `programmes.conf` | Roll-number prefixes (TEMPORARY placeholders) |
 | `sample-roster.csv` | Fake roster used by the seed; also an example of the CSV format |
 | `migrations/` | Numbered SQL files (see its README for SQLite vs MySQL) |
@@ -97,8 +99,15 @@ All paths are under `/dphy/api` (`BASE_PATH` + `/api`). Requests that change som
 | `POST /password-reset/complete` | `{token, password}` | `200 {status:"password_reset"}` | `400 invalid_input / password_too_short / password_too_long / invalid_or_expired_link`, `429` |
 | `GET /my-courses` | — | `200 {courses:[{code,title,semester,resources:[{id,kind,title,url}]}]}` | `401 not_logged_in`, `403 password_change_required / students_only` |
 
+| `GET /teaching` | — | `200 {courses:[{id,code,title,semester,studentCount,resources:[…,visibleFrom]}]}` | `401`, `403 password_change_required / not_allowed` |
+| `POST /resources` | `{courseId, kind, title, url, visibleFrom?}` | `201 {id}` | `400 invalid_kind / invalid_title / invalid_url / invalid_date`, `403 not_allowed`, `404 course_not_found` |
+| `PUT /resources/:id` | `{kind, title, url, visibleFrom?}` | `200 {id}` | as above, `404 resource_not_found` |
+| `DELETE /resources/:id` | — | `204` | `403 not_allowed`, `404 resource_not_found` |
+
 `/my-courses` returns only the logged-in student's enrolled, active courses; only links whose
-`visible_from` has passed; and only `http(s)` links.
+`visible_from` has passed; and only `http(s)` links. `/teaching` and `/resources` are for faculty
+(their own courses, where `courses.faculty_id` is them) and admin (all courses); a course someone
+may not manage answers exactly like one that doesn't exist. Every link change is audit-logged.
 
 `user` is `{id, name, email, role, mustChangePassword}`. Other codes any endpoint can return:
 `415 json_required`, `400 invalid_json`, `413 request_too_large`, `404 not_found`,

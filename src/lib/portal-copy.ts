@@ -84,8 +84,37 @@ export const copy = {
 			other: '[PLACEHOLDER — "other" label]',
 		} as Record<string, string>,
 		opensInNewTab: '[PLACEHOLDER — "(opens in a new tab)" for screen readers]',
-		notStudent: '[PLACEHOLDER — this page is for students; faculty pages are coming later]',
 		notLoggedIn: '[PLACEHOLDER — please log in to see your courses]',
+		loginLink: '[PLACEHOLDER — go to login link]',
+	},
+
+	faculty: {
+		title: '[PLACEHOLDER — faculty dashboard page title]',
+		intro: '[PLACEHOLDER — faculty dashboard intro: add and update class and notes links for your courses]',
+		// Shown above the courses: logging in controls who sees the page, not who can open a forwarded link.
+		forwardReminder: '[PLACEHOLDER — reminder: students can forward links; restrict Drive/Meet links to specific people]',
+		students: '[PLACEHOLDER — "students enrolled"]', // follows the number
+		noCourses: '[PLACEHOLDER — you have no courses assigned yet; who to contact]',
+		noLinks: '[PLACEHOLDER — no links yet for this course]',
+		kindLabel: '[PLACEHOLDER — link type field label]',
+		linkTitle: '[PLACEHOLDER — link title field label]',
+		url: '[PLACEHOLDER — link address (URL) field label]',
+		urlHint: '[PLACEHOLDER — must start with https:// or http://]',
+		visibleFrom: '[PLACEHOLDER — "show to students from" date field label]',
+		visibleFromHint: '[PLACEHOLDER — optional; leave empty to show straight away]',
+		visibleFromNote: '[PLACEHOLDER — "hidden from students until"]', // followed by the date
+		add: '[PLACEHOLDER — add link button]',
+		save: '[PLACEHOLDER — save changes button]',
+		cancel: '[PLACEHOLDER — cancel editing button]',
+		edit: '[PLACEHOLDER — edit button]',
+		delete: '[PLACEHOLDER — delete button]',
+		confirmDelete: '[PLACEHOLDER — "delete this link? students will no longer see it"]',
+		added: '[PLACEHOLDER — link added]',
+		saved: '[PLACEHOLDER — changes saved]',
+		deleted: '[PLACEHOLDER — link deleted]',
+		signedInAs: '[PLACEHOLDER — "signed in as"]',
+		logout: '[PLACEHOLDER — log out button]',
+		notLoggedIn: '[PLACEHOLDER — please log in to manage your courses]',
 		loginLink: '[PLACEHOLDER — go to login link]',
 	},
 
@@ -105,6 +134,13 @@ const errors: Record<string, string> = {
 	password_unchanged: '[PLACEHOLDER — new password must differ from the current one]',
 	invalid_or_expired_link: '[PLACEHOLDER — this link has expired or was already used; ask for a new one]',
 	server_error: '[PLACEHOLDER — something went wrong on our side, please try again]',
+	invalid_kind: '[PLACEHOLDER — choose a link type]',
+	invalid_title: '[PLACEHOLDER — give the link a title (up to 200 characters)]',
+	invalid_url: '[PLACEHOLDER — the link must be a full web address starting with https:// or http://]',
+	invalid_date: '[PLACEHOLDER — the date is not valid]',
+	course_not_found: '[PLACEHOLDER — this course is not one of yours, or no longer active]',
+	resource_not_found: '[PLACEHOLDER — this link no longer exists; reload the page]',
+	not_allowed: '[PLACEHOLDER — you do not have access to this page]',
 };
 
 export function errorMessage(code: string, retryAfterSeconds?: number): string {

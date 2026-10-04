@@ -71,6 +71,24 @@ export const copy = {
 		loginLink: '[PLACEHOLDER — go to login link]',
 	},
 
+	portal: {
+		title: '[PLACEHOLDER — student portal page title]',
+		intro: '[PLACEHOLDER — student portal intro: your courses and their class and notes links]',
+		signedInAs: '[PLACEHOLDER — "signed in as"]', // followed by the person's name
+		logout: '[PLACEHOLDER — log out button]',
+		empty: '[PLACEHOLDER — no courses yet: you are not enrolled in any course; who to contact]',
+		noLinks: '[PLACEHOLDER — no links for this course yet]',
+		kinds: {
+			class_link: '[PLACEHOLDER — "class link" label]',
+			notes: '[PLACEHOLDER — "notes" label]',
+			other: '[PLACEHOLDER — "other" label]',
+		} as Record<string, string>,
+		opensInNewTab: '[PLACEHOLDER — "(opens in a new tab)" for screen readers]',
+		notStudent: '[PLACEHOLDER — this page is for students; faculty pages are coming later]',
+		notLoggedIn: '[PLACEHOLDER — please log in to see your courses]',
+		loginLink: '[PLACEHOLDER — go to login link]',
+	},
+
 	// Shown after asking for a registration or reset link. Must not say whether the email was found.
 	checkYourEmail: '[PLACEHOLDER — "if your details match, we have emailed you a link; it expires in 30 minutes"]',
 	passwordsDontMatch: '[PLACEHOLDER — the two new passwords are different]',

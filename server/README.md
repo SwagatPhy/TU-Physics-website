@@ -4,9 +4,11 @@ Small Node.js + Express API for the Student/Faculty Portal trial. Plan, data mod
 security checklist: [docs/portal-trial/REPORT.md](../docs/portal-trial/REPORT.md).
 The public website (Astro, in `src/`) does not depend on this folder.
 
-**Status:** Phase 1 (login, sessions, password change) plus Step A: people register
+**Status:** Phase 1 (login, sessions, password change); Step A: people register
 themselves from an admin-uploaded **roster** through an emailed one-time link, and reset a
-forgotten password the same way.
+forgotten password the same way; Step B: the student course-links endpoint. The website pages
+(`/login`, `/register`, `/forgot-password`, `/change-password`, `/portal`) are in `src/pages/`.
+To click through everything locally, see [docs/portal-trial/TRY_IT.md](../docs/portal-trial/TRY_IT.md).
 
 ## Run it locally
 
@@ -70,6 +72,7 @@ choose a new password. That signs out every existing session.
 | `src/audit.js` | Writes to `audit_log` |
 | `src/routes/auth-routes.js` | `/login`, `/logout`, `/me`, `/change-password` |
 | `src/routes/register-routes.js` | `/register/…`, `/password-reset/…` |
+| `src/routes/student-routes.js` | `/my-courses` |
 | `programmes.conf` | Roll-number prefixes (TEMPORARY placeholders) |
 | `sample-roster.csv` | Fake roster used by the seed; also an example of the CSV format |
 | `migrations/` | Numbered SQL files (see its README for SQLite vs MySQL) |
@@ -92,6 +95,10 @@ All paths are under `/dphy/api` (`BASE_PATH` + `/api`). Requests that change som
 | `POST /register/complete` | `{token, password}` | `201 {status:"registered"}` | `400 invalid_input / password_too_short / password_too_long / invalid_or_expired_link`, `429` |
 | `POST /password-reset/request` | `{email}` | `202 {status:"check_your_email"}` **always** | `400 invalid_input`, `429 too_many_attempts` |
 | `POST /password-reset/complete` | `{token, password}` | `200 {status:"password_reset"}` | `400 invalid_input / password_too_short / password_too_long / invalid_or_expired_link`, `429` |
+| `GET /my-courses` | — | `200 {courses:[{code,title,semester,resources:[{id,kind,title,url}]}]}` | `401 not_logged_in`, `403 password_change_required / students_only` |
+
+`/my-courses` returns only the logged-in student's enrolled, active courses; only links whose
+`visible_from` has passed; and only `http(s)` links.
 
 `user` is `{id, name, email, role, mustChangePassword}`. Other codes any endpoint can return:
 `415 json_required`, `400 invalid_json`, `413 request_too_large`, `404 not_found`,

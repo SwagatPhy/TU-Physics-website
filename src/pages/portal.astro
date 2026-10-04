@@ -1,0 +1,176 @@
+---
+// Student portal: the student's courses with their class and notes links.
+// States: loading → unavailable | not-logged-in | not-student | courses | empty.
+// Course data comes from GET /api/my-courses after login; nothing private is in
+// this static page itself.
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import PortalPanel from '../components/PortalPanel.astro';
+import { copy } from '../lib/portal-copy';
+import { portalPages } from '../lib/api';
+
+const text = copy.portal;
+---
+
+<Layout title={text.title} noindex>
+	<PageHeader title={text.title} lead={text.intro} />
+
+	<section class="section">
+		<div class="container">
+			<div class="portal-account" id="portal-account" hidden>
+				<p>{text.signedInAs} <strong id="portal-name"></strong></p>
+				<button class="btn btn--outline" type="button" id="logout-button">{text.logout}</button>
+			</div>
+
+			<PortalPanel>
+				<div data-state="not-logged-in" hidden>
+					<p>{text.notLoggedIn}</p>
+					<a class="btn btn--navy" href={portalPages.login}>{text.loginLink}</a>
+				</div>
+				<div data-state="not-student" hidden>
+					<p>{text.notStudent}</p>
+				</div>
+				<div data-state="empty" hidden>
+					<p>{text.empty}</p>
+				</div>
+				<div data-state="courses" hidden>
+					<ul class="course-list" id="course-list"></ul>
+				</div>
+			</PortalPanel>
+		</div>
+	</section>
+</Layout>
+
+<script>
+	import { api, portalPages } from '../lib/api';
+	import { copy } from '../lib/portal-copy';
+	import { showState, portalIsAvailable } from '../lib/portal-ui';
+
+	interface Link { id: number; kind: string; title: string; url: string }
+	interface Course { code: string; title: string; semester: string; resources: Link[] }
+
+	const text = copy.portal;
+
+	// Builds the course cards with DOM methods and textContent only, so course
+	// and link titles can never be interpreted as HTML.
+	function renderCourses(courses: Course[]) {
+		const list = document.getElementById('course-list')!;
+		list.replaceChildren(
+			...courses.map((course) => {
+				const item = document.createElement('li');
+				item.className = 'course';
+
+				const heading = document.createElement('h2');
+				heading.className = 'course__title';
+				heading.textContent = `${course.code} — ${course.title}`;
+				item.append(heading);
+
+				if (course.resources.length === 0) {
+					const none = document.createElement('p');
+					none.className = 'course__none';
+					none.textContent = text.noLinks;
+					item.append(none);
+				} else {
+					const links = document.createElement('ul');
+					links.className = 'course__links';
+					for (const resource of course.resources) {
+						const row = document.createElement('li');
+						const kind = document.createElement('span');
+						kind.className = 'badge';
+						kind.textContent = text.kinds[resource.kind] ?? text.kinds.other;
+						const link = document.createElement('a');
+						link.href = resource.url; // the API only sends http(s) links
+						link.target = '_blank';
+						link.rel = 'noopener noreferrer';
+						link.textContent = resource.title;
+						const note = document.createElement('span');
+						note.className = 'visually-hidden';
+						note.textContent = ` ${text.opensInNewTab}`;
+						link.append(note);
+						row.append(kind, ' ', link);
+						links.append(row);
+					}
+					item.append(links);
+				}
+				return item;
+			}),
+		);
+	}
+
+	document.getElementById('logout-button')!.addEventListener('click', async () => {
+		await api('logout', { method: 'POST' });
+		location.href = portalPages.login;
+	});
+
+	async function start() {
+		if (!(await portalIsAvailable())) return;
+		const me = await api<{ user: { name: string; role: string; mustChangePassword: boolean } }>('me');
+		if (!me.ok) return showState('not-logged-in');
+		if (me.data!.user.mustChangePassword) return void (location.href = portalPages.changePassword);
+
+		document.getElementById('portal-name')!.textContent = me.data!.user.name;
+		document.getElementById('portal-account')!.hidden = false;
+		if (me.data!.user.role !== 'student') return showState('not-student');
+
+		const result = await api<{ courses: Course[] }>('my-courses');
+		if (result.error === 'unavailable') return showState('unavailable');
+		if (result.error === 'not_logged_in') return showState('not-logged-in');
+		if (!result.ok) return showState('not-student');
+		if (result.data!.courses.length === 0) return showState('empty');
+		renderCourses(result.data!.courses);
+		showState('courses');
+	}
+	start();
+</script>
+
+<style>
+	.portal-account {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-sm);
+		max-width: 44rem;
+		margin: 0 auto var(--space-md);
+	}
+
+	.portal-account p {
+		margin: 0;
+	}
+
+	/* The course list needs more room than the login-sized panel. */
+	section :global(.portal-panel) {
+		max-width: 44rem;
+	}
+
+	.course-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: var(--space-lg);
+	}
+
+	:global(.course__title) {
+		font-size: 1.25rem;
+		margin-bottom: var(--space-sm);
+	}
+
+	:global(.course__links) {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.6rem;
+	}
+
+	:global(.course__links .badge) {
+		min-width: 6.5rem;
+		justify-content: center;
+	}
+
+	:global(.course__none) {
+		margin: 0;
+		color: var(--color-text-muted);
+	}
+</style>

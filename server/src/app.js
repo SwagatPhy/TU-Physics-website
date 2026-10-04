@@ -4,12 +4,34 @@
 import express from 'express';
 import { loadSession, requireJson } from './auth.js';
 import { createLoginLimiter } from './rate-limit.js';
+import { createMailer } from './mail.js';
 import { authRoutes } from './routes/auth-routes.js';
+import { registerRoutes } from './routes/register-routes.js';
 
-export function createApp({ db, config, loginLimiter = createLoginLimiter() }) {
+export function createApp({
+	db,
+	config,
+	loginLimiter = createLoginLimiter(),
+	// Registration / reset emails: at most 3 per address per 15 minutes.
+	linkRequestLimiter = createLoginLimiter({ maxFailuresPerAccount: 3 }),
+	mailer = createMailer(config),
+}) {
 	const app = express();
 	app.disable('x-powered-by');
 	if (config.trustProxy) app.set('trust proxy', 1);
+
+	// Work done after the response has been sent (roster lookups and emails, so
+	// they can't affect response timing). Tests wait for it with
+	// app.locals.backgroundWorkDone().
+	const pending = new Set();
+	function runInBackground(task) {
+		const work = Promise.resolve()
+			.then(task)
+			.catch((error) => console.error('[background]', error))
+			.finally(() => pending.delete(work));
+		pending.add(work);
+	}
+	app.locals.backgroundWorkDone = () => Promise.all([...pending]);
 
 	// Basic security headers for an API that only ever returns JSON.
 	// (Full helmet/CSP setup is part of Phase 5 hardening.)
@@ -38,6 +60,7 @@ export function createApp({ db, config, loginLimiter = createLoginLimiter() }) {
 	});
 
 	api.use(authRoutes({ db, config, loginLimiter }));
+	api.use(registerRoutes({ db, config, mailer, loginLimiter, linkRequestLimiter, runInBackground }));
 
 	api.use((req, res) => res.status(404).json({ error: 'not_found' }));
 

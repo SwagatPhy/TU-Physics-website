@@ -27,5 +27,17 @@ export function loadConfig(env = process.env) {
 		trustProxy: readBoolean(env.TRUST_PROXY, false),
 		sessionIdleHours: readNumber(env.SESSION_IDLE_HOURS, 8),
 		sessionMaxDays: readNumber(env.SESSION_MAX_DAYS, 7),
+		// Roll-number prefix -> programme (see programmes.conf).
+		programmesFile: env.PROGRAMMES_FILE || 'programmes.conf',
+		// Address of the public website, used to build the links in emails
+		// (e.g. https://www.tezu.ernet.in); basePath is added after it.
+		siteUrl: (env.SITE_URL || 'http://localhost:4321').replace(/\/+$/, ''),
+		// Registration and password-reset links stop working after this long.
+		linkMinutes: readNumber(env.LINK_MINUTES, 30),
+		// "outbox": write emails to files in outboxDir (development; no SMTP needed).
+		// "smtp": real sending — not built yet; needs the university's SMTP details.
+		mailMode: env.MAIL_MODE || 'outbox',
+		outboxDir: env.OUTBOX_DIR || 'data/outbox',
+		mailFrom: env.MAIL_FROM || 'portal@example.test',
 	};
 }

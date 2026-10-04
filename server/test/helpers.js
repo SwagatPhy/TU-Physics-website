@@ -34,7 +34,10 @@ export async function startTestServer({ limiterOptions = {} } = {}) {
 
 	const clock = { now: Date.now() };
 	const loginLimiter = createLoginLimiter({ ...limiterOptions, now: () => clock.now });
-	const app = createApp({ db, config, loginLimiter });
+	const linkRequestLimiter = createLoginLimiter({ maxFailuresPerAccount: 3, now: () => clock.now });
+	const outbox = []; // emails "sent" during the test
+	const mailer = { send: async (message) => outbox.push(message) };
+	const app = createApp({ db, config, loginLimiter, linkRequestLimiter, mailer });
 
 	const server = await new Promise((resolve) => {
 		const listening = app.listen(0, '127.0.0.1', () => resolve(listening));
@@ -46,8 +49,27 @@ export async function startTestServer({ limiterOptions = {} } = {}) {
 		config,
 		clock,
 		baseUrl,
+		outbox,
+		// Waits for emails and other work that happens after a response is sent.
+		backgroundWorkDone: app.locals.backgroundWorkDone,
 		close: () => new Promise((resolve) => server.close(resolve)),
 	};
+}
+
+export function addRosterRow(db, { email, name = 'Roster Person', rollNumber = null, role = 'student', programme = null }) {
+	return Number(
+		db
+			.prepare(
+				`INSERT INTO roster (email, name, roll_number, role, programme, claimed, created_at)
+				 VALUES (?, ?, ?, ?, ?, 0, ?)`,
+			)
+			.run(email, name, rollNumber, role, programme, toDbTime(new Date())).lastInsertRowid,
+	);
+}
+
+// The token from the link in an email body ("…/register/#token=abc").
+export function tokenFromEmail(message) {
+	return message.text.match(/#token=([\w-]+)/)?.[1];
 }
 
 // A browser-like client: sends JSON and remembers the session cookie.

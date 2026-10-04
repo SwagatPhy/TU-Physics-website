@@ -7,7 +7,10 @@
 
 import { loadConfig } from '../src/config.js';
 import { openDatabase, migrate, toDbTime } from '../src/db.js';
+import { readFileSync } from 'node:fs';
 import { hashPassword } from '../src/auth.js';
+import { loadProgrammes } from '../src/programmes.js';
+import { parseRoster, importRoster } from '../src/roster.js';
 
 try {
 	process.loadEnvFile('.env');
@@ -82,8 +85,14 @@ for (const course of courses) {
 
 db.exec('COMMIT');
 
+// Unclaimed roster rows, for trying self-registration (same file as `npm run roster:import`).
+const { rows, errors } = parseRoster(readFileSync('sample-roster.csv', 'utf8'), loadProgrammes(config.programmesFile));
+if (errors.length > 0) throw new Error(`sample-roster.csv: ${errors.join('; ')}`);
+importRoster(db, rows);
+
 console.log(`Seeded ${config.databasePath} with fake data:
   admin    admin@example.test
   faculty  faculty.a@example.test, faculty.b@example.test
   students student01@example.test … student10@example.test
-  password SEED_PASSWORD from .env (must be changed on first login)`);
+  password SEED_PASSWORD from .env (must be changed on first login)
+  roster   ${rows.length} unclaimed people from sample-roster.csv, ready to register`);

@@ -10,13 +10,14 @@ function hashToken(token) {
 }
 
 // Creates a token and returns it (to put in the link).
-export function createLinkToken(db, { purpose, rosterId = null, userId = null, minutes }) {
+// purpose 'register' links point at a sign-up (signupId); 'reset' links at a user.
+export function createLinkToken(db, { purpose, signupId = null, userId = null, minutes }) {
 	const token = randomBytes(32).toString('base64url');
 	const now = new Date();
 	db.prepare(
-		`INSERT INTO auth_tokens (id, purpose, roster_id, user_id, expires_at, created_at)
+		`INSERT INTO auth_tokens (id, purpose, signup_id, user_id, expires_at, created_at)
 		 VALUES (?, ?, ?, ?, ?, ?)`,
-	).run(hashToken(token), purpose, rosterId, userId, toDbTime(new Date(now.getTime() + minutes * 60 * 1000)), toDbTime(now));
+	).run(hashToken(token), purpose, signupId, userId, toDbTime(new Date(now.getTime() + minutes * 60 * 1000)), toDbTime(now));
 	return token;
 }
 
@@ -35,13 +36,19 @@ export function useLinkToken(db, token, purpose) {
 	return db.prepare('SELECT * FROM auth_tokens WHERE id = ?').get(id);
 }
 
-// When a new reset link is sent, older unused ones for the same person stop working.
-export function cancelUnusedTokens(db, { purpose, rosterId = null, userId = null }) {
-	const now = toDbTime(new Date());
-	if (rosterId !== null) {
-		db.prepare('UPDATE auth_tokens SET used_at = ? WHERE purpose = ? AND roster_id = ? AND used_at IS NULL').run(now, purpose, rosterId);
-	}
-	if (userId !== null) {
-		db.prepare('UPDATE auth_tokens SET used_at = ? WHERE purpose = ? AND user_id = ? AND used_at IS NULL').run(now, purpose, userId);
-	}
+// When a new link is sent, older unused links for the same person stop working:
+// reset links by user, registration links by the email address signed up with.
+export function cancelUnusedResetLinks(db, userId) {
+	db.prepare("UPDATE auth_tokens SET used_at = ? WHERE purpose = 'reset' AND user_id = ? AND used_at IS NULL").run(
+		toDbTime(new Date()),
+		userId,
+	);
+}
+
+export function cancelUnusedRegistrationLinks(db, email) {
+	db.prepare(
+		`UPDATE auth_tokens SET used_at = ?
+		 WHERE purpose = 'register' AND used_at IS NULL
+		   AND signup_id IN (SELECT id FROM signups WHERE email = ?)`,
+	).run(toDbTime(new Date()), email);
 }

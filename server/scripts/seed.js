@@ -1,8 +1,9 @@
 // Fills an empty trial database with FAKE data: `npm run seed`.
 //
-// 1 admin, 2 faculty, 10 students, 3 courses, a few sample links.
-// Every account uses SEED_PASSWORD (see .env.example) and must change it on
-// first login. Emails use the reserved ".test" domain, so none can be real.
+// 1 admin, 2 faculty, 10 students, 3 courses, a few sample links (all
+// approved), 4 sign-ups waiting for approval, and a few roster rows.
+// Every account uses SEED_PASSWORD (see .env.example); the approved ones must
+// change it on first login. Emails use the reserved ".test" domain, so none can be real.
 // To start over, delete the database file (DATABASE_PATH) and run again.
 
 import { loadConfig } from '../src/config.js';
@@ -83,6 +84,17 @@ for (const course of courses) {
 	addResource.run(course.id, 'notes', 'FAKE notes', `https://example.com/fake-notes/${course.code}.pdf`, owner, now);
 }
 
+// Sign-ups waiting for an admin, as if they had signed up and verified their
+// email themselves (so they chose their password: no forced change).
+const addPending = db.prepare(
+	`INSERT INTO users (name, email, password_hash, role, status, active, must_change_password, created_at, roll_number, programme, phone)
+	 VALUES (?, ?, ?, ?, 'pending', 1, 0, ?, ?, ?, ?)`,
+);
+addPending.run('Pending Student 01', 'pending01@example.test', passwordHash, 'student', now, 'PHD23001', 'PhD', '+91 90000 00001');
+addPending.run('Pending Student 02', 'pending02@example.test', passwordHash, 'student', now, 'PHD23002', 'PhD', '+91 90000 00002');
+addPending.run('Pending Student 03', 'pending03@example.test', passwordHash, 'student', now, 'PHM24011', 'MSc', '+91 90000 00003');
+addPending.run('Pending Staff Member', 'pending.staff@example.test', passwordHash, 'faculty', now, null, null, '03712 000000');
+
 db.exec('COMMIT');
 
 // Unclaimed roster rows, for trying self-registration (same file as `npm run roster:import`).
@@ -95,4 +107,5 @@ console.log(`Seeded ${config.databasePath} with fake data:
   faculty  faculty.a@example.test, faculty.b@example.test
   students student01@example.test … student10@example.test
   password SEED_PASSWORD from .env (must be changed on first login)
-  roster   ${rows.length} unclaimed people from sample-roster.csv, ready to register`);
+  pending  pending01–03@example.test, pending.staff@example.test (waiting for approval; same password, no forced change)
+  roster   ${rows.length} unclaimed people from sample-roster.csv: signing up with a matching email + roll number is approved at once`);

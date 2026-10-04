@@ -9,6 +9,8 @@ import { authRoutes } from './routes/auth-routes.js';
 import { registerRoutes } from './routes/register-routes.js';
 import { studentRoutes } from './routes/student-routes.js';
 import { facultyRoutes } from './routes/faculty-routes.js';
+import { adminRoutes } from './routes/admin-routes.js';
+import { loadProgrammes } from './programmes.js';
 
 export function createApp({
 	db,
@@ -17,6 +19,7 @@ export function createApp({
 	// Registration / reset emails: at most 3 per address per 15 minutes.
 	linkRequestLimiter = createLoginLimiter({ maxFailuresPerAccount: 3 }),
 	mailer = createMailer(config),
+	programmes = loadProgrammes(config.programmesFile), // roll-number prefix -> programme
 }) {
 	const app = express();
 	app.disable('x-powered-by');
@@ -62,9 +65,10 @@ export function createApp({
 	});
 
 	api.use(authRoutes({ db, config, loginLimiter }));
-	api.use(registerRoutes({ db, config, mailer, loginLimiter, linkRequestLimiter, runInBackground }));
+	api.use(registerRoutes({ db, config, programmes, mailer, loginLimiter, linkRequestLimiter, runInBackground }));
 	api.use(studentRoutes({ db }));
 	api.use(facultyRoutes({ db }));
+	api.use(adminRoutes({ db, config, programmes, mailer, runInBackground }));
 
 	api.use((req, res) => res.status(404).json({ error: 'not_found' }));
 

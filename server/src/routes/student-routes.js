@@ -6,13 +6,13 @@
 
 import { Router } from 'express';
 import { toDbTime } from '../db.js';
-import { requireLogin, requirePasswordChanged } from '../auth.js';
+import { requireLogin, requirePasswordChanged, requireApproved } from '../auth.js';
 import { isWebLink } from '../validate.js';
 
 export function studentRoutes({ db }) {
 	const router = Router();
 
-	router.get('/my-courses', requireLogin, requirePasswordChanged, (req, res) => {
+	router.get('/my-courses', requireLogin, requirePasswordChanged, requireApproved, (req, res) => {
 		if (req.user.role !== 'student') return res.status(403).json({ error: 'students_only' });
 
 		const courses = db

@@ -1,8 +1,10 @@
 ---
-// Self-registration for people on the department roster.
-// Without a token: ask for a link (email + roll number for students).
-// With #token=… (from the emailed link): choose a password to create the account.
-// States: loading → unavailable | request | requested | complete | done.
+// Sign-up for department students and members.
+// Without a token: the form (student or department member; name, email, roll
+// number for students, contact number). The answer is always "check your email".
+// With #token=… (from the emailed link): choose a password. The account is then
+// either approved straight away (student matching the roster) or waits for an admin.
+// States: loading → unavailable | request | requested | complete | done-pending | done-approved.
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
 import PortalPanel from '../components/PortalPanel.astro';
@@ -20,14 +22,28 @@ const text = copy.register;
 			<PortalPanel>
 				<div data-state="request" hidden>
 					<form class="portal-form" id="request-form" novalidate>
+						<fieldset class="portal-choice">
+							<legend>{text.kindLegend}</legend>
+							<label><input type="radio" name="kind" value="student" checked /> {text.kindStudent}</label>
+							<label><input type="radio" name="kind" value="member" /> {text.kindMember}</label>
+						</fieldset>
+						<div class="portal-field">
+							<label for="register-name">{text.name}</label>
+							<input id="register-name" name="name" type="text" autocomplete="name" maxlength="200" required />
+						</div>
 						<div class="portal-field">
 							<label for="register-email">{text.email}</label>
 							<input id="register-email" name="email" type="email" autocomplete="email" required />
 						</div>
-						<div class="portal-field">
+						<div class="portal-field" id="roll-field">
 							<label for="register-roll">{text.rollNumber}</label>
 							<input id="register-roll" name="rollNumber" type="text" autocomplete="off" maxlength="30" aria-describedby="roll-hint" />
 							<p class="portal-field__hint" id="roll-hint">{text.rollNumberHint}</p>
+						</div>
+						<div class="portal-field">
+							<label for="register-phone">{text.phone}</label>
+							<input id="register-phone" name="phone" type="tel" autocomplete="tel" maxlength="30" required aria-describedby="phone-hint" />
+							<p class="portal-field__hint" id="phone-hint">{text.phoneHint}</p>
 						</div>
 						<button class="btn btn--navy" type="submit">{text.requestSubmit}</button>
 					</form>
@@ -53,8 +69,12 @@ const text = copy.register;
 					</form>
 				</div>
 
-				<div data-state="done" hidden>
-					<p>{text.done}</p>
+				<div data-state="done-pending" hidden>
+					<p>{text.donePending}</p>
+					<a class="btn btn--outline" href={portalPages.login}>{text.loginLink}</a>
+				</div>
+				<div data-state="done-approved" hidden>
+					<p>{text.doneApproved}</p>
 					<a class="btn btn--navy" href={portalPages.login}>{text.loginLink}</a>
 				</div>
 			</PortalPanel>
@@ -67,9 +87,19 @@ const text = copy.register;
 	import { showState, showMessage, showError, portalIsAvailable, onSubmit, watchForToken, passwordsMatch } from '../lib/portal-ui';
 
 	let token: string | null = null;
+	const requestForm = document.getElementById('request-form') as HTMLFormElement;
+	const rollField = document.getElementById('roll-field')!;
 
-	onSubmit(document.getElementById('request-form') as HTMLFormElement, async ({ email, rollNumber }) => {
-		const body = rollNumber.trim() ? { email, rollNumber } : { email };
+	// The roll number is only asked of students.
+	function showRollNumberForStudentsOnly() {
+		const isStudent = (requestForm.elements.namedItem('kind') as RadioNodeList).value === 'student';
+		rollField.hidden = !isStudent;
+	}
+	requestForm.addEventListener('change', showRollNumberForStudentsOnly);
+	showRollNumberForStudentsOnly();
+
+	onSubmit(requestForm, async ({ kind, name, email, rollNumber, phone }) => {
+		const body = kind === 'student' ? { kind, name, email, rollNumber, phone } : { kind, name, email, phone };
 		const result = await api('register/request', { method: 'POST', body });
 		if (result.error === 'unavailable') return showState('unavailable');
 		if (!result.ok) return showError(result);
@@ -78,14 +108,14 @@ const text = copy.register;
 
 	onSubmit(document.getElementById('complete-form') as HTMLFormElement, async ({ password, confirmPassword }) => {
 		if (!passwordsMatch(password, confirmPassword)) return;
-		const result = await api('register/complete', { method: 'POST', body: { token, password } });
+		const result = await api<{ approval: 'pending' | 'approved' }>('register/complete', { method: 'POST', body: { token, password } });
 		if (result.error === 'unavailable') return showState('unavailable');
 		if (result.error === 'invalid_or_expired_link') {
-			showState('request'); // let them ask for a fresh link straight away
+			showState('request'); // let them sign up again straight away
 			return showError(result);
 		}
 		if (!result.ok) return showError(result);
-		showState('done');
+		showState(result.data!.approval === 'approved' ? 'done-approved' : 'done-pending');
 	});
 
 	async function start() {
@@ -98,3 +128,32 @@ const text = copy.register;
 	}
 	start();
 </script>
+
+<style>
+	.portal-choice {
+		display: grid;
+		gap: 0.5rem;
+		margin: 0;
+		padding: 0;
+		border: 0;
+	}
+
+	.portal-choice legend {
+		margin-bottom: 0.4rem;
+		font-weight: 600;
+		color: var(--navy);
+	}
+
+	.portal-choice label {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		cursor: pointer;
+	}
+
+	.portal-choice input {
+		width: 1.15rem;
+		height: 1.15rem;
+		accent-color: var(--navy);
+	}
+</style>

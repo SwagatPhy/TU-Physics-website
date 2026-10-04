@@ -1,0 +1,296 @@
+---
+// Admin: approve or reject sign-ups waiting for approval.
+// A table of pending accounts; the admin can correct name, roll number and
+// contact number (Save), approve or reject one, or approve several at once.
+// States: loading → unavailable | not-logged-in | not-admin | list | none.
+// Rows are cloned from the <template> below and filled with textContent/value only.
+import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import PortalPanel from '../../components/PortalPanel.astro';
+import { copy } from '../../lib/portal-copy';
+import { portalPages } from '../../lib/api';
+
+const text = copy.admin;
+const col = text.columns;
+---
+
+<Layout title={text.title} noindex>
+	<PageHeader title={text.title} lead={text.intro} />
+
+	<section class="section">
+		<div class="container">
+			<div class="portal-account" id="portal-account" hidden>
+				<p>{text.signedInAs} <strong id="portal-name"></strong></p>
+				<div class="btn-row">
+					<a class="btn btn--outline" href={portalPages.faculty}>{text.facultyLink}</a>
+					<button class="btn btn--outline" type="button" id="logout-button">{text.logout}</button>
+				</div>
+			</div>
+
+			<PortalPanel>
+				<div data-state="not-logged-in" hidden>
+					<p>{text.notLoggedIn}</p>
+					<a class="btn btn--navy" href={portalPages.login}>{text.loginLink}</a>
+				</div>
+				<div data-state="not-admin" hidden>
+					<p>{text.notAdmin}</p>
+				</div>
+				<div data-state="none" hidden>
+					<p>{text.none}</p>
+				</div>
+				<div data-state="list" hidden>
+					<div class="approvals-toolbar">
+						<label class="approvals-select-all"><input type="checkbox" id="select-all" /> {text.selectAll}</label>
+						<button class="btn btn--navy" type="button" id="approve-selected">{text.approveSelected}</button>
+					</div>
+					<div class="approvals-table-wrap">
+						<table class="approvals-table">
+							<thead>
+								<tr>
+									<th scope="col"><span class="visually-hidden">{col.select}</span></th>
+									<th scope="col">{col.name}</th>
+									<th scope="col">{col.rollNumber}</th>
+									<th scope="col">{col.programme}</th>
+									<th scope="col">{col.email}</th>
+									<th scope="col">{col.phone}</th>
+									<th scope="col">{col.type}</th>
+									<th scope="col">{col.signedUp}</th>
+									<th scope="col">{col.actions}</th>
+								</tr>
+							</thead>
+							<tbody id="signup-rows"></tbody>
+						</table>
+					</div>
+				</div>
+			</PortalPanel>
+		</div>
+	</section>
+
+	<template id="row-template">
+		<tr>
+			<td><input type="checkbox" data-field="select" /></td>
+			<td><input type="text" maxlength="200" data-field="name" /></td>
+			<td><input type="text" maxlength="30" data-field="rollNumber" /><span data-field="noRoll">—</span></td>
+			<td data-field="programme"></td>
+			<td data-field="email"></td>
+			<td><input type="tel" maxlength="30" data-field="phone" /></td>
+			<td data-field="type"></td>
+			<td data-field="createdAt"></td>
+			<td class="approvals-actions">
+				<button class="btn btn--outline approvals-button" type="button" data-action="save">{text.save}</button>
+				<button class="btn btn--navy approvals-button" type="button" data-action="approve">{text.approve}</button>
+				<button class="btn btn--outline approvals-button" type="button" data-action="reject">{text.reject}</button>
+			</td>
+		</tr>
+	</template>
+</Layout>
+
+<script>
+	import { api, portalPages } from '../../lib/api';
+	import { copy, errorMessage } from '../../lib/portal-copy';
+	import { showState, showMessage, portalIsAvailable } from '../../lib/portal-ui';
+
+	interface Signup {
+		id: number;
+		name: string;
+		email: string;
+		role: string;
+		rollNumber: string | null;
+		programme: string | null;
+		phone: string | null;
+		createdAt: string;
+	}
+
+	const text = copy.admin;
+	const rows = document.getElementById('signup-rows')!;
+	const template = document.getElementById('row-template') as HTMLTemplateElement;
+	const selectAll = document.getElementById('select-all') as HTMLInputElement;
+	const field = <T extends HTMLElement = HTMLElement>(root: ParentNode, name: string) =>
+		root.querySelector<T>(`[data-field="${name}"]`)!;
+
+	function renderRow(signup: Signup): HTMLTableRowElement {
+		const row = (template.content.cloneNode(true) as DocumentFragment).firstElementChild as HTMLTableRowElement;
+		row.dataset.userId = String(signup.id);
+		const isStudent = signup.role === 'student';
+
+		field<HTMLInputElement>(row, 'select').setAttribute('aria-label', signup.name);
+		const name = field<HTMLInputElement>(row, 'name');
+		name.value = signup.name;
+		name.setAttribute('aria-label', `${text.columns.name}: ${signup.name}`);
+		const roll = field<HTMLInputElement>(row, 'rollNumber');
+		roll.value = signup.rollNumber ?? '';
+		roll.hidden = !isStudent;
+		roll.setAttribute('aria-label', `${text.columns.rollNumber}: ${signup.name}`);
+		field(row, 'noRoll').hidden = isStudent;
+		field(row, 'programme').textContent = signup.programme ?? '—';
+		field(row, 'email').textContent = signup.email;
+		const phone = field<HTMLInputElement>(row, 'phone');
+		phone.value = signup.phone ?? '';
+		phone.setAttribute('aria-label', `${text.columns.phone}: ${signup.name}`);
+		field(row, 'type').textContent = isStudent ? text.student : text.member;
+		field(row, 'createdAt').textContent = signup.createdAt.slice(0, 10);
+
+		row.querySelector('[data-action="save"]')!.addEventListener('click', () => saveRow(row, isStudent));
+		row.querySelector('[data-action="approve"]')!.addEventListener('click', () => decide([signup.id], 'approve'));
+		row.querySelector('[data-action="reject"]')!.addEventListener('click', () => {
+			if (confirm(text.confirmReject)) decide([signup.id], 'reject');
+		});
+		return row;
+	}
+
+	async function load(): Promise<boolean> {
+		const result = await api<{ signups: Signup[] }>('admin/signups');
+		if (result.error === 'unavailable') return (showState('unavailable'), false);
+		if (result.error === 'not_logged_in') return (showState('not-logged-in'), false);
+		if (!result.ok) return (showState('not-admin'), false);
+		selectAll.checked = false;
+		if (result.data!.signups.length === 0) return (showState('none'), true);
+		rows.replaceChildren(...result.data!.signups.map(renderRow));
+		showState('list');
+		return true;
+	}
+
+	async function saveRow(row: HTMLTableRowElement, isStudent: boolean) {
+		const body: Record<string, string> = {
+			name: field<HTMLInputElement>(row, 'name').value,
+			phone: field<HTMLInputElement>(row, 'phone').value,
+		};
+		if (isStudent) body.rollNumber = field<HTMLInputElement>(row, 'rollNumber').value;
+		const result = await api(`admin/users/${row.dataset.userId}`, { method: 'PUT', body });
+		if (result.error === 'unavailable') return showState('unavailable');
+		if (!result.ok) return showMessage(errorMessage(result.error!), { error: true });
+		await load();
+		showMessage(text.saved);
+	}
+
+	async function decide(userIds: number[], decision: 'approve' | 'reject') {
+		const result = await api<{ done: number[] }>('admin/decisions', { method: 'POST', body: { userIds, decision } });
+		if (result.error === 'unavailable') return showState('unavailable');
+		if (!result.ok) return showMessage(errorMessage(result.error!), { error: true });
+		await load();
+		showMessage(`${decision === 'approve' ? text.approved : text.rejected} ${result.data!.done.length}`);
+	}
+
+	selectAll.addEventListener('change', () => {
+		rows.querySelectorAll<HTMLInputElement>('[data-field="select"]').forEach((box) => (box.checked = selectAll.checked));
+	});
+
+	document.getElementById('approve-selected')!.addEventListener('click', () => {
+		const selected = [...rows.querySelectorAll<HTMLInputElement>('[data-field="select"]:checked')].map((box) =>
+			Number(box.closest('tr')!.dataset.userId),
+		);
+		if (selected.length === 0) return showMessage(text.nothingSelected, { error: true });
+		decide(selected, 'approve');
+	});
+
+	document.getElementById('logout-button')!.addEventListener('click', async () => {
+		await api('logout', { method: 'POST' });
+		location.href = portalPages.login;
+	});
+
+	async function start() {
+		if (!(await portalIsAvailable())) return;
+		const me = await api<{ user: { name: string; role: string; mustChangePassword: boolean } }>('me');
+		if (!me.ok) return showState('not-logged-in');
+		if (me.data!.user.mustChangePassword) return void (location.href = portalPages.changePassword);
+		if (me.data!.user.role !== 'admin') return showState('not-admin');
+		document.getElementById('portal-name')!.textContent = me.data!.user.name;
+		document.getElementById('portal-account')!.hidden = false;
+		await load();
+	}
+	start();
+</script>
+
+<style>
+	.portal-account {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-sm);
+		margin: 0 0 var(--space-md);
+	}
+
+	.portal-account p {
+		margin: 0;
+	}
+
+	/* The table needs the full container width, not the login-sized panel. */
+	section :global(.portal-panel) {
+		max-width: none;
+	}
+
+	.approvals-toolbar {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-sm);
+		margin-bottom: var(--space-md);
+	}
+
+	.approvals-select-all {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-weight: 600;
+		color: var(--navy);
+	}
+
+	/* Wide tables scroll inside their own box on small screens. */
+	.approvals-table-wrap {
+		overflow-x: auto;
+	}
+
+	.approvals-table {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 0.93rem;
+	}
+
+	.approvals-table th {
+		padding: 0.5rem;
+		text-align: left;
+		font-size: 0.78rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--color-text-muted);
+		border-bottom: 1px solid var(--color-border-strong);
+		white-space: nowrap;
+	}
+
+	:global(.approvals-table td) {
+		padding: 0.5rem;
+		border-bottom: 1px solid var(--color-border);
+		vertical-align: middle;
+	}
+
+	:global(.approvals-table td input[type='text']),
+	:global(.approvals-table td input[type='tel']) {
+		width: 100%;
+		min-width: 8rem;
+		min-height: 2.4rem;
+		padding: 0.35rem 0.6rem;
+		border: 1px solid var(--color-border-strong);
+		border-radius: var(--radius-sm);
+		font: inherit;
+		color: var(--color-text);
+	}
+
+	:global(.approvals-table input[type='checkbox']),
+	.approvals-select-all input {
+		width: 1.15rem;
+		height: 1.15rem;
+		accent-color: var(--navy);
+	}
+
+	:global(.approvals-actions) {
+		white-space: nowrap;
+	}
+
+	:global(.approvals-button) {
+		min-height: 2.3rem;
+		padding: 0.3rem 0.8rem;
+		font-size: 0.88rem;
+	}
+</style>

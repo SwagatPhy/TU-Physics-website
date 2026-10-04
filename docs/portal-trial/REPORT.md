@@ -253,3 +253,19 @@ Phone numbers and emails of students are personal data. Default until the owner 
 7. Admin tools (roster, enrollments, photo approval), hardening, handbook.
 
 **Privacy gate:** real student data is loaded only after university approval (India's DPDP Act applies to contact details). The trial uses fake data only.
+
+### 17.1 Update (2026-10-04): open sign-up with admin approval — built
+
+Owner decision: no typed-in roster required. The sign-up itself becomes the student record.
+
+- **Sign-up** (`/register`): students give name, roll number, email, contact number; department members (faculty, scholars, staff) give name, email, contact number. Email verified by a single-use 30-minute link, then the person chooses a password. Roll number validated against `server/programmes.conf` (PHD/PHM still TEMPORARY; BSc prefix unconfirmed); programme derived from it. Email and roll number are unique. The screen never reveals whether an email or roll number is already known (same answer and timing; tested).
+- **Status** `pending | approved | rejected` on every account. New accounts start **pending**; pending users can log in but only see a "waiting for approval" message and may edit their own name and contact number. **Rejected** users get the same answer as a wrong password. Nobody can sign up as admin.
+- **Optional roster:** a student whose email *and* roll number match an unclaimed roster row is approved at once. Department members always wait for the admin. Without a roster, everyone waits.
+- **Admin approvals** (`/admin/approvals`): list of pending sign-ups (name, roll, programme, email, phone, type, date); correct name/roll/phone; approve or reject one, or approve several at once. Every decision is audit-logged and emails the person (outbox for now).
+- **Accounts already on the site** (seeded, admin-created, roster-registered) count as approved.
+
+**Auto-enrolment — proposal, not built.** Courses currently have no programme or semester to match against, so there is nothing to base a rule on. Simplest rule, if the owner agrees:
+1. add `programme` (and use the existing `semester`) on each course, set by the admin;
+2. when a student is approved, enrol them in every active course whose `programme` equals theirs and whose `semester` is the current one (one "current semester" setting);
+3. the admin can still add or remove individual enrolments.
+Open questions for the owner: is "programme + current semester" enough (or do batches/years matter, e.g. MSc 1st vs 2nd year)? Until decided, enrolment stays a manual admin step.

@@ -17,15 +17,22 @@ import {
 	setSessionCookie,
 	clearSessionCookie,
 	requireLogin,
+	requirePasswordChanged,
 	PASSWORD_MAX_LENGTH,
 } from '../auth.js';
+import { checkName, checkPhone } from '../validate.js';
 
+// What the browser may know about the logged-in person (their own details).
 function publicUser(user) {
 	return {
 		id: user.id,
 		name: user.name,
 		email: user.email,
 		role: user.role,
+		status: user.status,
+		phone: user.phone ?? null,
+		rollNumber: user.rollNumber ?? user.roll_number ?? null,
+		programme: user.programme ?? null,
 		mustChangePassword: Boolean(user.mustChangePassword ?? user.must_change_password),
 	};
 }
@@ -49,9 +56,10 @@ export function authRoutes({ db, config, loginLimiter }) {
 		const user = db.prepare('SELECT * FROM users WHERE email = ?').get(normalizedEmail);
 		const passwordOk = await verifyPassword(user?.password_hash, password);
 
-		// Same response for "no such email", "wrong password" and "deactivated",
-		// so the login form can't be used to find out which accounts exist.
-		if (!user || !passwordOk || !user.active) {
+		// Same response for "no such email", "wrong password", "deactivated" and
+		// "rejected", so the login form can't be used to find out which accounts
+		// exist. (Pending accounts may log in; they only see a waiting page.)
+		if (!user || !passwordOk || !user.active || user.status === 'rejected') {
 			loginLimiter.recordFailure(normalizedEmail);
 			logAudit(db, { actorId: user?.id ?? null, action: 'login_failed', target: user ? `user:${user.id}` : null });
 			return res.status(401).json({ error: 'invalid_credentials' });
@@ -76,6 +84,19 @@ export function authRoutes({ db, config, loginLimiter }) {
 
 	router.get('/me', requireLogin, (req, res) => {
 		res.json({ user: publicUser(req.user) });
+	});
+
+	// Your own name and contact number. Allowed while waiting for approval
+	// (an admin may also correct them). Email and roll number can't be changed here.
+	router.put('/profile', requireLogin, requirePasswordChanged, (req, res) => {
+		const name = checkName(req.body?.name);
+		if (name.error) return res.status(400).json({ error: name.error });
+		const phone = checkPhone(req.body?.phone);
+		if (phone.error) return res.status(400).json({ error: phone.error });
+
+		db.prepare('UPDATE users SET name = ?, phone = ? WHERE id = ?').run(name.value, phone.value, req.user.id);
+		logAudit(db, { actorId: req.user.id, action: 'profile_changed', target: `user:${req.user.id}` });
+		res.json({ user: publicUser({ ...req.user, name: name.value, phone: phone.value }) });
 	});
 
 	// Works while a password change is pending — that's how the first-login

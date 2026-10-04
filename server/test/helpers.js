@@ -15,14 +15,18 @@ async function sharedHash() {
 	return passwordHash;
 }
 
-export async function addUser(db, { name = 'Someone', email, role = 'student', active = 1, mustChange = 0 }) {
+export async function addUser(
+	db,
+	{ name = 'Someone', email, role = 'student', active = 1, mustChange = 0, status = 'approved', rollNumber = null, programme = null, phone = null },
+) {
 	return Number(
 		db
 			.prepare(
-				`INSERT INTO users (name, email, password_hash, role, active, must_change_password, created_at)
-				 VALUES (?, ?, ?, ?, ?, ?, ?)`,
+				`INSERT INTO users (name, email, password_hash, role, active, must_change_password, created_at, status, roll_number, programme, phone)
+				 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 			)
-			.run(name, email, await sharedHash(), role, active, mustChange, toDbTime(new Date())).lastInsertRowid,
+			.run(name, email, await sharedHash(), role, active, mustChange, toDbTime(new Date()), status, rollNumber, programme, phone)
+			.lastInsertRowid,
 	);
 }
 

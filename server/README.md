@@ -4,10 +4,11 @@ Small Node.js + Express API for the Student/Faculty Portal trial. Plan, data mod
 security checklist: [docs/portal-trial/REPORT.md](../docs/portal-trial/REPORT.md).
 The public website (Astro, in `src/`) does not depend on this folder.
 
-**Status:** Phase 1 (login, sessions, password change); Step A: people register
-themselves from an admin-uploaded **roster** through an emailed one-time link, and reset a
-forgotten password the same way; Step B: the student course-links endpoint. The website pages
-(`/login`, `/register`, `/forgot-password`, `/change-password`, `/portal`) are in `src/pages/`.
+**Status:** login, sessions and password changes; **open sign-up with admin approval**
+(students and department members sign up, verify their email, and wait for an admin; an
+optional roster approves matching students at once); forgot password; student course links;
+the faculty link dashboard. The website pages (`/login`, `/register`, `/forgot-password`,
+`/change-password`, `/portal`, `/faculty`, `/admin/approvals`) are in `src/pages/`.
 To click through everything locally, see [docs/portal-trial/TRY_IT.md](../docs/portal-trial/TRY_IT.md).
 
 ## Run it locally
@@ -23,34 +24,50 @@ npm start                # http://localhost:4400/dphy/api/health
 npm test                 # automated tests (use an in-memory database)
 ```
 
-**Seeded accounts** (all fake, `.test` domain): `admin@example.test`, `faculty.a@example.test`,
-`faculty.b@example.test`, `student01@example.test` … `student10@example.test`. All use
-`SEED_PASSWORD` from `.env` and must change it on first login.
+**Seeded accounts** (all fake, `.test` domain), all with `SEED_PASSWORD` from `.env`:
+`admin@example.test`, `faculty.a@example.test`, `faculty.b@example.test`,
+`student01@example.test` … `student10@example.test` (approved; must change the password on
+first login), and `pending01@example.test` … `pending03@example.test`,
+`pending.staff@example.test` (signed up, waiting for approval).
 
-**Seeded roster** (from `sample-roster.csv`, not yet registered): `roster.student01@example.test`
-(roll number `PHD22011`) … `roster.student04@example.test` (`PHM24002`), and
-`roster.faculty@example.test` (faculty, no roll number).
+**Seeded roster** (from `sample-roster.csv`, not yet used): `roster.student01@example.test`
+(roll number `PHD22011`) … `roster.student04@example.test` (`PHM24002`). A student who signs up
+with one of these email + roll number pairs is approved immediately.
 
 **Emails** aren't sent in development: each one is written as a text file to `data/outbox/`
 (`MAIL_MODE=outbox`). Open the newest file to find the registration or reset link.
 
 To start again, delete `data/` and run `npm run seed`.
 
-## The roster and registration
+## Sign-up and approval
 
-1. The admin adds people to the roster: `npm run roster:import -- people.csv`
-   (an admin page comes in Phase 4). Columns: `email,name,roll_number,role` (optional
-   `programme`). `role` is `student` or `faculty`; faculty and staff leave `roll_number` empty.
-   The whole file is checked first and nothing is imported if any line has a problem; the
-   errors list the line numbers. People already on the roster are never overwritten.
+1. **Sign up** (`/register`): a *student* gives name, email, roll number and contact number; a
+   *department member* (faculty, research scholar, staff) gives name, email and contact number.
+   Nobody can sign up as admin. Badly formatted details are refused at once; otherwise the
+   answer is always "check your email".
 2. **Programmes come from the roll-number prefix**, defined only in `programmes.conf`
    (one `PREFIX  Programme` per line). `PHD → PhD` and `PHM → MSc` are **temporary
-   placeholders** until the department confirms its roll-number formats.
-3. A person asks for a link with their email (students also give their roll number). If they
-   match an unclaimed roster row, they get an email with a link that works **once** and
-   expires after **30 minutes** (`LINK_MINUTES`). Asking again replaces the earlier link.
-4. Opening the link and choosing a password creates the account (role, roll number and
-   programme copied from the roster) and marks the roster row claimed. They then log in.
+   placeholders**; the BSc prefix isn't confirmed yet.
+3. **Email link:** works **once** and expires after **30 minutes** (`LINK_MINUTES`); signing up
+   again replaces the earlier link. Opening it and choosing a password creates the account.
+4. **Status:** the new account is `pending`, unless a student's email *and* roll number match an
+   unclaimed row of the optional roster, in which case it is `approved` at once and the row is
+   claimed. Department members always start `pending`.
+5. **Pending** accounts can log in, see themselves (`/me`), edit their own name and contact
+   number (`/profile`), change their password and log out. Everything else answers
+   `403 approval_pending`.
+6. **Admin** (`/admin/approvals`) sees the pending list, can correct name / roll number / contact
+   number, and approves or rejects one or many. Each decision is audit-logged and emails the
+   person. **Rejected** accounts are treated like deactivated ones: sessions end and login gets
+   the same answer as a wrong password.
+7. **No account discovery:** an email that already has an account gets a "you already have an
+   account" note in *its own* inbox; a roll number that already has an account gets a "contact
+   the office" note to the address typed. The screen shows the same answer in every case and
+   the timing doesn't differ (tested).
+8. **Optional roster:** `npm run roster:import -- people.csv` (columns
+   `email,name,roll_number,role`, optional `programme`; whole file checked first, line-numbered
+   errors, existing rows never overwritten). Without a roster everyone goes to `pending`.
+9. **Enrolment** in courses is not automatic yet (see REPORT.md §17).
 
 Forgot password works the same way: ask with your email, get a one-time 30-minute link,
 choose a new password. That signs out every existing session.
@@ -74,6 +91,7 @@ choose a new password. That signs out every existing session.
 | `src/routes/register-routes.js` | `/register/…`, `/password-reset/…` |
 | `src/routes/student-routes.js` | `/my-courses` |
 | `src/routes/faculty-routes.js` | `/teaching`, `/resources` |
+| `src/routes/admin-routes.js` | `/admin/signups`, `/admin/users/:id`, `/admin/decisions` |
 | `src/validate.js` | Input checks shared by routes (links must be http/https) |
 | `programmes.conf` | Roll-number prefixes (TEMPORARY placeholders) |
 | `sample-roster.csv` | Fake roster used by the seed; also an example of the CSV format |
@@ -93,25 +111,29 @@ All paths are under `/dphy/api` (`BASE_PATH` + `/api`). Requests that change som
 | `POST /logout` | — | `204`, cookie cleared | — |
 | `GET /me` | — | `200 {user}` | `401 not_logged_in` |
 | `POST /change-password` | `{currentPassword, newPassword}` | `200 {user}` + new cookie | `400 invalid_input / wrong_current_password / password_too_short / password_too_long / password_unchanged`, `401 not_logged_in`, `429 too_many_attempts` |
-| `POST /register/request` | `{email, rollNumber?}` | `202 {status:"check_your_email"}` **always** | `400 invalid_input`, `429 too_many_attempts` |
-| `POST /register/complete` | `{token, password}` | `201 {status:"registered"}` | `400 invalid_input / password_too_short / password_too_long / invalid_or_expired_link`, `429` |
+| `POST /register/request` | `{kind:"student"\|"member", name, email, rollNumber (students), phone}` | `202 {status:"check_your_email"}` for any well-formed request | `400 invalid_kind / invalid_name / invalid_email / invalid_phone / invalid_roll_number`, `429 too_many_attempts` |
+| `POST /register/complete` | `{token, password}` | `201 {status:"registered", approval:"pending"\|"approved"}` | `400 invalid_input / password_too_short / password_too_long / invalid_or_expired_link`, `429` |
+| `PUT /profile` | `{name, phone}` | `200 {user}` (own account; pending allowed) | `400 invalid_name / invalid_phone`, `401` |
 | `POST /password-reset/request` | `{email}` | `202 {status:"check_your_email"}` **always** | `400 invalid_input`, `429 too_many_attempts` |
 | `POST /password-reset/complete` | `{token, password}` | `200 {status:"password_reset"}` | `400 invalid_input / password_too_short / password_too_long / invalid_or_expired_link`, `429` |
-| `GET /my-courses` | — | `200 {courses:[{code,title,semester,resources:[{id,kind,title,url}]}]}` | `401 not_logged_in`, `403 password_change_required / students_only` |
+| `GET /my-courses` | — | `200 {courses:[{code,title,semester,resources:[{id,kind,title,url}]}]}` | `401 not_logged_in`, `403 password_change_required / approval_pending / students_only` |
 
 | `GET /teaching` | — | `200 {courses:[{id,code,title,semester,studentCount,resources:[…,visibleFrom]}]}` | `401`, `403 password_change_required / not_allowed` |
 | `POST /resources` | `{courseId, kind, title, url, visibleFrom?}` | `201 {id}` | `400 invalid_kind / invalid_title / invalid_url / invalid_date`, `403 not_allowed`, `404 course_not_found` |
 | `PUT /resources/:id` | `{kind, title, url, visibleFrom?}` | `200 {id}` | as above, `404 resource_not_found` |
 | `DELETE /resources/:id` | — | `204` | `403 not_allowed`, `404 resource_not_found` |
+| `GET /admin/signups` | — | `200 {signups:[{id,name,email,role,status,rollNumber,programme,phone,createdAt}]}` | `401`, `403 not_allowed` |
+| `PUT /admin/users/:id` | `{name, rollNumber? (students), phone?}` | `200 {user}` | `400 invalid_name / invalid_roll_number / invalid_phone / roll_number_taken`, `403`, `404 user_not_found` |
+| `POST /admin/decisions` | `{userIds:[…], decision:"approve"\|"reject"}` | `200 {decision, done:[ids], skipped:[ids]}` | `400 invalid_decision / invalid_input`, `403` |
 
 `/my-courses` returns only the logged-in student's enrolled, active courses; only links whose
 `visible_from` has passed; and only `http(s)` links. `/teaching` and `/resources` are for faculty
 (their own courses, where `courses.faculty_id` is them) and admin (all courses); a course someone
 may not manage answers exactly like one that doesn't exist. Every link change is audit-logged.
 
-`user` is `{id, name, email, role, mustChangePassword}`. Other codes any endpoint can return:
+`user` is `{id, name, email, role, status, phone, rollNumber, programme, mustChangePassword}` (your own details). Other codes any endpoint can return:
 `415 json_required`, `400 invalid_json`, `413 request_too_large`, `404 not_found`,
-`500 server_error`, and (from Phase 2 endpoints) `403 password_change_required`.
+`500 server_error`, `403 password_change_required`, `403 approval_pending`.
 
 Links in emails point to the website pages `/dphy/register/#token=…` and
 `/dphy/forgot-password/#token=…`. The token is after `#`, so browsers never send it to any

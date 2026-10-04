@@ -29,6 +29,10 @@ describe('login, session cookie, /me, logout', () => {
 			name: 'Ann Student',
 			email: 'ann@example.test',
 			role: 'student',
+			status: 'approved',
+			phone: null,
+			rollNumber: null,
+			programme: null,
 			mustChangePassword: false,
 		});
 		assert.match(res.setCookie, /^dphy_session=[\w-]{43};/);

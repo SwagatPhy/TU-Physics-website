@@ -1,6 +1,7 @@
 ---
 // Student portal: the student's courses with their class and notes links.
-// States: loading → unavailable | not-logged-in | courses | empty.
+// States: loading → unavailable | not-logged-in | pending | courses | empty.
+// Accounts still waiting for admin approval see only the "pending" message.
 // Faculty and admin who open this page are sent to /faculty/.
 // Course data comes from GET /api/my-courses after login; nothing private is in
 // this static page itself.
@@ -24,6 +25,10 @@ const text = copy.portal;
 			</div>
 
 			<PortalPanel>
+				<div data-state="pending" hidden>
+					<h2>{copy.pending.title}</h2>
+					<p>{copy.pending.text}</p>
+				</div>
 				<div data-state="not-logged-in" hidden>
 					<p>{text.notLoggedIn}</p>
 					<a class="btn btn--navy" href={portalPages.login}>{text.loginLink}</a>
@@ -102,12 +107,13 @@ const text = copy.portal;
 
 	async function start() {
 		if (!(await portalIsAvailable())) return;
-		const me = await api<{ user: { name: string; role: string; mustChangePassword: boolean } }>('me');
+		const me = await api<{ user: { name: string; role: string; status: string; mustChangePassword: boolean } }>('me');
 		if (!me.ok) return showState('not-logged-in');
 		if (me.data!.user.mustChangePassword) return void (location.href = portalPages.changePassword);
 
 		document.getElementById('portal-name')!.textContent = me.data!.user.name;
 		document.getElementById('portal-account')!.hidden = false;
+		if (me.data!.user.status === 'pending') return showState('pending');
 		if (me.data!.user.role !== 'student') return void (location.href = portalPages.faculty);
 
 		const result = await api<{ courses: Course[] }>('my-courses');

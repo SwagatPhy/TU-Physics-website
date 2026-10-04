@@ -1,45 +1,52 @@
-// Self-registration from the roster, and "forgot password":
-//   POST /register/request         {email, rollNumber?}
+// Sign-up and "forgot password":
+//   POST /register/request         {kind, name, email, rollNumber?, phone}
 //   POST /register/complete        {token, password}
 //   POST /password-reset/request   {email}
 //   POST /password-reset/complete  {token, password}
 //
-// The two "request" endpoints always give the same answer (202
-// "check_your_email") straight away, before looking anything up. The roster or
-// account lookup and the email happen afterwards, in the background, so neither
-// the response nor its timing reveals whether an email address is known.
+// Sign-up: anyone can fill in the form. They get an email link (single-use,
+// 30 minutes); opening it and choosing a password creates the account.
+// - Students give a roll number; its prefix sets the programme (programmes.conf).
+//   If email + roll number match an unclaimed roster row the account is created
+//   approved and the row is claimed; otherwise it waits for an admin (pending).
+// - Department members (faculty, scholars, staff) sign up without a roll number
+//   and always wait for an admin. Nobody can sign up as admin.
+//
+// The two "request" endpoints check only the format of what was typed, then
+// always answer 202 "check_your_email" before looking anything up. Lookups and
+// emails happen afterwards, in the background, so neither the answer nor its
+// timing reveals whether an email address or roll number is already known.
 
 import { Router } from 'express';
 import { logAudit } from '../audit.js';
 import { toDbTime } from '../db.js';
 import { hashPassword, checkNewPassword, deleteAllSessionsForUser } from '../auth.js';
-import { normalizeRollNumber } from '../programmes.js';
-import { createLinkToken, useLinkToken, cancelUnusedTokens } from '../tokens.js';
-import { registrationEmail, passwordResetEmail } from '../mail-templates.js';
+import { checkSignup, checkEmail } from '../validate.js';
+import { createLinkToken, useLinkToken, cancelUnusedResetLinks, cancelUnusedRegistrationLinks } from '../tokens.js';
+import {
+	registrationEmail,
+	alreadyRegisteredEmail,
+	rollNumberTakenEmail,
+	passwordResetEmail,
+} from '../mail-templates.js';
 
 const CHECK_YOUR_EMAIL = { status: 'check_your_email' };
 
-export function registerRoutes({ db, config, mailer, loginLimiter, linkRequestLimiter, runInBackground }) {
+export function registerRoutes({ db, config, programmes, mailer, loginLimiter, linkRequestLimiter, runInBackground }) {
 	const router = Router();
-	const linkTo = (page, token) => `${config.siteUrl}${config.basePath}/${page}/#token=${token}`;
+	const pageLink = (page) => `${config.siteUrl}${config.basePath}/${page}/`;
+	const linkTo = (page, token) => `${pageLink(page)}#token=${token}`;
 
-	// Shared by both "request" endpoints: input check and rate limit.
-	// Returns the normalized email, or null after sending an error response.
-	function acceptLinkRequest(req, res) {
-		const { email } = req.body ?? {};
-		if (typeof email !== 'string' || email.length > 254) {
-			res.status(400).json({ error: 'invalid_input' });
-			return null;
-		}
-		const normalizedEmail = email.trim().toLowerCase();
-		const waitSeconds = linkRequestLimiter.check(req.ip, normalizedEmail);
+	// At most 3 emails per address per 15 minutes. Returns true after sending a 429.
+	function linkRequestLimited(req, res, email) {
+		const waitSeconds = linkRequestLimiter.check(req.ip, email);
 		if (waitSeconds > 0) {
 			res.set('Retry-After', String(waitSeconds));
 			res.status(429).json({ error: 'too_many_attempts', retryAfterSeconds: waitSeconds });
-			return null;
+			return true;
 		}
-		linkRequestLimiter.recordFailure(normalizedEmail); // every request counts: max 3 emails per address per window
-		return normalizedEmail;
+		linkRequestLimiter.recordFailure(email); // every request counts towards the limit
+		return false;
 	}
 
 	// The "complete" endpoints hash a password (deliberately slow), so they share
@@ -53,26 +60,55 @@ export function registerRoutes({ db, config, mailer, loginLimiter, linkRequestLi
 	}
 
 	router.post('/register/request', (req, res) => {
-		const { rollNumber } = req.body ?? {};
-		if (rollNumber !== undefined && (typeof rollNumber !== 'string' || rollNumber.length > 30)) {
-			return res.status(400).json({ error: 'invalid_input' });
-		}
-		const email = acceptLinkRequest(req, res);
-		if (!email) return;
+		const { error, value: signup } = checkSignup(req.body, programmes);
+		if (error) return res.status(400).json({ error });
+		if (linkRequestLimited(req, res, signup.email)) return;
 		res.status(202).json(CHECK_YOUR_EMAIL);
 
 		runInBackground(async () => {
-			const person = db.prepare('SELECT * FROM roster WHERE email = ?').get(email);
-			if (!person || person.claimed) return;
-			// Students must also give the roll number on the roster; faculty and staff register by email only.
-			if (person.role === 'student' && normalizeRollNumber(rollNumber) !== person.roll_number) return;
-			if (db.prepare('SELECT 1 FROM users WHERE email = ?').get(email)) return;
+			// Email already has an account: tell that inbox (not the form) how to log in.
+			const existing = db.prepare('SELECT name FROM users WHERE email = ?').get(signup.email);
+			if (existing) {
+				return mailer.send({
+					to: signup.email,
+					...alreadyRegisteredEmail({ name: existing.name, loginLink: pageLink('login'), resetLink: pageLink('forgot-password') }),
+				});
+			}
+			// Roll number already belongs to someone else's account.
+			if (signup.rollNumber && db.prepare('SELECT 1 FROM users WHERE roll_number = ?').get(signup.rollNumber)) {
+				return mailer.send({ to: signup.email, ...rollNumberTakenEmail({ name: signup.name }) });
+			}
 
-			cancelUnusedTokens(db, { purpose: 'register', rosterId: person.id });
-			const token = createLinkToken(db, { purpose: 'register', rosterId: person.id, minutes: config.linkMinutes });
+			// Optional roster: a student whose email and roll number match an
+			// unclaimed row will be approved straight away.
+			const rosterRow =
+				signup.kind === 'student'
+					? db
+							.prepare("SELECT id FROM roster WHERE email = ? AND roll_number = ? AND role = 'student' AND claimed = 0")
+							.get(signup.email, signup.rollNumber)
+					: null;
+
+			const signupId = db
+				.prepare(
+					`INSERT INTO signups (kind, name, email, roll_number, programme, phone, roster_id, created_at)
+					 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+				)
+				.run(
+					signup.kind,
+					signup.name,
+					signup.email,
+					signup.rollNumber,
+					signup.programme,
+					signup.phone,
+					rosterRow?.id ?? null,
+					toDbTime(new Date()),
+				).lastInsertRowid;
+
+			cancelUnusedRegistrationLinks(db, signup.email); // only the newest link works
+			const token = createLinkToken(db, { purpose: 'register', signupId: Number(signupId), minutes: config.linkMinutes });
 			await mailer.send({
-				to: email,
-				...registrationEmail({ name: person.name, link: linkTo('register', token), minutes: config.linkMinutes }),
+				to: signup.email,
+				...registrationEmail({ name: signup.name, link: linkTo('register', token), minutes: config.linkMinutes }),
 			});
 		});
 	});
@@ -86,41 +122,61 @@ export function registerRoutes({ db, config, mailer, loginLimiter, linkRequestLi
 
 		const passwordHash = await hashPassword(password);
 		const link = useLinkToken(db, token, 'register');
-		const person = link && db.prepare('SELECT * FROM roster WHERE id = ?').get(link.roster_id);
-		if (!person || person.claimed || db.prepare('SELECT 1 FROM users WHERE email = ?').get(person.email)) {
-			return res.status(400).json({ error: 'invalid_or_expired_link' });
-		}
+		const signup = link?.signup_id && db.prepare('SELECT * FROM signups WHERE id = ?').get(link.signup_id);
+		if (!signup) return res.status(400).json({ error: 'invalid_or_expired_link' });
 
 		const now = toDbTime(new Date());
+		let status;
 		db.exec('BEGIN');
 		try {
-			const claimed = db.prepare('UPDATE roster SET claimed = 1, claimed_at = ? WHERE id = ? AND claimed = 0').run(now, person.id);
-			if (claimed.changes !== 1) throw new Error('roster row already claimed');
-			const userId = db
-				.prepare(
-					`INSERT INTO users (name, email, password_hash, role, active, must_change_password, created_at, roll_number, programme)
-					 VALUES (?, ?, ?, ?, 1, 0, ?, ?, ?)`,
-				)
-				.run(person.name, person.email, passwordHash, person.role, now, person.roll_number, person.programme).lastInsertRowid;
-			db.prepare('UPDATE roster SET user_id = ? WHERE id = ?').run(userId, person.id);
-			logAudit(db, { actorId: Number(userId), action: 'registered', target: `roster:${person.id}` });
+			// Claiming the roster row first means two sign-ups can't both use it.
+			const claimed =
+				signup.roster_id !== null &&
+				db.prepare('UPDATE roster SET claimed = 1, claimed_at = ? WHERE id = ? AND claimed = 0').run(now, signup.roster_id)
+					.changes === 1;
+			status = claimed ? 'approved' : 'pending';
+
+			// Fails on the UNIQUE email / roll number indexes if someone else got there first.
+			const userId = Number(
+				db
+					.prepare(
+						`INSERT INTO users (name, email, password_hash, role, status, active, must_change_password,
+						                    created_at, roll_number, programme, phone)
+						 VALUES (?, ?, ?, ?, ?, 1, 0, ?, ?, ?, ?)`,
+					)
+					.run(
+						signup.name,
+						signup.email,
+						passwordHash,
+						signup.kind === 'student' ? 'student' : 'faculty',
+						status,
+						now,
+						signup.roll_number,
+						signup.programme,
+						signup.phone,
+					).lastInsertRowid,
+			);
+			if (claimed) db.prepare('UPDATE roster SET user_id = ? WHERE id = ?').run(userId, signup.roster_id);
+			logAudit(db, { actorId: userId, action: claimed ? 'registered_from_roster' : 'registered_pending', target: `user:${userId}` });
 			db.exec('COMMIT');
 		} catch {
 			db.exec('ROLLBACK');
 			return res.status(400).json({ error: 'invalid_or_expired_link' });
 		}
-		res.status(201).json({ status: 'registered' });
+		// The person now owns this account, so telling them whether it still needs approval reveals nothing.
+		res.status(201).json({ status: 'registered', approval: status });
 	});
 
 	router.post('/password-reset/request', (req, res) => {
-		const email = acceptLinkRequest(req, res);
-		if (!email) return;
+		const { error, value: email } = checkEmail(req.body?.email);
+		if (error) return res.status(400).json({ error: 'invalid_input' });
+		if (linkRequestLimited(req, res, email)) return;
 		res.status(202).json(CHECK_YOUR_EMAIL);
 
 		runInBackground(async () => {
-			const user = db.prepare('SELECT id, name, active FROM users WHERE email = ?').get(email);
-			if (!user || !user.active) return;
-			cancelUnusedTokens(db, { purpose: 'reset', userId: user.id });
+			const user = db.prepare('SELECT id, name, active, status FROM users WHERE email = ?').get(email);
+			if (!user || !user.active || user.status === 'rejected') return;
+			cancelUnusedResetLinks(db, user.id);
 			const token = createLinkToken(db, { purpose: 'reset', userId: user.id, minutes: config.linkMinutes });
 			await mailer.send({
 				to: email,
@@ -138,8 +194,8 @@ export function registerRoutes({ db, config, mailer, loginLimiter, linkRequestLi
 
 		const passwordHash = await hashPassword(password);
 		const link = useLinkToken(db, token, 'reset');
-		const user = link && db.prepare('SELECT id, email, active FROM users WHERE id = ?').get(link.user_id);
-		if (!user || !user.active) return res.status(400).json({ error: 'invalid_or_expired_link' });
+		const user = link && db.prepare('SELECT id, email, active, status FROM users WHERE id = ?').get(link.user_id);
+		if (!user || !user.active || user.status === 'rejected') return res.status(400).json({ error: 'invalid_or_expired_link' });
 
 		db.prepare('UPDATE users SET password_hash = ?, must_change_password = 0 WHERE id = ?').run(passwordHash, user.id);
 		deleteAllSessionsForUser(db, user.id); // signs out every device

@@ -11,12 +11,12 @@
 import { Router } from 'express';
 import { toDbTime } from '../db.js';
 import { logAudit } from '../audit.js';
-import { requireLogin, requirePasswordChanged, requireRole } from '../auth.js';
+import { requireLogin, requirePasswordChanged, requireApproved, requireRole } from '../auth.js';
 import { checkResource } from '../validate.js';
 
 export function facultyRoutes({ db }) {
 	const router = Router();
-	const guard = [requireLogin, requirePasswordChanged, requireRole('faculty', 'admin')];
+	const guard = [requireLogin, requirePasswordChanged, requireApproved, requireRole('faculty', 'admin')];
 
 	// The course if this user may manage it, otherwise null.
 	function manageableCourse(user, courseId) {

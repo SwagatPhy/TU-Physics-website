@@ -1,7 +1,7 @@
 ---
 // Faculty dashboard: the courses I teach (admin: all courses) and their class
 // and notes links — add, edit, delete.
-// States: loading → unavailable | not-logged-in | courses | empty.
+// States: loading → unavailable | not-logged-in | pending | courses | empty.
 // Students who open this page are sent to /portal/.
 // Course cards are cloned from the <template>s below; every value from the
 // database is set with textContent, never as HTML.
@@ -26,6 +26,10 @@ const kinds = copy.portal.kinds;
 			</div>
 
 			<PortalPanel>
+				<div data-state="pending" hidden>
+					<h2>{copy.pending.title}</h2>
+					<p>{copy.pending.text}</p>
+				</div>
 				<div data-state="not-logged-in" hidden>
 					<p>{text.notLoggedIn}</p>
 					<a class="btn btn--navy" href={portalPages.login}>{text.loginLink}</a>
@@ -214,13 +218,14 @@ const kinds = copy.portal.kinds;
 
 	async function start() {
 		if (!(await portalIsAvailable())) return;
-		const me = await api<{ user: { name: string; role: string; mustChangePassword: boolean } }>('me');
+		const me = await api<{ user: { name: string; role: string; status: string; mustChangePassword: boolean } }>('me');
 		if (!me.ok) return showState('not-logged-in');
 		if (me.data!.user.mustChangePassword) return void (location.href = portalPages.changePassword);
 		if (me.data!.user.role === 'student') return void (location.href = portalPages.portal);
 
 		document.getElementById('portal-name')!.textContent = me.data!.user.name;
 		document.getElementById('portal-account')!.hidden = false;
+		if (me.data!.user.status === 'pending') return showState('pending');
 		await load();
 	}
 	start();

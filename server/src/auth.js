@@ -57,14 +57,15 @@ export function createSession(db, config, userId, { ip = null, userAgent = null 
 }
 
 // Returns the logged-in user for a token, or null if the session is missing,
-// past its idle or absolute limit, or the user has been deactivated.
+// past its idle or absolute limit, or the user has been deactivated or rejected.
 export function findSessionUser(db, config, token) {
 	if (!token) return null;
 	const id = hashToken(token);
 	const row = db
 		.prepare(
 			`SELECT s.last_seen_at, s.expires_at,
-			        u.id, u.name, u.email, u.role, u.active, u.must_change_password
+			        u.id, u.name, u.email, u.role, u.active, u.status, u.must_change_password,
+			        u.phone, u.roll_number, u.programme
 			 FROM sessions s JOIN users u ON u.id = s.user_id
 			 WHERE s.id = ?`,
 		)
@@ -73,7 +74,7 @@ export function findSessionUser(db, config, token) {
 
 	const now = new Date();
 	const idleLimit = new Date(fromDbTime(row.last_seen_at).getTime() + config.sessionIdleHours * 60 * 60 * 1000);
-	if (!row.active || now >= fromDbTime(row.expires_at) || now >= idleLimit) {
+	if (!row.active || row.status === 'rejected' || now >= fromDbTime(row.expires_at) || now >= idleLimit) {
 		db.prepare('DELETE FROM sessions WHERE id = ?').run(id);
 		return null;
 	}
@@ -84,6 +85,10 @@ export function findSessionUser(db, config, token) {
 		name: row.name,
 		email: row.email,
 		role: row.role,
+		status: row.status,
+		phone: row.phone,
+		rollNumber: row.roll_number,
+		programme: row.programme,
 		mustChangePassword: Boolean(row.must_change_password),
 	};
 }
@@ -142,6 +147,13 @@ export function requireLogin(req, res, next) {
 // a user with a temporary password must change it before doing anything else.
 export function requirePasswordChanged(req, res, next) {
 	if (req.user?.mustChangePassword) return res.status(403).json({ error: 'password_change_required' });
+	next();
+}
+
+// For everything except /me, /logout, /change-password and /profile: a
+// self-registered account can't use the portal until an admin approves it.
+export function requireApproved(req, res, next) {
+	if (req.user?.status !== 'approved') return res.status(403).json({ error: 'approval_pending' });
 	next();
 }
 

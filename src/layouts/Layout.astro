@@ -6,9 +6,10 @@ import { withBase } from '../lib/url';
 interface Props {
 	title: string;
 	description?: string;
+	noindex?: boolean; // keep the page out of search results (portal pages)
 }
 
-const { title, description = 'Department of Physics, Tezpur University.' } = Astro.props;
+const { title, description = 'Department of Physics, Tezpur University.', noindex = false } = Astro.props;
 
 const navLinks = [
 	{ href: '/about', label: 'About' },
@@ -38,6 +39,7 @@ const pageTitle = title === 'Home' ? 'Department of Physics | Tezpur University'
 		<meta name="description" content={description} />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="theme-color" content="#00254e" />
+		{noindex && <meta name="robots" content="noindex, nofollow" />}
 		<link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
 		<link rel="icon" href={withBase('/favicon.ico')} />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />

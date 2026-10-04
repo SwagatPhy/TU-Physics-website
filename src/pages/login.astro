@@ -1,0 +1,90 @@
+---
+// Portal login. Static page; the script talks to the portal API.
+// States: loading → unavailable | signed-out (form) | signed-in.
+// Someone who still has a temporary password is sent to /change-password/.
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import PortalPanel from '../components/PortalPanel.astro';
+import { copy } from '../lib/portal-copy';
+import { portalPages } from '../lib/api';
+
+const text = copy.login;
+---
+
+<Layout title={text.title} noindex>
+	<PageHeader title={text.title} lead={text.intro} />
+
+	<section class="section">
+		<div class="container">
+			<PortalPanel>
+				<div data-state="signed-out" hidden>
+					<form class="portal-form" id="login-form" novalidate>
+						<div class="portal-field">
+							<label for="login-email">{text.email}</label>
+							<input id="login-email" name="email" type="email" autocomplete="username" required />
+						</div>
+						<div class="portal-field">
+							<label for="login-password">{text.password}</label>
+							<input id="login-password" name="password" type="password" autocomplete="current-password" required />
+						</div>
+						<button class="btn btn--navy" type="submit">{text.submit}</button>
+					</form>
+					<ul class="portal-links">
+						<li><a href={portalPages.forgotPassword}>{text.forgotLink}</a></li>
+						<li><a href={portalPages.register}>{text.registerLink}</a></li>
+					</ul>
+				</div>
+
+				<div data-state="signed-in" hidden>
+					<p>{text.signedInAs} <strong id="signed-in-name"></strong></p>
+					<ul class="portal-links">
+						<li><a href={portalPages.changePassword}>{text.changePasswordLink}</a></li>
+					</ul>
+					<button class="btn btn--outline" type="button" id="logout-button">{text.logout}</button>
+				</div>
+			</PortalPanel>
+		</div>
+	</section>
+</Layout>
+
+<script>
+	import { api, portalPages } from '../lib/api';
+	import { copy } from '../lib/portal-copy';
+	import { showState, showMessage, showError, portalIsAvailable, onSubmit } from '../lib/portal-ui';
+
+	interface User {
+		name: string;
+		mustChangePassword: boolean;
+	}
+
+	function showSignedIn(user: User) {
+		if (user.mustChangePassword) {
+			location.href = portalPages.changePassword;
+			return;
+		}
+		document.getElementById('signed-in-name')!.textContent = user.name;
+		showState('signed-in');
+	}
+
+	onSubmit(document.getElementById('login-form') as HTMLFormElement, async ({ email, password }) => {
+		const result = await api<{ user: User }>('login', { method: 'POST', body: { email, password } });
+		if (result.error === 'unavailable') return showState('unavailable');
+		if (!result.ok) return showError(result);
+		showSignedIn(result.data!.user);
+	});
+
+	document.getElementById('logout-button')!.addEventListener('click', async () => {
+		const result = await api('logout', { method: 'POST' });
+		if (result.error === 'unavailable') return showState('unavailable');
+		showState('signed-out');
+		showMessage(copy.login.loggedOut);
+	});
+
+	async function start() {
+		if (!(await portalIsAvailable())) return;
+		const me = await api<{ user: User }>('me');
+		if (me.ok) showSignedIn(me.data!.user);
+		else showState('signed-out');
+	}
+	start();
+</script>

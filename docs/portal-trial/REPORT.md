@@ -218,3 +218,38 @@ Grades, attendance, assignment submission, messaging, payments, public sign-up, 
 3. Should faculty also see the list of students enrolled in their course?
 4. Will students and faculty have university-issued email addresses to use as login names?
 5. Approx. size: number of students per batch, faculty, and courses per semester?
+
+---
+
+## 17. Scope update (2026-10-04, after owner clarification)
+
+Supersedes sections 1, 7 and 11 where they differ. Sections on architecture, security and registration (roster + emailed link) stand.
+
+**Purpose (owner's words, summarised):** collect student information inside the portal instead of sharing Google Docs with students; feed the People page; give MSc/BSc students their class and notes links after login; give the department a login-only area for dept-specific information.
+
+**What is collected**
+- Name, roll number, contact number, email. Roll number and email come from the roster (verified at registration); the student confirms their name and adds their contact number.
+- Other department people (faculty, research scholars, research assistants, non-teaching staff) additionally upload a photo for their People tile. MSc and BSc students have no photo: their tile shows the information only.
+
+**Data flow to the public People page**
+The public site is static. The portal database is the source; an export step (`npm run people:export`, run by an admin before a build) writes the JSON the People page already reads (`src/content/people/*.json`, plus a new student group) and copies approved photos into `public/People-photos/`. The site is then rebuilt and uploaded as usual. No live database calls from public pages.
+
+**Public vs private fields (open decision for owner)**
+Phone numbers and emails of students are personal data. Default until the owner decides: a student's public tile shows name, roll number and programme only; contact number and email are visible to logged-in department members only. Visibility is a per-field setting in one config file. Students see exactly what will be public before saving.
+
+**Photos:** JPEG/PNG/WebP only, max 3 MB, resized server-side, stored outside the web root until an admin approves; the export copies approved ones.
+
+**Class and notes links:** kept (original Phases 2-3). MSc and BSc only for now (programme from roll-number prefix).
+
+**Department-only area:** logged-in pages for information that must not be public (content to be defined by the owner). Served by the API, never placed in `dist/`.
+
+**Revised build order**
+1. Finish Step B auth pages: /register, /login, forgot-password, first-login change, dev proxy, "portal not available" state.
+2. Student portal: courses and links (GET /api/my-courses).
+3. Faculty dashboard: manage links for own courses.
+4. Student/people profile: contact number form, photo upload for non-student groups, visibility setting.
+5. People export script and a new students section on the People page (MSc, BSc).
+6. Department-only area.
+7. Admin tools (roster, enrollments, photo approval), hardening, handbook.
+
+**Privacy gate:** real student data is loaded only after university approval (India's DPDP Act applies to contact details). The trial uses fake data only.

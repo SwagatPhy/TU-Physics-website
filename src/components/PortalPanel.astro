@@ -1,0 +1,116 @@
+---
+// The box every portal page puts its forms in. It also holds the states all
+// portal pages share:
+//   - "loading": shown until the page script has checked the API;
+//   - "unavailable": the portal server can't be reached (the static website is
+//     still fine — this just says the portal is offline);
+//   - a <noscript> note, because the portal needs JavaScript.
+// Each page's own states are the elements in the slot with data-state="…";
+// src/lib/portal-ui.ts shows one state at a time.
+import { copy } from '../lib/portal-copy';
+---
+
+<div class="portal-panel" data-portal>
+	<p class="portal-panel__loading" data-state="loading">{copy.loading}</p>
+
+	<div class="portal-panel__unavailable" data-state="unavailable" hidden>
+		<h2>{copy.unavailableTitle}</h2>
+		<p>{copy.unavailableText}</p>
+	</div>
+
+	<noscript><p class="portal-message portal-message--error">{copy.noScript}</p></noscript>
+
+	<p class="portal-message" role="status" aria-live="polite" data-message hidden></p>
+
+	<slot />
+</div>
+
+<style is:global>
+	.portal-panel {
+		max-width: 28rem;
+		margin-inline: auto;
+		padding: var(--space-lg);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius);
+		background: var(--color-bg);
+		box-shadow: var(--shadow-sm);
+	}
+
+	.portal-panel h2 {
+		font-size: 1.4rem;
+	}
+
+	.portal-panel__loading {
+		margin: 0;
+		color: var(--color-text-muted);
+	}
+
+	.portal-form {
+		display: grid;
+		gap: var(--space-md);
+	}
+
+	.portal-field {
+		display: grid;
+		gap: 0.35rem;
+	}
+
+	.portal-field label {
+		font-weight: 600;
+		color: var(--navy);
+	}
+
+	.portal-field input {
+		width: 100%;
+		min-height: 2.9rem;
+		padding: 0.6rem 0.85rem;
+		border: 1px solid var(--color-border-strong);
+		border-radius: var(--radius-sm);
+		background: var(--color-bg);
+		color: var(--color-text);
+		font: inherit;
+	}
+
+	.portal-field input:focus-visible {
+		outline: 2px solid var(--color-focus);
+		outline-offset: 1px;
+		border-color: var(--navy);
+	}
+
+	.portal-field__hint {
+		margin: 0;
+		font-size: 0.9rem;
+		color: var(--color-text-muted);
+	}
+
+	.portal-form .btn {
+		width: 100%;
+	}
+
+	.portal-form .btn[disabled] {
+		opacity: 0.6;
+		cursor: progress;
+	}
+
+	.portal-links {
+		display: grid;
+		gap: 0.4rem;
+		margin: var(--space-md) 0 0;
+		padding: 0;
+		list-style: none;
+		font-size: 0.95rem;
+	}
+
+	.portal-message {
+		margin: 0 0 var(--space-md);
+		padding: 0.75rem 1rem;
+		border-radius: var(--radius-sm);
+		background: var(--color-bg-soft);
+		border-left: 3px solid var(--mint);
+		color: var(--color-text);
+	}
+
+	.portal-message--error {
+		border-left-color: var(--amber);
+	}
+</style>

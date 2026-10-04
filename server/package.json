@@ -1,0 +1,20 @@
+{
+  "name": "dphy-portal-api",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Student/Faculty portal API (trial). See docs/portal-trial/REPORT.md.",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning src/server.js",
+    "migrate": "node --disable-warning=ExperimentalWarning scripts/migrate.js",
+    "seed": "node --disable-warning=ExperimentalWarning scripts/seed.js",
+    "test": "node --disable-warning=ExperimentalWarning --test \"test/**/*.test.js\""
+  },
+  "dependencies": {
+    "argon2": "^0.45.1",
+    "express": "^5.2.1"
+  }
+}

@@ -15,13 +15,18 @@ sent**, and nothing here is on the live site.
    You see the login form and, under it, the yellow *Trial accounts* box.
 
 2. **Log in as a student — Swagat Bordoloi** (PhD research scholar).
-   You see your course **PHY 101 Classical Mechanics** with a *TRIAL class link* and
-   *TRIAL notes*. You only see courses you are enrolled in. Click *Log out*.
+   You see your course **PHY 101 Classical Mechanics** with a *Class links* section and a
+   *Notes* section. The two *TRIAL notes (… file)* notes have a *Download* button (tiny
+   made-up text and PDF files). You only see courses you are enrolled in. Click *Log out*.
 
 3. **Log in as a teacher — Rupjyoti Gogoi** (teaches PHY 101).
-   You see PHY 101 and how many students are enrolled. Add a link: type a title (e.g.
-   *Week 1 notes*), an address such as `https://example.com/week1`, and click the add button.
-   Log out, log in as Swagat Bordoloi again: the new link is there.
+   You see PHY 101 and how many students are enrolled. Add a class link: type a title (e.g.
+   *Week 1 lecture*), an address such as `https://example.com/week1`, and click *Add link*.
+   Then add a note under *Notes*: a title and a file (PDF, Word .docx, PowerPoint .pptx, or a
+   .txt/.md/.csv text file, up to 20 MB), optionally a link too, and click *Add note*. Other
+   files (a renamed program, a .doc, a macro-enabled .docm) are refused.
+   Log out, log in as Swagat Bordoloi again: the new link and note are there, and the file
+   downloads.
 
 4. **Log in as someone who just signed up — Trial Applicant One.**
    You only see a "waiting for approval" message — no courses, nothing else.
@@ -68,7 +73,7 @@ to match and restart terminal 1; the API's log warns you if the two don't match.
 **Start again with clean data:**
 
 1. Stop terminal 1 (Ctrl+C) — the API must not be running during a reset.
-2. `cd server && npm run seed:people -- --fresh`
+2. `cd server && npm run seed:people -- --fresh` (also empties `server/data/uploads/`)
 3. Start terminal 1 again (`npm start`). **Always restart the API after any reset**, also
    after deleting or replacing `server/data/portal.sqlite` by hand.
 
@@ -83,7 +88,8 @@ two people sharing one email), so they can be fixed there.
 
 ## Look at the database
 
-Everything the portal stores is in one file: **`server/data/portal.sqlite`**.
+Everything the portal stores is in one file, **`server/data/portal.sqlite`**, plus the uploaded
+note files in **`server/data/uploads/`** (random names; the real names are in the `resources` table).
 
 - **DB Browser for SQLite** (free app, <https://sqlitebrowser.org>): *Open Database Read Only…*,
   choose that file, then the *Browse Data* tab and pick a table (`users`, `courses`, …).

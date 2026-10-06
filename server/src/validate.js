@@ -4,8 +4,6 @@
 import { toDbTime } from './db.js';
 import { normalizeRollNumber, programmeForRollNumber } from './programmes.js';
 
-export const RESOURCE_KINDS = ['class_link', 'notes', 'other'];
-
 // Only http(s) links may be stored or shown: anything else ("javascript:",
 // "data:", …) could run code when clicked.
 export function isWebLink(url) {
@@ -16,21 +14,48 @@ export function isWebLink(url) {
 	}
 }
 
-// Checks a class/notes link sent by a faculty member.
-// Returns { error } or { value: { kind, title, url, visibleFrom } }.
-export function checkResource(body) {
-	const { kind, title, url, visibleFrom } = body ?? {};
-	if (!RESOURCE_KINDS.includes(kind)) return { error: 'invalid_kind' };
-	if (typeof title !== 'string' || !title.trim() || title.trim().length > 200) return { error: 'invalid_title' };
-	if (typeof url !== 'string' || url.trim().length > 2000 || !isWebLink(url.trim())) return { error: 'invalid_url' };
+function isBlank(value) {
+	return value === undefined || value === null || value === '';
+}
 
-	let visible = null;
-	if (visibleFrom !== undefined && visibleFrom !== null && visibleFrom !== '') {
-		const date = typeof visibleFrom === 'string' ? new Date(visibleFrom) : null;
-		if (!date || Number.isNaN(date.getTime())) return { error: 'invalid_date' };
-		visible = toDbTime(date);
-	}
-	return { value: { kind, title: title.trim(), url: url.trim(), visibleFrom: visible } };
+function checkTitle(title) {
+	if (typeof title !== 'string' || !title.trim() || title.trim().length > 200) return { error: 'invalid_title' };
+	return { value: title.trim() };
+}
+
+function checkUrl(url) {
+	if (typeof url !== 'string' || url.trim().length > 2000 || !isWebLink(url.trim())) return { error: 'invalid_url' };
+	return { value: url.trim() };
+}
+
+// "Show to students from": optional; null means straight away.
+function checkVisibleFrom(visibleFrom) {
+	if (isBlank(visibleFrom)) return { value: null };
+	const date = typeof visibleFrom === 'string' ? new Date(visibleFrom) : null;
+	if (!date || Number.isNaN(date.getTime())) return { error: 'invalid_date' };
+	return { value: toDbTime(date) };
+}
+
+// A class link: title and URL required, optional show-from date.
+// Returns { error } or { value: { title, url, visibleFrom } }.
+export function checkClassLink(body) {
+	const title = checkTitle(body?.title);
+	const url = checkUrl(body?.url);
+	const visibleFrom = checkVisibleFrom(body?.visibleFrom);
+	for (const result of [title, url, visibleFrom]) if (result.error) return result;
+	return { value: { title: title.value, url: url.value, visibleFrom: visibleFrom.value } };
+}
+
+// The text part of a note: title, optional URL, optional show-from date.
+// (The file is checked separately by checkUpload in files.js; the route makes
+// sure a note ends up with a file, a URL, or both.)
+// Returns { error } or { value: { title, url, visibleFrom } } (url may be null).
+export function checkNoteDetails(body) {
+	const title = checkTitle(body?.title);
+	const url = isBlank(body?.url) ? { value: null } : checkUrl(body.url);
+	const visibleFrom = checkVisibleFrom(body?.visibleFrom);
+	for (const result of [title, url, visibleFrom]) if (result.error) return result;
+	return { value: { title: title.value, url: url.value, visibleFrom: visibleFrom.value } };
 }
 
 // ---- Sign-up and profile details ------------------------------------------

@@ -40,5 +40,10 @@ export function loadConfig(env = process.env) {
 		mailMode: env.MAIL_MODE || 'outbox',
 		outboxDir: env.OUTBOX_DIR || 'data/outbox',
 		mailFrom: env.MAIL_FROM || 'portal@example.test',
+		// Uploaded note files, stored under random names. Outside the web root and
+		// git-ignored (inside data/); back it up together with the database.
+		uploadsDir: env.UPLOADS_DIR || 'data/uploads',
+		// Largest note file accepted, in MB (REPORT.md section 18).
+		maxUploadBytes: readNumber(env.MAX_UPLOAD_MB, 20) * 1024 * 1024,
 	};
 }

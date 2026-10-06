@@ -17,3 +17,7 @@ The SQL is written to work in both, with one difference:
 Everything else (VARCHAR, BOOLEAN as 0/1, DATETIME as UTC text, CHECK constraints,
 `REFERENCES`, `UNIQUE`, indexes) is accepted by both. MySQL enforces CHECK constraints from
 8.0.16.
+
+**Table rebuilds.** SQLite cannot drop `NOT NULL` from a column, so `005_note_files.sql`
+rebuilds `resources` (new table, copy rows, drop, rename). On MySQL, use the one-line
+`ALTER TABLE … MODIFY` given in that file's header instead.

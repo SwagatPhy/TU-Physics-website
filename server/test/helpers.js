@@ -6,6 +6,9 @@ import { openDatabase, migrate, toDbTime } from '../src/db.js';
 import { createApp } from '../src/app.js';
 import { createLoginLimiter } from '../src/rate-limit.js';
 import { hashPassword } from '../src/auth.js';
+import { mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 export const PASSWORD = 'test-password-123';
 
@@ -31,8 +34,13 @@ export async function addUser(
 }
 
 // Starts an app. `clock` lets a test move time forward for the rate limiter.
-export async function startTestServer({ limiterOptions = {} } = {}) {
-	const config = loadConfig({ DATABASE_PATH: ':memory:', BASE_PATH: '/dphy', COOKIE_SECURE: 'true' });
+// Uploaded files go to a fresh temporary folder, removed by close().
+export async function startTestServer({ limiterOptions = {}, env = {} } = {}) {
+	const testDir = mkdtempSync(join(tmpdir(), 'portal-uploads-'));
+	// A dot-folder in the path on purpose: real server paths can have one, and
+	// downloads must still work (they once failed under .claude/ worktrees).
+	const uploadsDir = join(testDir, '.dot-folder', 'uploads');
+	const config = loadConfig({ DATABASE_PATH: ':memory:', BASE_PATH: '/dphy', COOKIE_SECURE: 'true', UPLOADS_DIR: uploadsDir, ...env });
 	const db = openDatabase(':memory:');
 	migrate(db);
 
@@ -56,7 +64,10 @@ export async function startTestServer({ limiterOptions = {} } = {}) {
 		outbox,
 		// Waits for emails and other work that happens after a response is sent.
 		backgroundWorkDone: app.locals.backgroundWorkDone,
-		close: () => new Promise((resolve) => server.close(resolve)),
+		close: async () => {
+			await new Promise((resolve) => server.close(resolve));
+			rmSync(testDir, { recursive: true, force: true });
+		},
 	};
 }
 
@@ -101,8 +112,11 @@ export function client(baseUrl) {
 				const [pair] = setCookie.split(';');
 				cookie = pair.endsWith('=') ? null : pair; // "dphy_session=" means cleared
 			}
-			const text = await response.text();
-			return { status: response.status, headers: response.headers, setCookie, body: text ? JSON.parse(text) : null };
+			// JSON answers are parsed; anything else (a downloaded file) is returned as a Buffer.
+			const bytes = Buffer.from(await response.arrayBuffer());
+			const isJson = (response.headers.get('content-type') ?? '').includes('application/json');
+			const answer = !bytes.length ? null : isJson ? JSON.parse(bytes.toString('utf8')) : bytes;
+			return { status: response.status, headers: response.headers, setCookie, body: answer };
 		},
 		login(email, password = PASSWORD) {
 			return this.request('/login', { method: 'POST', body: { email, password } });

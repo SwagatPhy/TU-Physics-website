@@ -1,6 +1,7 @@
 ---
-// Faculty dashboard: the courses I teach (admin: all courses) and their class
-// and notes links — add, edit, delete.
+// Faculty dashboard: the courses I teach (admin: all courses), each with two
+// sections — "Class links" (title + URL) and "Notes" (title + an uploaded
+// file and/or a link) — to add, edit and delete.
 // States: loading → unavailable | not-logged-in | pending | courses | empty.
 // Students who open this page are sent to /portal/.
 // Course cards are cloned from the <template>s below; every value from the
@@ -12,7 +13,9 @@ import { copy } from '../lib/portal-copy';
 import { portalPages } from '../lib/api';
 
 const text = copy.faculty;
-const kinds = copy.portal.kinds;
+// The file types the API accepts (server/src/files.js). The API also checks
+// each file's content; this only filters the file picker.
+const acceptedFiles = '.pdf,.txt,.md,.csv,.docx,.pptx';
 ---
 
 <Layout title={text.title} noindex>
@@ -48,27 +51,18 @@ const kinds = copy.portal.kinds;
 	<template id="course-template">
 		<li class="fcourse">
 			<h2 class="fcourse__title" data-field="title"></h2>
-			<p class="fcourse__meta"><span data-field="students"></span> {text.students}</p>
+			<p class="fcourse__meta" data-field="students"></p>
 			<p class="portal-message" role="status" aria-live="polite" data-field="status" hidden></p>
-			<p class="fcourse__none" data-field="none">{text.noLinks}</p>
-			<ul class="fcourse__links" data-field="links"></ul>
 
-			<form class="portal-form fcourse__form" novalidate>
-				<input type="hidden" name="resourceId" />
-				<div class="fcourse__row">
-					<label class="portal-field">
-						{text.kindLabel}
-						<select name="kind">
-							<option value="class_link">{kinds.class_link}</option>
-							<option value="notes">{kinds.notes}</option>
-							<option value="other">{kinds.other}</option>
-						</select>
-					</label>
-					<label class="portal-field">
-						{text.linkTitle}
-						<input name="title" type="text" maxlength="200" required />
-					</label>
-				</div>
+			<h3 class="fcourse__heading">{text.classLinks}</h3>
+			<p class="fcourse__none" data-field="noLinks">{text.noLinks}</p>
+			<ul class="fcourse__links" data-field="links"></ul>
+			<form class="portal-form fcourse__form" data-form="link" novalidate>
+				<input type="hidden" name="id" />
+				<label class="portal-field">
+					{text.linkTitle}
+					<input name="title" type="text" maxlength="200" required />
+				</label>
 				<label class="portal-field">
 					{text.url}
 					<input name="url" type="url" maxlength="2000" required placeholder="https://" />
@@ -80,17 +74,48 @@ const kinds = copy.portal.kinds;
 					<span class="portal-field__hint">{text.visibleFromHint}</span>
 				</label>
 				<div class="btn-row">
-					<button class="btn btn--navy" type="submit" data-field="submit">{text.add}</button>
+					<button class="btn btn--navy" type="submit" data-field="submit" data-add-label={text.add}>{text.add}</button>
+					<button class="btn btn--outline" type="button" data-action="cancel" hidden>{text.cancel}</button>
+				</div>
+			</form>
+
+			<h3 class="fcourse__heading">{text.notes}</h3>
+			<p class="fcourse__none" data-field="noNotes">{text.noNotes}</p>
+			<ul class="fcourse__links" data-field="notes"></ul>
+			<form class="portal-form fcourse__form" data-form="note" novalidate>
+				<input type="hidden" name="id" />
+				<label class="portal-field">
+					{text.noteTitle}
+					<input name="title" type="text" maxlength="200" required />
+				</label>
+				<label class="portal-field">
+					{text.file}
+					<input name="file" type="file" accept={acceptedFiles} />
+					<span class="portal-field__hint" data-field="currentFile" hidden></span>
+				</label>
+				<label class="portal-field">
+					{text.noteUrl}
+					<input name="url" type="url" maxlength="2000" placeholder="https://" />
+					<span class="portal-field__hint">{text.urlHint}</span>
+				</label>
+				<label class="portal-field">
+					{text.visibleFrom}
+					<input name="visibleFrom" type="date" />
+					<span class="portal-field__hint">{text.visibleFromHint}</span>
+				</label>
+				<div class="btn-row">
+					<button class="btn btn--navy" type="submit" data-field="submit" data-add-label={text.addNote}>{text.addNote}</button>
 					<button class="btn btn--outline" type="button" data-action="cancel" hidden>{text.cancel}</button>
 				</div>
 			</form>
 		</li>
 	</template>
 
-	<template id="link-template">
+	<template id="item-template">
 		<li class="flink">
-			<span class="badge" data-field="kind"></span>
-			<a data-field="link" target="_blank" rel="noopener noreferrer"></a>
+			<span class="flink__title" data-field="title"></span>
+			<a data-field="link" target="_blank" rel="noopener noreferrer" hidden></a>
+			<a class="flink__file" data-field="file" download hidden></a>
 			<span class="flink__note" data-field="note"></span>
 			<span class="flink__actions">
 				<button class="btn btn--outline flink__button" type="button" data-action="edit">{text.edit}</button>
@@ -101,20 +126,32 @@ const kinds = copy.portal.kinds;
 </Layout>
 
 <script>
-	import { api, portalPages } from '../lib/api';
+	import { api, portalPages, fileDownloadUrl } from '../lib/api';
 	import { copy, errorMessage } from '../lib/portal-copy';
 	import { showState, portalIsAvailable } from '../lib/portal-ui';
 
-	interface Link { id: number; kind: string; title: string; url: string; visibleFrom: string | null }
-	interface Course { id: number; code: string; title: string; semester: string; studentCount: number; resources: Link[] }
+	interface Item {
+		id: number;
+		kind: string;
+		title: string;
+		url: string | null;
+		file: { name: string; size: number } | null;
+		visibleFrom: string | null;
+	}
+	interface Course { id: number; code: string; title: string; semester: string; studentCount: number; resources: Item[] }
+
+	// Same limit as the API (MAX_UPLOAD_MB). Checked here only so a too-large
+	// file is refused before it is read and sent; the API checks again.
+	const MAX_FILE_BYTES = 20 * 1024 * 1024;
 
 	const text = copy.faculty;
-	const kinds = copy.portal.kinds;
 	const list = document.getElementById('course-list')!;
 	const courseTemplate = document.getElementById('course-template') as HTMLTemplateElement;
-	const linkTemplate = document.getElementById('link-template') as HTMLTemplateElement;
+	const itemTemplate = document.getElementById('item-template') as HTMLTemplateElement;
 
 	const field = (root: ParentNode, name: string) => root.querySelector<HTMLElement>(`[data-field="${name}"]`)!;
+	const input = (form: HTMLFormElement, name: string) => form.elements.namedItem(name) as HTMLInputElement;
+	const isNote = (item: Item) => item.kind !== 'class_link'; // 'notes', and older 'other' items
 
 	function setStatus(courseElement: Element, message: string, isError = false) {
 		const status = field(courseElement, 'status');
@@ -123,51 +160,89 @@ const kinds = copy.portal.kinds;
 		status.hidden = !message;
 	}
 
-	// Puts the form back into "add a new link" mode.
-	function resetForm(form: HTMLFormElement) {
-		form.reset();
-		(form.elements.namedItem('resourceId') as HTMLInputElement).value = '';
-		field(form, 'submit').textContent = text.add;
-		form.querySelector<HTMLElement>('[data-action="cancel"]')!.hidden = true;
+	function formatSize(bytes: number) {
+		return bytes < 1024 * 1024 ? `${Math.max(1, Math.round(bytes / 1024))} KB` : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 	}
 
-	function startEditing(form: HTMLFormElement, link: Link) {
-		const value = (name: string, v: string) => ((form.elements.namedItem(name) as HTMLInputElement).value = v);
-		value('resourceId', String(link.id));
-		value('kind', link.kind);
-		value('title', link.title);
-		value('url', link.url);
-		value('visibleFrom', link.visibleFrom ? link.visibleFrom.slice(0, 10) : '');
+	// Puts a form back into "add new" mode.
+	function resetForm(form: HTMLFormElement) {
+		form.reset();
+		input(form, 'id').value = '';
+		delete form.dataset.hasFile;
+		const submit = field(form, 'submit');
+		submit.textContent = submit.dataset.addLabel!;
+		form.querySelector<HTMLElement>('[data-action="cancel"]')!.hidden = true;
+		const currentFile = form.querySelector<HTMLElement>('[data-field="currentFile"]');
+		if (currentFile) currentFile.hidden = true;
+	}
+
+	function startEditing(form: HTMLFormElement, item: Item) {
+		resetForm(form);
+		input(form, 'id').value = String(item.id);
+		input(form, 'title').value = item.title;
+		input(form, 'url').value = item.url ?? '';
+		input(form, 'visibleFrom').value = item.visibleFrom ? item.visibleFrom.slice(0, 10) : '';
+		const currentFile = form.querySelector<HTMLElement>('[data-field="currentFile"]');
+		if (currentFile && item.file) {
+			currentFile.textContent = `${text.currentFile} ${item.file.name}`;
+			currentFile.hidden = false;
+			form.dataset.hasFile = 'yes';
+		}
 		field(form, 'submit').textContent = text.save;
 		form.querySelector<HTMLElement>('[data-action="cancel"]')!.hidden = false;
-		form.querySelector<HTMLInputElement>('input[name="title"]')!.focus();
+		input(form, 'title').focus();
+	}
+
+	// One class link or note: its title (a link if it has a URL), a download
+	// link if it has a file, the show-from date, and Edit/Delete.
+	function renderItem(course: Course, item: Item, form: HTMLFormElement): HTMLElement {
+		const row = (itemTemplate.content.cloneNode(true) as DocumentFragment).firstElementChild as HTMLElement;
+		if (item.url) {
+			const link = field(row, 'link') as HTMLAnchorElement;
+			link.href = item.url; // the API only stores http(s) links
+			link.textContent = item.title;
+			link.hidden = false;
+			field(row, 'title').hidden = true;
+		} else {
+			field(row, 'title').textContent = item.title;
+		}
+		if (item.file) {
+			const file = field(row, 'file') as HTMLAnchorElement;
+			file.href = fileDownloadUrl(item.id);
+			file.textContent = `${text.download}: ${item.file.name} (${formatSize(item.file.size)})`;
+			file.hidden = false;
+		}
+		field(row, 'note').textContent = item.visibleFrom ? `${text.visibleFromNote} ${item.visibleFrom.slice(0, 10)}` : '';
+		row.querySelector('[data-action="edit"]')!.addEventListener('click', () => startEditing(form, item));
+		row.querySelector('[data-action="delete"]')!.addEventListener('click', () => deleteItem(course.id, item));
+		return row;
 	}
 
 	function renderCourse(course: Course): HTMLElement {
 		const element = (courseTemplate.content.cloneNode(true) as DocumentFragment).firstElementChild as HTMLElement;
 		element.dataset.courseId = String(course.id);
 		field(element, 'title').textContent = `${course.code} — ${course.title}`;
-		field(element, 'students').textContent = String(course.studentCount);
-		field(element, 'none').hidden = course.resources.length > 0;
+		field(element, 'students').textContent = course.studentCount ? `${text.students} ${course.studentCount}` : text.noStudents;
 
-		const form = element.querySelector('form')!;
-		const links = field(element, 'links');
-		for (const link of course.resources) {
-			const row = (linkTemplate.content.cloneNode(true) as DocumentFragment).firstElementChild as HTMLElement;
-			field(row, 'kind').textContent = kinds[link.kind] ?? kinds.other;
-			const anchor = field(row, 'link') as HTMLAnchorElement;
-			anchor.href = link.url; // the API only stores http(s) links
-			anchor.textContent = link.title;
-			field(row, 'note').textContent = link.visibleFrom ? `${text.visibleFromNote} ${link.visibleFrom.slice(0, 10)}` : '';
-			row.querySelector('[data-action="edit"]')!.addEventListener('click', () => startEditing(form, link));
-			row.querySelector('[data-action="delete"]')!.addEventListener('click', () => deleteLink(course.id, link.id));
-			links.append(row);
+		const linkForm = element.querySelector<HTMLFormElement>('[data-form="link"]')!;
+		const noteForm = element.querySelector<HTMLFormElement>('[data-form="note"]')!;
+		const links = course.resources.filter((item) => !isNote(item));
+		const notes = course.resources.filter(isNote);
+		field(element, 'noLinks').hidden = links.length > 0;
+		field(element, 'noNotes').hidden = notes.length > 0;
+		field(element, 'links').append(...links.map((item) => renderItem(course, item, linkForm)));
+		field(element, 'notes').append(...notes.map((item) => renderItem(course, item, noteForm)));
+
+		for (const form of [linkForm, noteForm]) {
+			form.querySelector('[data-action="cancel"]')!.addEventListener('click', () => resetForm(form));
 		}
-
-		form.querySelector('[data-action="cancel"]')!.addEventListener('click', () => resetForm(form));
-		form.addEventListener('submit', (event) => {
+		linkForm.addEventListener('submit', (event) => {
 			event.preventDefault();
-			saveLink(course.id, form);
+			saveLink(course.id, linkForm);
+		});
+		noteForm.addEventListener('submit', (event) => {
+			event.preventDefault();
+			saveNote(course.id, noteForm);
 		});
 		return element;
 	}
@@ -188,27 +263,74 @@ const kinds = copy.portal.kinds;
 		}
 	}
 
-	async function saveLink(courseId: number, form: HTMLFormElement) {
+	// Sends a form's request with its button disabled; on success reloads and shows doneText.
+	async function send(courseId: number, form: HTMLFormElement, request: () => Promise<{ ok: boolean; error?: string }>, doneText: string) {
 		const button = field(form, 'submit') as HTMLButtonElement;
 		button.disabled = true;
-		const values = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
-		const body = { kind: values.kind, title: values.title, url: values.url, visibleFrom: values.visibleFrom || null };
-		const result = values.resourceId
-			? await api(`resources/${values.resourceId}`, { method: 'PUT', body })
-			: await api('resources', { method: 'POST', body: { courseId, ...body } });
+		const result = await request();
 		button.disabled = false;
-
 		if (result.error === 'unavailable') return showState('unavailable');
 		if (!result.ok) return setStatus(form.closest('.fcourse')!, errorMessage(result.error!), true);
-		await load({ courseId, text: values.resourceId ? text.saved : text.added });
+		await load({ courseId, text: doneText });
 	}
 
-	async function deleteLink(courseId: number, linkId: number) {
-		if (!confirm(text.confirmDelete)) return;
-		const result = await api(`resources/${linkId}`, { method: 'DELETE' });
+	function saveLink(courseId: number, form: HTMLFormElement) {
+		const id = input(form, 'id').value;
+		const body = { title: input(form, 'title').value, url: input(form, 'url').value, visibleFrom: input(form, 'visibleFrom').value || null };
+		return send(
+			courseId,
+			form,
+			() => (id ? api(`resources/${id}`, { method: 'PUT', body }) : api('resources', { method: 'POST', body: { courseId, ...body } })),
+			id ? text.saved : text.added,
+		);
+	}
+
+	// The chosen file as { name, data } with its bytes base64-encoded (the API takes JSON only).
+	function readFile(file: File): Promise<{ name: string; data: string }> {
+		return new Promise((resolve, reject) => {
+			const reader = new FileReader();
+			reader.onload = () => resolve({ name: file.name, data: String(reader.result).split(',')[1] ?? '' });
+			reader.onerror = () => reject(reader.error);
+			reader.readAsDataURL(file);
+		});
+	}
+
+	// Without a newly chosen file, an edited note keeps the file it has.
+	async function saveNote(courseId: number, form: HTMLFormElement) {
+		const courseElement = form.closest('.fcourse')!;
+		const id = input(form, 'id').value;
+		const chosen = input(form, 'file').files?.[0];
+		if (chosen && chosen.size > MAX_FILE_BYTES) return setStatus(courseElement, errorMessage('file_too_large'), true);
+		if (chosen && form.dataset.hasFile && !confirm(text.confirmReplaceFile)) return;
+
+		const body: Record<string, unknown> = {
+			title: input(form, 'title').value,
+			url: input(form, 'url').value || null,
+			visibleFrom: input(form, 'visibleFrom').value || null,
+		};
+		if (chosen) {
+			setStatus(courseElement, text.uploading);
+			try {
+				body.file = await readFile(chosen);
+			} catch {
+				return setStatus(courseElement, errorMessage('invalid_file'), true);
+			}
+		}
+		return send(
+			courseId,
+			form,
+			() => (id ? api(`notes/${id}`, { method: 'PUT', body }) : api('notes', { method: 'POST', body: { courseId, ...body } })),
+			id ? text.saved : text.noteAdded,
+		);
+	}
+
+	async function deleteItem(courseId: number, item: Item) {
+		const note = isNote(item);
+		if (!confirm(note ? text.confirmDeleteNote : text.confirmDelete)) return;
+		const result = await api(`${note ? 'notes' : 'resources'}/${item.id}`, { method: 'DELETE' });
 		if (result.error === 'unavailable') return showState('unavailable');
 		if (!result.ok) return load({ courseId, text: errorMessage(result.error!), isError: true });
-		await load({ courseId, text: text.deleted });
+		await load({ courseId, text: note ? text.noteDeleted : text.deleted });
 	}
 
 	document.getElementById('logout-button')!.addEventListener('click', async () => {
@@ -268,6 +390,11 @@ const kinds = copy.portal.kinds;
 		margin-bottom: 0.2rem;
 	}
 
+	:global(.fcourse__heading) {
+		font-size: 1.05rem;
+		margin: var(--space-md) 0 var(--space-sm);
+	}
+
 	:global(.fcourse__meta),
 	:global(.fcourse__none) {
 		margin: 0 0 var(--space-sm);
@@ -289,6 +416,10 @@ const kinds = copy.portal.kinds;
 		gap: 0.4rem 0.75rem;
 		padding: 0.6rem 0;
 		border-bottom: 1px solid var(--color-border);
+	}
+
+	:global(.flink__file) {
+		font-size: 0.92rem;
 	}
 
 	:global(.flink__note) {
@@ -316,18 +447,6 @@ const kinds = copy.portal.kinds;
 
 	:global(.fcourse__form .btn) {
 		width: auto;
-	}
-
-	:global(.fcourse__row) {
-		display: grid;
-		gap: var(--space-md);
-		grid-template-columns: minmax(10rem, 1fr) 2fr;
-	}
-
-	@media (max-width: 40rem) {
-		:global(.fcourse__row) {
-			grid-template-columns: 1fr;
-		}
 	}
 
 	:global(label.portal-field) {

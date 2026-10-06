@@ -31,6 +31,7 @@ import { loadConfig } from '../src/config.js';
 import { openDatabase, migrate, toDbTime } from '../src/db.js';
 import { hashPassword } from '../src/auth.js';
 import { refuseIfApiRunning } from './api-is-running.js';
+import { storeFile } from '../src/files.js';
 
 const SERVER_DIR = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const REPO_DIR = resolve(SERVER_DIR, '..');
@@ -57,6 +58,10 @@ const databaseFile = resolve(SERVER_DIR, config.databasePath);
 if (!databaseFile.startsWith(join(SERVER_DIR, 'data') + '/')) {
 	refuse(`DATABASE_PATH must be a file inside server/data/ (it is ${config.databasePath}).`);
 }
+const uploadsDir = resolve(SERVER_DIR, config.uploadsDir);
+if (!uploadsDir.startsWith(join(SERVER_DIR, 'data') + '/')) {
+	refuse(`UPLOADS_DIR must be a folder inside server/data/ (it is ${config.uploadsDir}).`);
+}
 const seedPassword = process.env.SEED_PASSWORD;
 if (!seedPassword || seedPassword.length < 10) refuse('set SEED_PASSWORD (at least 10 characters) in server/.env first.');
 
@@ -65,6 +70,7 @@ await refuseIfApiRunning(config.port);
 
 if (process.argv.includes('--fresh')) {
 	for (const suffix of ['', '-wal', '-shm']) rmSync(databaseFile + suffix, { force: true });
+	rmSync(uploadsDir, { recursive: true, force: true }); // the note files belonged to the old database
 }
 const db = openDatabase(databaseFile);
 migrate(db);
@@ -197,6 +203,21 @@ const enroll = db.prepare('INSERT INTO enrollments (user_id, course_id) VALUES (
 const addLink = db.prepare(
 	'INSERT INTO resources (course_id, kind, title, url, created_by, updated_at) VALUES (?, ?, ?, ?, ?, ?)',
 );
+const addFileNote = db.prepare(
+	`INSERT INTO resources (course_id, kind, title, url, created_by, updated_at, file_name, file_stored_as, file_size, file_type)
+	 VALUES (?, 'notes', ?, NULL, ?, ?, ?, ?, ?, ?)`,
+);
+// Two tiny made-up note files per course, stored like real uploads.
+function addFakeFileNotes(courseId, code, teacher) {
+	const fakeText = Buffer.from(`TRIAL notes for ${code}.\nMade-up text so the download can be tried. Not real course material.\n`);
+	const fakePdf = Buffer.from(`%PDF-1.4\n% TRIAL made-up PDF for ${code}; not real course material\n%%EOF\n`);
+	for (const [title, name, bytes, type] of [
+		['TRIAL notes (text file)', 'trial-notes.txt', fakeText, 'text/plain; charset=utf-8'],
+		['TRIAL notes (PDF file)', 'trial-notes.pdf', fakePdf, 'application/pdf'],
+	]) {
+		addFileNote.run(courseId, title, teacher, now, name, storeFile(uploadsDir, bytes), bytes.length, type);
+	}
+}
 const courseSummary = [];
 
 for (const course of courses) {
@@ -207,6 +228,7 @@ for (const course of courses) {
 	const slug = course.code.replace(/\s+/g, '').toLowerCase();
 	addLink.run(courseId, 'class_link', 'TRIAL class link', `https://example.com/trial-class/${slug}`, teacher ?? null, now);
 	addLink.run(courseId, 'notes', 'TRIAL notes', `https://example.com/trial-notes/${slug}.pdf`, teacher ?? null, now);
+	addFakeFileNotes(courseId, course.code, teacher ?? null);
 
 	// Trial enrolments: the research scholars supervised by the course's teacher.
 	const teacherName = course.faculty.replace(/^(Dr|Prof)\.?\s+/i, '').trim().toLowerCase();

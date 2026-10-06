@@ -1,6 +1,6 @@
-// Email wording. The text is [PLACEHOLDER] until Notes-manager TU supplies it
-// (content-notes/portal.md); only names, links and the expiry time are filled
-// in by code.
+// Email wording, from Notes-manager TU (content-notes/portal.md). Emails not
+// written yet are [PLACEHOLDER]; only names, links and the expiry time are
+// filled in by code.
 
 // After sign-up: verify the email address and choose a password.
 export function registrationEmail({ name, link, minutes }) {
@@ -21,15 +21,19 @@ ${link}
 // that address, so the person on the sign-up form learns nothing.
 export function alreadyRegisteredEmail({ name, loginLink, resetLink }) {
 	return {
-		subject: '[PLACEHOLDER — "you already have an account" subject]',
-		text: `[PLACEHOLDER — greeting] ${name}
+		subject: 'Portal account already exists',
+		text: `Hello ${name},
 
-[PLACEHOLDER — someone (probably you) tried to sign up with this email, but it already has an account]
+An account with this email already exists.
 
-[PLACEHOLDER — log in here:] ${loginLink}
-[PLACEHOLDER — forgot your password? reset it here:] ${resetLink}
+Log in here: ${loginLink}
+Reset password: ${resetLink}
 
-[PLACEHOLDER — "if this wasn't you, ignore this email"]`,
+If you didn't create this account, contact [PLACEHOLDER: department office].
+
+Best regards,
+Department of Physics
+[PLACEHOLDER: Contact]`,
 	};
 }
 
@@ -37,10 +41,16 @@ export function alreadyRegisteredEmail({ name, loginLink, resetLink }) {
 // Sent to the address on the form (the page itself shows the usual answer).
 export function rollNumberTakenEmail({ name }) {
 	return {
-		subject: '[PLACEHOLDER — "we couldn\'t complete your sign-up" subject]',
-		text: `[PLACEHOLDER — greeting] ${name}
+		subject: "We couldn't complete your sign-up",
+		text: `Hello ${name},
 
-[PLACEHOLDER — we couldn't start your sign-up with the details given; please contact the department office]`,
+We couldn't create your account. Your roll number may already be registered.
+
+Please contact [PLACEHOLDER: department office] for help.
+
+Best regards,
+Department of Physics
+[PLACEHOLDER: Contact]`,
 	};
 }
 
@@ -61,21 +71,31 @@ ${link}
 // An admin approved a sign-up.
 export function approvedEmail({ name, loginLink }) {
 	return {
-		subject: '[PLACEHOLDER — "your account is approved" subject]',
-		text: `[PLACEHOLDER — greeting] ${name}
+		subject: 'Your portal account is approved',
+		text: `Hello ${name},
 
-[PLACEHOLDER — your portal account has been approved; you can now log in]
+Your account has been approved! Log in here:
 
-${loginLink}`,
+${loginLink}
+
+Best regards,
+Department of Physics
+[PLACEHOLDER: Contact]`,
 	};
 }
 
 // An admin did not approve a sign-up.
 export function notApprovedEmail({ name }) {
 	return {
-		subject: '[PLACEHOLDER — "your sign-up was not approved" subject]',
-		text: `[PLACEHOLDER — greeting] ${name}
+		subject: 'About your portal sign-up',
+		text: `Hello ${name},
 
-[PLACEHOLDER — your sign-up was not approved; contact the department office if you think this is a mistake]`,
+Your sign-up was not approved at this time.
+
+Contact [PLACEHOLDER: department office] if you have questions.
+
+Best regards,
+Department of Physics
+[PLACEHOLDER: Contact]`,
 	};
 }

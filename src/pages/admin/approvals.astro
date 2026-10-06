@@ -42,6 +42,7 @@ const col = text.columns;
 					<div class="approvals-toolbar">
 						<label class="approvals-select-all"><input type="checkbox" id="select-all" /> {text.selectAll}</label>
 						<button class="btn btn--navy" type="button" id="approve-selected">{text.approveSelected}</button>
+						<button class="btn btn--outline" type="button" id="reject-selected">{text.rejectSelected}</button>
 					</div>
 					<div class="approvals-table-wrap">
 						<table class="approvals-table">
@@ -133,7 +134,7 @@ const col = text.columns;
 		row.querySelector('[data-action="save"]')!.addEventListener('click', () => saveRow(row, isStudent));
 		row.querySelector('[data-action="approve"]')!.addEventListener('click', () => decide([signup.id], 'approve'));
 		row.querySelector('[data-action="reject"]')!.addEventListener('click', () => {
-			if (confirm(text.confirmReject)) decide([signup.id], 'reject');
+			if (confirm(text.confirmReject.replace('{n}', '1'))) decide([signup.id], 'reject');
 		});
 		return row;
 	}
@@ -168,19 +169,29 @@ const col = text.columns;
 		if (result.error === 'unavailable') return showState('unavailable');
 		if (!result.ok) return showMessage(errorMessage(result.error!), { error: true });
 		await load();
-		showMessage(`${decision === 'approve' ? text.approved : text.rejected} ${result.data!.done.length}`);
+		showMessage((decision === 'approve' ? text.approved : text.rejected).replace('{n}', String(result.data!.done.length)));
 	}
 
 	selectAll.addEventListener('change', () => {
 		rows.querySelectorAll<HTMLInputElement>('[data-field="select"]').forEach((box) => (box.checked = selectAll.checked));
 	});
 
-	document.getElementById('approve-selected')!.addEventListener('click', () => {
-		const selected = [...rows.querySelectorAll<HTMLInputElement>('[data-field="select"]:checked')].map((box) =>
+	function selectedIds() {
+		return [...rows.querySelectorAll<HTMLInputElement>('[data-field="select"]:checked')].map((box) =>
 			Number(box.closest('tr')!.dataset.userId),
 		);
+	}
+
+	document.getElementById('approve-selected')!.addEventListener('click', () => {
+		const selected = selectedIds();
 		if (selected.length === 0) return showMessage(text.nothingSelected, { error: true });
 		decide(selected, 'approve');
+	});
+
+	document.getElementById('reject-selected')!.addEventListener('click', () => {
+		const selected = selectedIds();
+		if (selected.length === 0) return showMessage(text.nothingSelected, { error: true });
+		if (confirm(text.confirmReject.replace('{n}', String(selected.length)))) decide(selected, 'reject');
 	});
 
 	document.getElementById('logout-button')!.addEventListener('click', async () => {

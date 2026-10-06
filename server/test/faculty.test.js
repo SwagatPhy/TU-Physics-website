@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { startTestServer, client, addUser } from './helpers.js';
 import { toDbTime } from '../src/db.js';
 
-describe('faculty link dashboard', () => {
+describe('faculty dashboard: class links', () => {
 	let app, mine, theirs, retired, theirLink;
 	const browsers = {};
 
@@ -24,7 +24,7 @@ describe('faculty link dashboard', () => {
 		theirLink = Number(
 			db
 				.prepare('INSERT INTO resources (course_id, kind, title, url, created_by, updated_at) VALUES (?, ?, ?, ?, ?, ?)')
-				.run(theirs, 'notes', 'Their notes', 'https://example.com/theirs', other, toDbTime(new Date())).lastInsertRowid,
+				.run(theirs, 'class_link', 'Their link', 'https://example.com/theirs', other, toDbTime(new Date())).lastInsertRowid,
 		);
 
 		for (const email of ['me', 'other', 'admin', 'student', 'pending']) {
@@ -34,14 +34,14 @@ describe('faculty link dashboard', () => {
 	});
 	after(() => app.close());
 
-	const link = (extra = {}) => ({ kind: 'notes', title: 'Week 1 notes', url: 'https://example.com/week1', ...extra });
+	const link = (extra = {}) => ({ title: 'Week 1 class', url: 'https://example.com/week1', ...extra });
 	const post = (who, body) => browsers[who].request('/resources', { method: 'POST', body });
 
 	test('/teaching lists only my own active courses, with student counts', async () => {
 		const res = await browsers.me.request('/teaching');
 		assert.equal(res.status, 200);
 		assert.deepEqual(res.body.courses.map((c) => [c.code, c.studentCount]), [['MINE', 1]]);
-		assert.ok(!JSON.stringify(res.body).includes('Their notes'));
+		assert.ok(!JSON.stringify(res.body).includes('Their link'));
 	});
 
 	test('admin sees every active course', async () => {
@@ -64,13 +64,13 @@ describe('faculty link dashboard', () => {
 		let course = (await browsers.me.request('/teaching')).body.courses[0];
 		assert.deepEqual(
 			course.resources.map((r) => [r.title, r.visibleFrom]),
-			[['Week 1 notes', '2030-01-01 00:00:00']],
+			[['Week 1 class', '2030-01-01 00:00:00']],
 		);
 
-		const changed = await browsers.me.request(`/resources/${id}`, { method: 'PUT', body: link({ title: 'Week 1 notes (v2)', kind: 'other' }) });
+		const changed = await browsers.me.request(`/resources/${id}`, { method: 'PUT', body: link({ title: 'Week 1 class (v2)' }) });
 		assert.equal(changed.status, 200);
 		course = (await browsers.me.request('/teaching')).body.courses[0];
-		assert.deepEqual(course.resources.map((r) => [r.kind, r.title, r.visibleFrom]), [['other', 'Week 1 notes (v2)', null]]);
+		assert.deepEqual(course.resources.map((r) => [r.kind, r.title, r.visibleFrom]), [['class_link', 'Week 1 class (v2)', null]]);
 
 		assert.equal((await browsers.me.request(`/resources/${id}`, { method: 'DELETE' })).status, 204);
 		assert.deepEqual((await browsers.me.request('/teaching')).body.courses[0].resources, []);
@@ -87,7 +87,7 @@ describe('faculty link dashboard', () => {
 		assert.deepEqual(del.body, { error: 'resource_not_found' });
 
 		const row = app.db.prepare('SELECT title FROM resources WHERE id = ?').get(theirLink);
-		assert.equal(row.title, 'Their notes'); // untouched
+		assert.equal(row.title, 'Their link'); // untouched
 	});
 
 	test('an inactive course cannot be changed', async () => {
@@ -104,7 +104,7 @@ describe('faculty link dashboard', () => {
 		assert.equal(await bad({ url: 'javascript:alert(1)' }), 'invalid_url');
 		assert.equal(await bad({ url: 'data:text/html,hi' }), 'invalid_url');
 		assert.equal(await bad({ url: 'not a link' }), 'invalid_url');
-		assert.equal(await bad({ kind: 'video' }), 'invalid_kind');
+		assert.equal(await bad({ url: undefined }), 'invalid_url'); // a class link needs a URL
 		assert.equal(await bad({ title: '   ' }), 'invalid_title');
 		assert.equal(await bad({ title: 'x'.repeat(201) }), 'invalid_title');
 		assert.equal(await bad({ visibleFrom: 'next tuesday' }), 'invalid_date');

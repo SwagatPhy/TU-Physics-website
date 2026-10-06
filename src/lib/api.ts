@@ -51,6 +51,11 @@ export async function api<T = any>(
 	return { ok: true, status: response.status, data };
 }
 
+// Where a note's file is downloaded from (the API checks who may download it).
+export function fileDownloadUrl(resourceId: number): string {
+	return `${API_ROOT}files/${resourceId}`;
+}
+
 // The portal page addresses, for links and redirects.
 export const portalPages = {
 	login: withBase('/login'),

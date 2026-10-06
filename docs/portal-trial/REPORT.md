@@ -281,16 +281,18 @@ Open questions for the owner: is "programme + current semester" enough (or do ba
 
 Notes must be uploaded through the portal itself; the PDF is not kept as a public file on the site.
 
-**Proposed rules (owner to confirm or change)**
-- Allowed files: PDF and plain text (`.pdf`, `.txt`, `.md`, `.csv`). Office files (`.docx`, `.pptx`) and images are left out for now; they can be added to one allow-list later.
+**Rules (confirmed by the owner, 2026-10-06; built on portal-trial)**
+- Allowed files: `.pdf`, `.txt`, `.md`, `.csv`, `.docx`, `.pptx` (one allow-list, `FILE_TYPES` in `server/src/files.js`). Images are left out for now.
+- Word and PowerPoint: **modern Office Open XML only** (`.docx`, `.pptx`). Refused: macro-enabled `.docm`, `.pptm`, `.xlsm` (they carry VBA macros) and legacy `.doc`, `.ppt` (old binary OLE files, which can carry macros and can't be checked reliably).
 - Max size 20 MB per file (one setting); optional per-course storage cap.
-- Files are stored on the server outside the web root (`server/uploads/`, git-ignored), under random names; the original filename is kept only in the database for display and download.
-- Type is checked by content (PDF must start with `%PDF-`; text must be valid UTF-8 without binary bytes), not by the extension the browser claims.
-- No direct file URL exists. A file is served only through an authenticated endpoint that checks: logged in, approved, student enrolled in that course (or the course's own faculty, or admin), and `visible_from` has passed. Sent with `Content-Disposition: attachment` and `X-Content-Type-Options: nosniff`; text files as `text/plain`.
+- Files are stored on the server outside the web root (`server/data/uploads/`, git-ignored; setting `UPLOADS_DIR`), under random names; the original filename is kept only in the database for display and download.
+- Type is checked by content, not by the extension the browser claims: a PDF must start with `%PDF-`; text must be valid UTF-8 without binary bytes; a `.docx`/`.pptx` must be a well-formed ZIP containing `[Content_Types].xml` and `word/` (docx) or `ppt/` (pptx) parts, with no macro or ActiveX parts (`vbaProject.bin`, `vbaData.xml`, `activeX/`) and no macro-enabled content type. A renamed `.exe`, a `.docm` renamed to `.docx`, or any other ZIP is refused.
+- Zip bombs are refused: at most 2000 parts, 200 MB unpacked in total, and no part over 1 MB that unpacks more than 200 times its packed size. ZIP64 archives are refused (never needed under 20 MB).
+- No direct file URL exists. A file is served only through an authenticated endpoint that checks: logged in, approved, student enrolled in that course (or the course's own faculty, or admin), and `visible_from` has passed. Sent with `Content-Disposition: attachment`, `X-Content-Type-Options: nosniff` and the file type's own MIME type (`application/pdf`, the Word/PowerPoint types; text files as `text/plain`).
 - Faculty may replace or delete a file; deleting a note deletes its file. Audit-logged.
-- Backups must include `server/uploads/` as well as the database (the handbook says so).
+- Backups must include `server/data/uploads/` as well as the database (the handbook says so).
 - No antivirus scan in the trial. For production, ask IT whether the server has one.
 
-**Data model**: `resources` gains `file_name`, `file_stored_as`, `file_size`, `file_type` (all nullable) and keeps `url` nullable for notes; class links keep `url` required. Migration `00N_note_files.sql`.
+**Data model**: `resources` gains `file_name`, `file_stored_as`, `file_size`, `file_type` (all nullable) and keeps `url` nullable for notes; class links keep `url` required. Migration `005_note_files.sql`.
 
-**Tests**: wrong type refused (renamed .exe, fake PDF); oversize refused; student A cannot download student B's course file; pending/unenrolled/not-yet-visible downloads refused; faculty cannot upload to another faculty's course; deleting removes the file from disk.
+**Tests** (`server/test/notes.test.js`): wrong type refused (renamed .exe, fake PDF, a ZIP that isn't Office, a docx with `vbaProject.bin`, a macro-enabled content type, `.docm`/`.pptm`/`.xlsm`/`.doc`/`.ppt`, zip bombs); tiny valid fake .docx/.pptx accepted; oversize refused; student A cannot download student B's course file; pending/unenrolled/not-yet-visible downloads refused; faculty cannot upload to another faculty's course; deleting removes the file from disk.

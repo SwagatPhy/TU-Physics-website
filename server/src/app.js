@@ -11,6 +11,7 @@ import { registerRoutes } from './routes/register-routes.js';
 import { studentRoutes } from './routes/student-routes.js';
 import { facultyRoutes } from './routes/faculty-routes.js';
 import { adminRoutes } from './routes/admin-routes.js';
+import { filesRoutes } from './routes/files-routes.js';
 import { loadProgrammes } from './programmes.js';
 
 export function createApp({
@@ -93,6 +94,14 @@ export function createApp({
 	}
 
 	const api = express.Router();
+	// Notes carry an uploaded file as base64 inside the JSON (a third larger
+	// than the file), so /notes accepts bodies up to that size; a bigger body
+	// gets the same file_too_large answer as a too-large file. Everything else
+	// stays small.
+	const largestNoteBody = Math.ceil((config.maxUploadBytes * 4) / 3) + 64 * 1024;
+	api.use('/notes', express.json({ limit: largestNoteBody }), (error, req, res, next) =>
+		error.type === 'entity.too.large' ? res.status(413).json({ error: 'file_too_large' }) : next(error),
+	);
 	api.use(express.json({ limit: '10kb' }));
 	api.use(requireJson);
 	api.use(loadSession(db, config));
@@ -109,7 +118,8 @@ export function createApp({
 	api.use(authRoutes({ db, config, loginLimiter }));
 	api.use(registerRoutes({ db, config, programmes, mailer, loginLimiter, linkRequestLimiter, runInBackground }));
 	api.use(studentRoutes({ db }));
-	api.use(facultyRoutes({ db }));
+	api.use(facultyRoutes({ db, config }));
+	api.use(filesRoutes({ db, config }));
 	api.use(adminRoutes({ db, config, programmes, mailer, runInBackground }));
 
 	api.use((req, res) => res.status(404).json({ error: 'not_found' }));

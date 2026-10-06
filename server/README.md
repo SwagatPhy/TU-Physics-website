@@ -99,7 +99,9 @@ choose a new password. That signs out every existing session.
 | `src/routes/auth-routes.js` | `/login`, `/logout`, `/me`, `/change-password` |
 | `src/routes/register-routes.js` | `/register/…`, `/password-reset/…` |
 | `src/routes/student-routes.js` | `/my-courses` |
-| `src/routes/faculty-routes.js` | `/teaching`, `/resources` |
+| `src/routes/faculty-routes.js` | `/teaching`, `/resources` (class links), `/notes` |
+| `src/routes/files-routes.js` | `/files/:id` (downloading a note's file) |
+| `src/files.js` | Note files: allowed types, content checks, storage under random names |
 | `src/routes/admin-routes.js` | `/admin/signups`, `/admin/users/:id`, `/admin/decisions` |
 | `src/validate.js` | Input checks shared by routes (links must be http/https) |
 | `programmes.conf` | Roll-number prefixes (TEMPORARY placeholders) |
@@ -125,12 +127,16 @@ All paths are under `/dphy/api` (`BASE_PATH` + `/api`). Requests that change som
 | `PUT /profile` | `{name, phone}` | `200 {user}` (own account; pending allowed) | `400 invalid_name / invalid_phone`, `401` |
 | `POST /password-reset/request` | `{email}` | `202 {status:"check_your_email"}` **always** | `400 invalid_input`, `429 too_many_attempts` |
 | `POST /password-reset/complete` | `{token, password}` | `200 {status:"password_reset"}` | `400 invalid_input / password_too_short / password_too_long / invalid_or_expired_link`, `429` |
-| `GET /my-courses` | — | `200 {courses:[{code,title,semester,resources:[{id,kind,title,url}]}]}` | `401 not_logged_in`, `403 password_change_required / approval_pending / students_only` |
+| `GET /my-courses` | — | `200 {courses:[{code,title,semester,resources:[{id,kind,title,url,file:{name,size}\|null}]}]}` | `401 not_logged_in`, `403 password_change_required / approval_pending / students_only` |
 
-| `GET /teaching` | — | `200 {courses:[{id,code,title,semester,studentCount,resources:[…,visibleFrom]}]}` | `401`, `403 password_change_required / not_allowed` |
-| `POST /resources` | `{courseId, kind, title, url, visibleFrom?}` | `201 {id}` | `400 invalid_kind / invalid_title / invalid_url / invalid_date`, `403 not_allowed`, `404 course_not_found` |
-| `PUT /resources/:id` | `{kind, title, url, visibleFrom?}` | `200 {id}` | as above, `404 resource_not_found` |
+| `GET /teaching` | — | `200 {courses:[{id,code,title,semester,studentCount,resources:[{id,kind,title,url,file,visibleFrom,updatedAt}]}]}` | `401`, `403 password_change_required / not_allowed` |
+| `POST /resources` (class link) | `{courseId, title, url, visibleFrom?}` | `201 {id}` | `400 invalid_title / invalid_url / invalid_date`, `403 not_allowed`, `404 course_not_found` |
+| `PUT /resources/:id` | `{title, url, visibleFrom?}` | `200 {id}` | as above, `404 resource_not_found` |
 | `DELETE /resources/:id` | — | `204` | `403 not_allowed`, `404 resource_not_found` |
+| `POST /notes` | `{courseId, title, url?, visibleFrom?, file?:{name, data (base64)}}` | `201 {id}` | `400 invalid_title / invalid_url / invalid_date / file_or_link_required / invalid_file / invalid_file_type / file_too_large`, `413 file_too_large`, `404 course_not_found` |
+| `PUT /notes/:id` | as POST without `courseId`; `file` object = replace, `null` = remove, left out = keep | `200 {id}` | as above, `404 resource_not_found` |
+| `DELETE /notes/:id` | — | `204` (the stored file is deleted too) | `404 resource_not_found` |
+| `GET /files/:id` | — | `200` the file, as an attachment | `401`, `403 approval_pending`, `404 file_not_found` |
 | `GET /admin/signups` | — | `200 {signups:[{id,name,email,role,status,rollNumber,programme,phone,createdAt}]}` | `401`, `403 not_allowed` |
 | `PUT /admin/users/:id` | `{name, rollNumber? (students), phone?}` | `200 {user}` | `400 invalid_name / invalid_roll_number / invalid_phone / roll_number_taken`, `403`, `404 user_not_found` |
 | `POST /admin/decisions` | `{userIds:[…], decision:"approve"\|"reject"}` | `200 {decision, done:[ids], skipped:[ids]}` | `400 invalid_decision / invalid_input`, `403` |
@@ -139,6 +145,16 @@ All paths are under `/dphy/api` (`BASE_PATH` + `/api`). Requests that change som
 `visible_from` has passed; and only `http(s)` links. `/teaching` and `/resources` are for faculty
 (their own courses, where `courses.faculty_id` is them) and admin (all courses); a course someone
 may not manage answers exactly like one that doesn't exist. Every link change is audit-logged.
+
+**Notes and files** (REPORT.md section 18). `/resources` handles class links only, `/notes` handles
+notes (a note needs a file, a link, or both). Files arrive base64-encoded inside the JSON; `/notes`
+accepts bodies up to the file limit (`MAX_UPLOAD_MB`, default 20), every other route stays at 10 kB.
+Allowed: `.pdf .txt .md .csv .docx .pptx`, checked by content (see `src/files.js`: no macro-enabled
+or legacy Office files, no zip bombs). Files are kept in `UPLOADS_DIR` (default `data/uploads/`,
+outside the web root, git-ignored) under random names. `GET /files/:id` sends a file only to an
+approved student enrolled in that course once the note's show-from date has passed, the course's
+faculty member, or an admin; always as an attachment with its MIME type and `nosniff`. Adding,
+changing, deleting and downloading are audit-logged. **Back up `data/uploads/` with the database.**
 
 `user` is `{id, name, email, role, status, phone, rollNumber, programme, mustChangePassword}` (your own details). Other codes any endpoint can return:
 `415 json_required`, `400 invalid_json`, `413 request_too_large`, `404 not_found`,

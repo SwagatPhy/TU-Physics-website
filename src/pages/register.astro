@@ -47,6 +47,7 @@ const text = copy.register;
 						</div>
 						<button class="btn btn--navy" type="submit">{text.requestSubmit}</button>
 					</form>
+					<p class="portal-field__hint privacy-notice">{text.privacyNotice}</p>
 				</div>
 
 				<div data-state="requested" hidden>
@@ -130,6 +131,10 @@ const text = copy.register;
 </script>
 
 <style>
+	.privacy-notice {
+		margin: var(--space-md) 0 0;
+	}
+
 	.portal-choice {
 		display: grid;
 		gap: 0.5rem;

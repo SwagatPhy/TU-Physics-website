@@ -1,5 +1,6 @@
 ---
-// Student portal: the student's courses with their class and notes links.
+// Student portal: the student's courses, each with its class links and notes
+// (notes can have a file to download and/or a link).
 // States: loading → unavailable | not-logged-in | pending | courses | empty.
 // Accounts still waiting for admin approval see only the "pending" message.
 // Faculty and admin who open this page are sent to /faculty/.
@@ -45,14 +46,58 @@ const text = copy.portal;
 </Layout>
 
 <script>
-	import { api, portalPages } from '../lib/api';
+	import { api, portalPages, fileDownloadUrl } from '../lib/api';
 	import { copy } from '../lib/portal-copy';
 	import { showState, portalIsAvailable } from '../lib/portal-ui';
 
-	interface Link { id: number; kind: string; title: string; url: string }
-	interface Course { code: string; title: string; semester: string; resources: Link[] }
+	interface Item { id: number; kind: string; title: string; url: string | null; file: { name: string; size: number } | null }
+	interface Course { code: string; title: string; semester: string; resources: Item[] }
 
 	const text = copy.portal;
+
+	function element<K extends keyof HTMLElementTagNameMap>(tag: K, className: string, content = '') {
+		const node = document.createElement(tag);
+		node.className = className;
+		node.textContent = content;
+		return node;
+	}
+
+	// One class link or note: its title (a link if it has a URL, opening in a
+	// new tab) and, if it has a file, a Download link.
+	function renderItem(item: Item): HTMLLIElement {
+		const row = element('li', 'course__item');
+		if (item.url) {
+			const link = element('a', 'course__link', item.title);
+			link.href = item.url; // the API only sends http(s) links
+			link.target = '_blank';
+			link.rel = 'noopener noreferrer';
+			link.append(element('span', 'visually-hidden', ` ${text.opensInNewTab}`));
+			row.append(link);
+		} else {
+			row.append(element('span', 'course__item-title', item.title));
+		}
+		if (item.file) {
+			const download = element('a', 'btn btn--outline course__download', text.download);
+			download.href = fileDownloadUrl(item.id);
+			download.download = item.file.name;
+			download.append(element('span', 'visually-hidden', `: ${item.file.name}`));
+			row.append(' ', download, element('span', 'course__file-name', item.file.name));
+		}
+		return row;
+	}
+
+	// A "Class links" or "Notes" heading with its items, or its empty message.
+	function renderSection(heading: string, emptyText: string, items: Item[]): HTMLElement[] {
+		const parts: HTMLElement[] = [element('h3', 'course__heading', heading)];
+		if (items.length === 0) {
+			parts.push(element('p', 'course__none', emptyText));
+		} else {
+			const list = element('ul', 'course__links');
+			list.append(...items.map(renderItem));
+			parts.push(list);
+		}
+		return parts;
+	}
 
 	// Builds the course cards with DOM methods and textContent only, so course
 	// and link titles can never be interpreted as HTML.
@@ -60,41 +105,15 @@ const text = copy.portal;
 		const list = document.getElementById('course-list')!;
 		list.replaceChildren(
 			...courses.map((course) => {
-				const item = document.createElement('li');
-				item.className = 'course';
-
-				const heading = document.createElement('h2');
-				heading.className = 'course__title';
-				heading.textContent = `${course.code} — ${course.title}`;
-				item.append(heading);
-
+				const item = element('li', 'course');
+				item.append(element('h2', 'course__title', `${course.code} — ${course.title}`));
 				if (course.resources.length === 0) {
-					const none = document.createElement('p');
-					none.className = 'course__none';
-					none.textContent = text.noLinks;
-					item.append(none);
-				} else {
-					const links = document.createElement('ul');
-					links.className = 'course__links';
-					for (const resource of course.resources) {
-						const row = document.createElement('li');
-						const kind = document.createElement('span');
-						kind.className = 'badge';
-						kind.textContent = text.kinds[resource.kind] ?? text.kinds.other;
-						const link = document.createElement('a');
-						link.href = resource.url; // the API only sends http(s) links
-						link.target = '_blank';
-						link.rel = 'noopener noreferrer';
-						link.textContent = resource.title;
-						const note = document.createElement('span');
-						note.className = 'visually-hidden';
-						note.textContent = ` ${text.opensInNewTab}`;
-						link.append(note);
-						row.append(kind, ' ', link);
-						links.append(row);
-					}
-					item.append(links);
+					item.append(element('p', 'course__none', text.noLinks));
+					return item;
 				}
+				const links = course.resources.filter((resource) => resource.kind === 'class_link');
+				const notes = course.resources.filter((resource) => resource.kind !== 'class_link'); // notes and older 'other' items
+				item.append(...renderSection(text.classLinks, text.noClassLinks, links), ...renderSection(text.notes, text.noNotes, notes));
 				return item;
 			}),
 		);
@@ -168,9 +187,27 @@ const text = copy.portal;
 		gap: 0.6rem;
 	}
 
-	:global(.course__links .badge) {
-		min-width: 6.5rem;
-		justify-content: center;
+	:global(.course__heading) {
+		font-size: 1.05rem;
+		margin: var(--space-md) 0 var(--space-sm);
+	}
+
+	:global(.course__item) {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.4rem 0.75rem;
+	}
+
+	:global(.course__download) {
+		min-height: 2.4rem;
+		padding: 0.35rem 0.9rem;
+		font-size: 0.9rem;
+	}
+
+	:global(.course__file-name) {
+		font-size: 0.88rem;
+		color: var(--color-text-muted);
 	}
 
 	:global(.course__none) {

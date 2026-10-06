@@ -1,8 +1,10 @@
-// GET /api/my-courses — a student's courses and their class/notes links.
+// GET /api/my-courses — a student's courses with their class links and notes.
 //
-// Only courses the student is enrolled in, only active courses, only links
+// Only courses the student is enrolled in, only active courses, only items
 // whose visible_from date has passed, and only http(s) links (a stored
 // "javascript:" link would be dangerous on the page, so it is never sent).
+// Note files are only described here; they are downloaded through
+// GET /api/files/:id (files-routes.js), which checks the same rules again.
 
 import { Router } from 'express';
 import { toDbTime } from '../db.js';
@@ -24,8 +26,8 @@ export function studentRoutes({ db }) {
 			)
 			.all(req.user.id);
 
-		const linksFor = db.prepare(
-			`SELECT id, kind, title, url FROM resources
+		const itemsFor = db.prepare(
+			`SELECT id, kind, title, url, file_name, file_size FROM resources
 			 WHERE course_id = ? AND (visible_from IS NULL OR visible_from <= ?)
 			 ORDER BY kind, title`,
 		);
@@ -36,10 +38,16 @@ export function studentRoutes({ db }) {
 				code: course.code,
 				title: course.title,
 				semester: course.semester,
-				resources: linksFor
+				resources: itemsFor
 					.all(course.id, now)
-					.filter((link) => isWebLink(link.url))
-					.map(({ id, kind, title, url }) => ({ id, kind, title, url })),
+					.map((item) => ({
+						id: item.id,
+						kind: item.kind,
+						title: item.title,
+						url: isWebLink(item.url) ? item.url : null,
+						file: item.file_name ? { name: item.file_name, size: item.file_size } : null,
+					}))
+					.filter((item) => item.url || item.file),
 			})),
 		});
 	});

@@ -1,6 +1,10 @@
-// Reads programmes.conf: which roll-number prefix belongs to which programme.
+// Reads programmes.conf (which roll-number prefix belongs to which
+// programme) and reads roll numbers: prefix + 2-digit joining year + 3-digit
+// serial, e.g. PHP22017 (PhD, joined 2022).
 
 import { readFileSync } from 'node:fs';
+
+const ROLL_NUMBER = /^([A-Z]+)(\d{2})(\d{3})$/;
 
 // Returns a Map of PREFIX -> programme name.
 export function loadProgrammes(path) {
@@ -17,14 +21,17 @@ export function loadProgrammes(path) {
 	return programmes;
 }
 
-// Roll numbers are compared in upper case without spaces ("phd 22017" -> "PHD22017").
+// Roll numbers are stored and compared trimmed and in upper case ("php22017 " -> "PHP22017").
 export function normalizeRollNumber(rollNumber) {
-	return String(rollNumber ?? '').replace(/\s+/g, '').toUpperCase();
+	return String(rollNumber ?? '').trim().toUpperCase();
 }
 
-// The programme for a roll number (prefix + digits), or null if the format or
-// prefix isn't known.
-export function programmeForRollNumber(programmes, rollNumber) {
-	const match = normalizeRollNumber(rollNumber).match(/^([A-Z]+)(\d+)$/);
-	return match ? (programmes.get(match[1]) ?? null) : null;
+// { rollNumber, programme, batchYear } for a valid roll number, or null if the
+// format is wrong or the prefix isn't in programmes.conf.
+export function readRollNumber(programmes, rollNumber) {
+	const clean = normalizeRollNumber(rollNumber);
+	const match = clean.match(ROLL_NUMBER);
+	const programme = match ? programmes.get(match[1]) : undefined;
+	if (!programme) return null;
+	return { rollNumber: clean, programme, batchYear: 2000 + Number(match[2]) };
 }

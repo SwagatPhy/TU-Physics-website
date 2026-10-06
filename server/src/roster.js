@@ -10,7 +10,7 @@
 // No passwords: people set their own when they register.
 
 import { toDbTime } from './db.js';
-import { normalizeRollNumber, programmeForRollNumber } from './programmes.js';
+import { normalizeRollNumber, readRollNumber } from './programmes.js';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const COLUMNS = ['email', 'name', 'roll_number', 'role', 'programme'];
@@ -76,9 +76,9 @@ export function parseRoster(csvText, programmes) {
 
 		let programme = null;
 		if (role === 'student') {
-			programme = programmeForRollNumber(programmes, rollNumber);
+			programme = readRollNumber(programmes, rollNumber)?.programme ?? null;
 			if (!rollNumber) problems.push('students need a roll number');
-			else if (!programme) problems.push(`roll number "${rollNumber}" doesn't start with a prefix from programmes.conf`);
+			else if (!programme) problems.push(`roll number "${rollNumber}" is not a prefix from programmes.conf + 2-digit year + 3-digit number (e.g. PHP22017)`);
 			else if (seenRollNumbers.has(rollNumber)) problems.push(`roll number ${rollNumber} appears twice`);
 			const given = field('programme');
 			if (programme && given && given.toLowerCase() !== programme.toLowerCase()) {

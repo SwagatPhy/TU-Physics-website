@@ -1,2 +1,2 @@
-# Local trial database (never commit: it holds password hashes and sessions)
+# Local database, uploaded files and outbox emails (never commit: password hashes, sessions, personal data)
 data/

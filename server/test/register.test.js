@@ -9,7 +9,7 @@ const student = (extra = {}) => ({
 	kind: 'student',
 	name: 'Priya Das',
 	email: 'priya@example.test',
-	rollNumber: 'PHD22017',
+	rollNumber: 'PHP22017',
 	phone: '+91 98765 43210',
 	...extra,
 });
@@ -18,7 +18,7 @@ describe('sign-up', () => {
 	let app;
 	before(async () => {
 		app = await startTestServer();
-		await addUser(app.db, { name: 'Existing Person', email: 'taken@example.test', rollNumber: 'PHD20001', programme: 'PhD' });
+		await addUser(app.db, { name: 'Existing Person', email: 'taken@example.test', rollNumber: 'PHP20001', programme: 'PhD' });
 		addRosterRow(app.db, { email: 'listed@example.test', name: 'On Roster', rollNumber: 'PHM24001', programme: 'MSc' });
 	});
 	after(() => app.close());
@@ -60,8 +60,8 @@ describe('sign-up', () => {
 		assert.deepEqual(done.body, { status: 'registered', approval: 'pending' });
 		const created = user('priya@example.test');
 		assert.deepEqual(
-			[created.role, created.status, created.roll_number, created.programme, created.phone, created.name],
-			['student', 'pending', 'PHD22017', 'PhD', '+91 98765 43210', 'Priya Das'],
+			[created.role, created.status, created.roll_number, created.programme, created.batch_year, created.phone, created.name],
+			['student', 'pending', 'PHP22017', 'PhD', 2022, '+91 98765 43210', 'Priya Das'],
 		);
 
 		// Pending: can log in and see themselves, nothing else.
@@ -72,7 +72,7 @@ describe('sign-up', () => {
 	});
 
 	test('an existing email gets exactly the same answer, and only a note to that inbox', async () => {
-		const res = await request(student({ email: 'taken@example.test', rollNumber: 'PHD22030' }));
+		const res = await request(student({ email: 'taken@example.test', rollNumber: 'PHP22030' }));
 		assert.deepEqual([res.status, res.body], [202, { status: 'check_your_email' }]);
 		await app.backgroundWorkDone();
 		assert.equal(app.outbox.length, 1);
@@ -82,7 +82,7 @@ describe('sign-up', () => {
 	});
 
 	test('a roll number that already has an account gets the same answer and no link', async () => {
-		const res = await request(student({ email: 'copycat@example.test', rollNumber: 'phd 20001' }));
+		const res = await request(student({ email: 'copycat@example.test', rollNumber: ' php20001 ' }));
 		assert.deepEqual([res.status, res.body], [202, { status: 'check_your_email' }]);
 		await app.backgroundWorkDone();
 		assert.equal(tokenFromEmail(app.outbox[0]), undefined);
@@ -100,9 +100,9 @@ describe('sign-up', () => {
 			}
 			return times.sort((a, b) => a - b)[2];
 		};
-		const fresh = await median(student({ email: 'timing-new@example.test', rollNumber: 'PHD22040' }));
-		const existing = await median(student({ email: 'taken@example.test', rollNumber: 'PHD22041' }));
-		const duplicateRoll = await median(student({ email: 'timing-dup@example.test', rollNumber: 'PHD20001' }));
+		const fresh = await median(student({ email: 'timing-new@example.test', rollNumber: 'PHP22040' }));
+		const existing = await median(student({ email: 'taken@example.test', rollNumber: 'PHP22041' }));
+		const duplicateRoll = await median(student({ email: 'timing-dup@example.test', rollNumber: 'PHP20001' }));
 		await app.backgroundWorkDone();
 		for (const [label, ms] of [['existing', existing], ['duplicate roll', duplicateRoll]]) {
 			assert.ok(Math.abs(fresh - ms) < 25, `new ${fresh.toFixed(1)} ms vs ${label} ${ms.toFixed(1)} ms`);
@@ -119,8 +119,8 @@ describe('sign-up', () => {
 	});
 
 	test('a roster email with a different roll number is not auto-approved', async () => {
-		addRosterRow(app.db, { email: 'half@example.test', rollNumber: 'PHD22050', programme: 'PhD' });
-		const token = await signUp(student({ email: 'half@example.test', rollNumber: 'PHD22051' }));
+		addRosterRow(app.db, { email: 'half@example.test', rollNumber: 'PHP22050', programme: 'PhD' });
+		const token = await signUp(student({ email: 'half@example.test', rollNumber: 'PHP22051' }));
 		assert.equal((await complete(token)).body.approval, 'pending');
 		assert.equal(app.db.prepare('SELECT claimed FROM roster WHERE email = ?').get('half@example.test').claimed, 0);
 	});
@@ -134,35 +134,35 @@ describe('sign-up', () => {
 	});
 
 	test('a link works only once', async () => {
-		const token = await signUp(student({ email: 'once@example.test', rollNumber: 'PHD22060' }));
+		const token = await signUp(student({ email: 'once@example.test', rollNumber: 'PHP22060' }));
 		assert.equal((await complete(token)).status, 201);
 		assert.deepEqual((await complete(token)).body, { error: 'invalid_or_expired_link' });
 	});
 
 	test('an expired link is refused and creates nothing', async () => {
-		const token = await signUp(student({ email: 'late@example.test', rollNumber: 'PHD22070' }));
+		const token = await signUp(student({ email: 'late@example.test', rollNumber: 'PHP22070' }));
 		app.db.prepare("UPDATE auth_tokens SET expires_at = ? WHERE purpose = 'register'").run(toDbTime(new Date(Date.now() - 1000)));
 		assert.deepEqual((await complete(token)).body, { error: 'invalid_or_expired_link' });
 		assert.equal(user('late@example.test'), undefined);
 	});
 
 	test('signing up again replaces the earlier link', async () => {
-		const first = await signUp(student({ email: 'twice@example.test', rollNumber: 'PHD22080' }));
-		const second = await signUp(student({ email: 'twice@example.test', rollNumber: 'PHD22080' }));
+		const first = await signUp(student({ email: 'twice@example.test', rollNumber: 'PHP22080' }));
+		const second = await signUp(student({ email: 'twice@example.test', rollNumber: 'PHP22080' }));
 		assert.equal((await complete(first)).status, 400);
 		assert.equal((await complete(second)).status, 201);
 	});
 
 	test('if someone else takes the roll number before the link is used, the link fails', async () => {
-		const a = await signUp(student({ email: 'race-a@example.test', rollNumber: 'PHD22090' }));
-		const b = await signUp(student({ email: 'race-b@example.test', rollNumber: 'PHD22090' }));
+		const a = await signUp(student({ email: 'race-a@example.test', rollNumber: 'PHP22090' }));
+		const b = await signUp(student({ email: 'race-b@example.test', rollNumber: 'PHP22090' }));
 		assert.equal((await complete(a)).status, 201);
 		assert.deepEqual((await complete(b)).body, { error: 'invalid_or_expired_link' });
 		assert.equal(user('race-b@example.test'), undefined);
 	});
 
 	test('a weak password is refused without using up the link', async () => {
-		const token = await signUp(student({ email: 'weak@example.test', rollNumber: 'PHD22100' }));
+		const token = await signUp(student({ email: 'weak@example.test', rollNumber: 'PHP22100' }));
 		assert.deepEqual((await complete(token, 'short')).body, { error: 'password_too_short' });
 		assert.equal((await complete(token)).status, 201);
 	});
@@ -172,7 +172,7 @@ describe('sign-up', () => {
 	});
 
 	test('an address can ask for at most 3 emails per 15 minutes', async () => {
-		const body = student({ email: 'anyone@example.test', rollNumber: 'PHD22110' });
+		const body = student({ email: 'anyone@example.test', rollNumber: 'PHP22110' });
 		for (let i = 0; i < 3; i++) assert.equal((await request(body)).status, 202);
 		assert.equal((await request(body)).status, 429);
 	});

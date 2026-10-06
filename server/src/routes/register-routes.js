@@ -22,6 +22,7 @@ import { logAudit } from '../audit.js';
 import { toDbTime } from '../db.js';
 import { hashPassword, checkNewPassword, deleteAllSessionsForUser } from '../auth.js';
 import { checkSignup, checkEmail } from '../validate.js';
+import { readRollNumber } from '../programmes.js';
 import { createLinkToken, useLinkToken, cancelUnusedResetLinks, cancelUnusedRegistrationLinks } from '../tokens.js';
 import {
 	registrationEmail,
@@ -141,8 +142,8 @@ export function registerRoutes({ db, config, programmes, mailer, loginLimiter, l
 				db
 					.prepare(
 						`INSERT INTO users (name, email, password_hash, role, status, active, must_change_password,
-						                    created_at, roll_number, programme, phone)
-						 VALUES (?, ?, ?, ?, ?, 1, 0, ?, ?, ?, ?)`,
+						                    created_at, roll_number, programme, phone, batch_year)
+						 VALUES (?, ?, ?, ?, ?, 1, 0, ?, ?, ?, ?, ?)`,
 					)
 					.run(
 						signup.name,
@@ -154,6 +155,8 @@ export function registerRoutes({ db, config, programmes, mailer, loginLimiter, l
 						signup.roll_number,
 						signup.programme,
 						signup.phone,
+						// Batch = programme + joining year, read from the roll number (PHP22017 -> 2022).
+						readRollNumber(programmes, signup.roll_number)?.batchYear ?? null,
 					).lastInsertRowid,
 			);
 			if (claimed) db.prepare('UPDATE roster SET user_id = ? WHERE id = ?').run(userId, signup.roster_id);

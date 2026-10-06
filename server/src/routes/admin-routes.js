@@ -53,21 +53,22 @@ export function adminRoutes({ db, config, programmes, mailer, runInBackground })
 			phone = checked.value;
 		}
 
-		let { roll_number: rollNumber, programme } = user;
+		let { roll_number: rollNumber, programme, batch_year: batchYear } = user;
 		if (user.role === 'student' && req.body?.rollNumber !== undefined) {
 			const checked = checkRollNumber(req.body.rollNumber, programmes);
 			if (checked.error) return res.status(400).json({ error: checked.error });
-			({ rollNumber, programme } = checked.value);
+			({ rollNumber, programme, batchYear } = checked.value);
 			if (db.prepare('SELECT 1 FROM users WHERE roll_number = ? AND id <> ?').get(rollNumber, user.id)) {
 				return res.status(400).json({ error: 'roll_number_taken' });
 			}
 		}
 
-		db.prepare('UPDATE users SET name = ?, phone = ?, roll_number = ?, programme = ? WHERE id = ?').run(
+		db.prepare('UPDATE users SET name = ?, phone = ?, roll_number = ?, programme = ?, batch_year = ? WHERE id = ?').run(
 			name.value,
 			phone,
 			rollNumber,
 			programme,
+			batchYear,
 			user.id,
 		);
 		logAudit(db, { actorId: req.user.id, action: 'user_edited', target: `user:${user.id}` });

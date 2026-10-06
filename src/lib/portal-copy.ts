@@ -38,7 +38,7 @@ export const copy = {
 		name: 'Full name',
 		email: 'Email address',
 		rollNumber: 'Roll number',
-		rollNumberHint: 'Format: [PLACEHOLDER: e.g. PHD22017]',
+		rollNumberHint: 'Format: e.g. PHP22017 (PhD), PHM24123 (MSc) or PHI23005 (Integrated BSc-MSc)',
 		phone: 'Phone number',
 		phoneHint: 'Format: [PLACEHOLDER]; department use only',
 		requestSubmit: 'Sign up',

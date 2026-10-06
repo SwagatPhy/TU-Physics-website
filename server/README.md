@@ -1,52 +1,49 @@
-# Portal API (trial)
+# Portal API
 
-Small Node.js + Express API for the Student/Faculty Portal trial. Plan, data model and
+Small Node.js + Express API for the department's Student/Faculty Portal. Plan, data model and
 security checklist: [docs/portal-trial/REPORT.md](../docs/portal-trial/REPORT.md).
+Installing it on a real server: [docs/portal-trial/DEPLOY_API.md](../docs/portal-trial/DEPLOY_API.md).
 The public website (Astro, in `src/`) does not depend on this folder.
 
 **Status:** login, sessions and password changes; **open sign-up with admin approval**
 (students and department members sign up, verify their email, and wait for an admin; an
-optional roster approves matching students at once); forgot password; student course links;
-the faculty link dashboard. The website pages (`/login`, `/register`, `/forgot-password`,
-`/change-password`, `/portal`, `/faculty`, `/admin/approvals`) are in `src/pages/`.
-To click through everything locally, see [docs/portal-trial/TRY_IT.md](../docs/portal-trial/TRY_IT.md).
+optional roster approves matching students at once); forgot password; student course links
+and notes (with file downloads); the faculty dashboard. The website pages (`/login`,
+`/register`, `/forgot-password`, `/change-password`, `/portal`, `/faculty`, `/admin/approvals`)
+are in `src/pages/`. Developing and clicking through it locally:
+[docs/portal-trial/DEVELOPING.md](../docs/portal-trial/DEVELOPING.md).
 
-## Run it locally
+## Run it locally (development)
 
 Needs Node.js 24 or newer.
 
 ```sh
 cd server
 npm install
-cp .env.example .env     # local settings; never commit .env
-npm run seed             # creates data/portal.sqlite with FAKE users, courses and roster rows
-# or: npm run seed:people -- --fresh   # trial DB from the website's people (see below)
-npm start                # http://localhost:4400/dphy/api/health
-npm test                 # automated tests (use an in-memory database)
+cp .env.example .env          # local settings; never commit .env
+npm run seed                  # data/portal.sqlite with FAKE users, courses, notes and roster rows
+npm start                     # http://localhost:4400/dphy/api/health
+npm test                      # automated tests (in-memory database, temporary upload folder)
 ```
 
-**`npm run seed:people`** builds a trial database from the people on the website
-(`src/content/people/*.json`, never modified) and the course catalogue: real names and
-designations, generated logins `<website id>@trial.test`, made-up roll numbers `PHD99001…`
-for research scholars, an admin and four pending sign-ups; made-up values are marked
-`TRIAL` in `users.admin_note`. It refuses `NODE_ENV=production`, any mail mode other than
-`outbox`, and any database outside `server/data/`, and prints problems found in the JSON.
-The owner's walkthrough uses it: [docs/portal-trial/TRY_IT.md](../docs/portal-trial/TRY_IT.md).
+**`npm run seed`** (`dev/seed.js`) is **development only**: it refuses `NODE_ENV=production`
+and any mail mode other than `outbox`, and refuses to run while the API is running.
+`npm run seed -- --fresh` deletes the local database and `data/uploads/` first (only inside
+`server/data/`). Nothing in it comes from real people.
 
 **Seeded accounts** (all fake, `.test` domain), all with `SEED_PASSWORD` from `.env`:
 `admin@example.test`, `faculty.a@example.test`, `faculty.b@example.test`,
 `student01@example.test` … `student10@example.test` (approved; must change the password on
-first login), and `pending01@example.test` … `pending03@example.test`,
-`pending.staff@example.test` (signed up, waiting for approval).
+first login; 01–05 are MSc 2024 `PHM249xx`, 06–10 Integrated 2023 `PHI239xx`), and
+`pending01@example.test` … `pending03@example.test`, `pending.staff@example.test` (signed up,
+waiting for approval).
 
-**Seeded roster** (from `sample-roster.csv`, not yet used): `roster.student01@example.test`
-(roll number `PHD22011`) … `roster.student04@example.test` (`PHM24002`). A student who signs up
-with one of these email + roll number pairs is approved immediately.
+**Seeded roster:** `roster.student01@example.test` + roll number `PHP22911` (and two more, see
+`dev/seed.js`). A student who signs up with one of these email + roll number pairs is
+approved immediately.
 
 **Emails** aren't sent in development: each one is written as a text file to `data/outbox/`
 (`MAIL_MODE=outbox`). Open the newest file to find the registration or reset link.
-
-To start again, delete `data/` and run `npm run seed`.
 
 ## The first administrator (real servers)
 
@@ -67,9 +64,12 @@ The new account is role `admin`, status `approved`, and the creation is audit-lo
    *department member* (faculty, research scholar, staff) gives name, email and contact number.
    Nobody can sign up as admin. Badly formatted details are refused at once; otherwise the
    answer is always "check your email".
-2. **Programmes come from the roll-number prefix**, defined only in `programmes.conf`
-   (one `PREFIX  Programme` per line). `PHD → PhD` and `PHM → MSc` are **temporary
-   placeholders**; the BSc prefix isn't confirmed yet.
+2. **Roll numbers** are a prefix, the 2-digit joining year and a 3-digit serial, nothing in
+   between: `PHM24123` (MSc), `PHI23005` (Integrated BSc-MSc), `PHP22017` (PhD). They are
+   trimmed and upper-cased; anything else is refused (`invalid_roll_number`). The programme
+   comes from the prefix, defined only in `programmes.conf`. The student's **batch** is the
+   programme + joining year (`users.batch_year`, e.g. 2022), stored at sign-up and updated
+   when an admin corrects the roll number.
 3. **Email link:** works **once** and expires after **30 minutes** (`LINK_MINUTES`); signing up
    again replaces the earlier link. Opening it and choosing a password creates the account.
 4. **Status:** the new account is `pending`, unless a student's email *and* roll number match an
@@ -117,10 +117,10 @@ choose a new password. That signs out every existing session.
 | `src/files.js` | Note files: allowed types, content checks, storage under random names |
 | `src/routes/admin-routes.js` | `/admin/signups`, `/admin/users/:id`, `/admin/decisions` |
 | `src/validate.js` | Input checks shared by routes (links must be http/https) |
-| `programmes.conf` | Roll-number prefixes (TEMPORARY placeholders) |
-| `sample-roster.csv` | Fake roster used by the seed; also an example of the CSV format |
+| `programmes.conf` | Roll-number prefixes: `PHM` MSc, `PHI` Integrated BSc-MSc, `PHP` PhD |
 | `migrations/` | Numbered SQL files (see its README for SQLite vs MySQL) |
-| `scripts/` | `migrate`, `admin:create`, `seed`, `roster:import` |
+| `scripts/` | `migrate`, `admin:create`, `roster:import` (all usable in production) |
+| `dev/` | **Development only:** `seed` (fake data) and its check that the API isn't running |
 | `test/` | `node:test` tests |
 
 ## API

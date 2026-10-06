@@ -12,14 +12,14 @@ describe('admin approval of sign-ups', () => {
 		const db = app.db;
 		ids.admin = await addUser(db, { name: 'Admin', email: 'admin@example.test', role: 'admin' });
 		ids.faculty = await addUser(db, { name: 'Prof', email: 'prof@example.test', role: 'faculty' });
-		ids.student = await addUser(db, { name: 'Approved Student', email: 'ok@example.test', rollNumber: 'PHD21001', programme: 'PhD' });
-		for (const [key, rollNumber] of [['p1', 'PHD23001'], ['p2', 'PHD23002'], ['p3', 'PHM24003'], ['p4', 'PHM24004'], ['p5', 'PHM24005']]) {
+		ids.student = await addUser(db, { name: 'Approved Student', email: 'ok@example.test', rollNumber: 'PHP21001', programme: 'PhD' });
+		for (const [key, rollNumber] of [['p1', 'PHP23001'], ['p2', 'PHP23002'], ['p3', 'PHM24003'], ['p4', 'PHM24004'], ['p5', 'PHM24005']]) {
 			ids[key] = await addUser(db, {
 				name: `Pending ${key}`,
 				email: `${key}@example.test`,
 				status: 'pending',
 				rollNumber,
-				programme: rollNumber.startsWith('PHD') ? 'PhD' : 'MSc',
+				programme: rollNumber.startsWith('PHP') ? 'PhD' : 'MSc',
 				phone: '98765 43210',
 			});
 		}
@@ -56,8 +56,8 @@ describe('admin approval of sign-ups', () => {
 		assert.deepEqual(
 			res.body.signups.map((s) => [s.name, s.rollNumber, s.programme, s.email, s.phone, s.role]),
 			[
-				['Pending p1', 'PHD23001', 'PhD', 'p1@example.test', '98765 43210', 'student'],
-				['Pending p2', 'PHD23002', 'PhD', 'p2@example.test', '98765 43210', 'student'],
+				['Pending p1', 'PHP23001', 'PhD', 'p1@example.test', '98765 43210', 'student'],
+				['Pending p2', 'PHP23002', 'PhD', 'p2@example.test', '98765 43210', 'student'],
 				['Pending p3', 'PHM24003', 'MSc', 'p3@example.test', '98765 43210', 'student'],
 				['Pending p4', 'PHM24004', 'MSc', 'p4@example.test', '98765 43210', 'student'],
 				['Pending p5', 'PHM24005', 'MSc', 'p5@example.test', '98765 43210', 'student'],
@@ -77,7 +77,7 @@ describe('admin approval of sign-ups', () => {
 		assert.equal(changed.status, 200);
 		assert.equal(changed.body.user.name, 'Pending p2 Fixed');
 		const row = app.db.prepare('SELECT name, phone, email, roll_number FROM users WHERE id = ?').get(ids.p2);
-		assert.deepEqual({ ...row }, { name: 'Pending p2 Fixed', phone: '+91 90000 00000', email: 'p2@example.test', roll_number: 'PHD23002' });
+		assert.deepEqual({ ...row }, { name: 'Pending p2 Fixed', phone: '+91 90000 00000', email: 'p2@example.test', roll_number: 'PHP23002' });
 		assert.deepEqual((await pending.request('/profile', { method: 'PUT', body: { name: 'x', phone: 'nope' } })).body, { error: 'invalid_phone' });
 	});
 
@@ -92,11 +92,15 @@ describe('admin approval of sign-ups', () => {
 	});
 
 	test('the admin can correct a name and roll number before approving', async () => {
-		const fix = await browsers.admin.request(`/admin/users/${ids.p3}`, { method: 'PUT', body: { name: 'Corrected Name', rollNumber: 'phd 23003' } });
+		const fix = await browsers.admin.request(`/admin/users/${ids.p3}`, { method: 'PUT', body: { name: 'Corrected Name', rollNumber: ' php23003 ' } });
 		assert.equal(fix.status, 200);
-		assert.deepEqual([fix.body.user.name, fix.body.user.rollNumber, fix.body.user.programme], ['Corrected Name', 'PHD23003', 'PhD']);
+		assert.deepEqual([fix.body.user.name, fix.body.user.rollNumber, fix.body.user.programme], ['Corrected Name', 'PHP23003', 'PhD']);
+		assert.equal(app.db.prepare('SELECT batch_year FROM users WHERE id = ?').get(ids.p3).batch_year, 2023);
+		const moved = await browsers.admin.request(`/admin/users/${ids.p3}`, { method: 'PUT', body: { name: 'Corrected Name', rollNumber: 'PHM25003' } });
+		assert.equal(moved.body.user.programme, 'MSc');
+		assert.equal(app.db.prepare('SELECT batch_year FROM users WHERE id = ?').get(ids.p3).batch_year, 2025);
 
-		const taken = await browsers.admin.request(`/admin/users/${ids.p3}`, { method: 'PUT', body: { name: 'Corrected Name', rollNumber: 'PHD21001' } });
+		const taken = await browsers.admin.request(`/admin/users/${ids.p3}`, { method: 'PUT', body: { name: 'Corrected Name', rollNumber: 'PHP21001' } });
 		assert.deepEqual(taken.body, { error: 'roll_number_taken' });
 		const badPrefix = await browsers.admin.request(`/admin/users/${ids.p3}`, { method: 'PUT', body: { name: 'Corrected Name', rollNumber: 'XYZ1' } });
 		assert.deepEqual(badPrefix.body, { error: 'invalid_roll_number' });

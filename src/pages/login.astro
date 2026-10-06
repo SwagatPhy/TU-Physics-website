@@ -7,7 +7,6 @@
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
 import PortalPanel from '../components/PortalPanel.astro';
-import TrialAccounts from '../components/TrialAccounts.astro'; // development only
 import { copy } from '../lib/portal-copy';
 import { portalPages } from '../lib/api';
 
@@ -46,7 +45,6 @@ const text = copy.login;
 					<button class="btn btn--outline" type="button" id="logout-button">{text.logout}</button>
 				</div>
 			</PortalPanel>
-			{import.meta.env.DEV && <TrialAccounts />}
 		</div>
 	</section>
 </Layout>

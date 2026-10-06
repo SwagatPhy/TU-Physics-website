@@ -2,7 +2,7 @@
 // user as text chosen by Notes-manager TU) or the cleaned value.
 
 import { toDbTime } from './db.js';
-import { normalizeRollNumber, programmeForRollNumber } from './programmes.js';
+import { readRollNumber } from './programmes.js';
 
 // Only http(s) links may be stored or shown: anything else ("javascript:",
 // "data:", …) could run code when clicked.
@@ -83,14 +83,13 @@ export function checkEmail(email) {
 	return { value: clean };
 }
 
-// A student roll number: its prefix must be in programmes.conf.
-// Returns { value: { rollNumber, programme } } or { error }.
+// A student roll number: a prefix from programmes.conf, the 2-digit joining
+// year and a 3-digit serial (PHP22017).
+// Returns { value: { rollNumber, programme, batchYear } } or { error }.
 export function checkRollNumber(rollNumber, programmes) {
 	if (typeof rollNumber !== 'string' || rollNumber.length > 30) return { error: 'invalid_roll_number' };
-	const clean = normalizeRollNumber(rollNumber);
-	const programme = programmeForRollNumber(programmes, clean);
-	if (!programme) return { error: 'invalid_roll_number' };
-	return { value: { rollNumber: clean, programme } };
+	const read = readRollNumber(programmes, rollNumber);
+	return read ? { value: read } : { error: 'invalid_roll_number' };
 }
 
 // The sign-up form. kind is "student" (needs a roll number) or "member"

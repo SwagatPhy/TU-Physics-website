@@ -38,7 +38,7 @@ async function startOnFile() {
 }
 
 describe('the API notices when its database file is replaced or deleted', () => {
-	test('replaced file (e.g. reset with seed:people -- --fresh): requests refused, API stops', async () => {
+	test('replaced file (e.g. reset with seed -- --fresh): requests refused, API stops', async () => {
 		const api = await startOnFile();
 		assert.equal((await api.health()).status, 200);
 
@@ -72,30 +72,40 @@ describe('the API notices when its database file is replaced or deleted', () => 
 	});
 });
 
-describe('the seed scripts refuse while the API is running', () => {
-	for (const script of ['scripts/seed-people.js', 'scripts/seed.js']) {
-		test(`${script} refuses when something listens on the API port`, async () => {
-			const blocker = createServer().listen(0, '127.0.0.1');
-			await new Promise((resolve) => blocker.once('listening', resolve));
-			const databasePath = `data/guard-test-${process.pid}.sqlite`;
+describe('the dev seed refuses while the API is running', () => {
+	test('npm run seed refuses when something listens on the API port', async () => {
+		const blocker = createServer().listen(0, '127.0.0.1');
+		await new Promise((resolve) => blocker.once('listening', resolve));
+		const databasePath = `data/guard-test-${process.pid}.sqlite`;
 
-			const run = spawnSync(process.execPath, ['--disable-warning=ExperimentalWarning', script, '--fresh'], {
-				cwd: SERVER_DIR,
-				encoding: 'utf8',
-				env: {
-					...process.env,
-					NODE_ENV: 'development',
-					PORT: String(blocker.address().port),
-					DATABASE_PATH: databasePath,
-					MAIL_MODE: 'outbox',
-					SEED_PASSWORD: 'guard-test-password',
-				},
-			});
-			blocker.close();
-
-			assert.equal(run.status, 1);
-			assert.match(run.stderr, /Refusing to seed: the portal API is running on port \d+/);
-			assert.ok(!existsSync(join(SERVER_DIR, databasePath)), 'no database file was created');
+		const run = spawnSync(process.execPath, ['--disable-warning=ExperimentalWarning', 'dev/seed.js', '--fresh'], {
+			cwd: SERVER_DIR,
+			encoding: 'utf8',
+			env: {
+				...process.env,
+				NODE_ENV: 'development',
+				PORT: String(blocker.address().port),
+				DATABASE_PATH: databasePath,
+				MAIL_MODE: 'outbox',
+				SEED_PASSWORD: 'guard-test-password',
+			},
 		});
-	}
+		blocker.close();
+
+		assert.equal(run.status, 1);
+		assert.match(run.stderr, /Refusing to seed: the portal API is running on port \d+/);
+		assert.ok(!existsSync(join(SERVER_DIR, databasePath)), 'no database file was created');
+	});
+
+	test('npm run seed refuses NODE_ENV=production (it is development-only fake data)', () => {
+		const databasePath = `data/prod-test-${process.pid}.sqlite`;
+		const run = spawnSync(process.execPath, ['--disable-warning=ExperimentalWarning', 'dev/seed.js'], {
+			cwd: SERVER_DIR,
+			encoding: 'utf8',
+			env: { ...process.env, NODE_ENV: 'production', DATABASE_PATH: databasePath, SEED_PASSWORD: 'guard-test-password' },
+		});
+		assert.equal(run.status, 1);
+		assert.match(run.stderr, /NODE_ENV is production/);
+		assert.ok(!existsSync(join(SERVER_DIR, databasePath)), 'no database file was created');
+	});
 });

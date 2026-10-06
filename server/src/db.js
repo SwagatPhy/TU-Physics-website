@@ -22,8 +22,10 @@ export function openDatabase(path) {
 }
 
 // Applies migrations/NNN_name.sql files that haven't run yet, in number order.
-// Returns the names of the files it applied.
-export function migrate(db) {
+// Returns the names of the files it applied. `until` (tests only) stops before
+// the file with that number, e.g. { until: '006' }, so a test can add data in
+// the old schema and then check what the next migration does with it.
+export function migrate(db, { until = null } = {}) {
 	db.exec(`CREATE TABLE IF NOT EXISTS schema_migrations (
 		name VARCHAR(255) PRIMARY KEY,
 		applied_at DATETIME NOT NULL
@@ -33,6 +35,7 @@ export function migrate(db) {
 	const applied = [];
 
 	for (const file of files) {
+		if (until && file >= until) break;
 		if (done.has(file)) continue;
 		const sql = readFileSync(join(MIGRATIONS_DIR, file), 'utf8');
 		db.exec('BEGIN');
@@ -51,7 +54,7 @@ export function migrate(db) {
 
 // Which file on disk a path currently points to ("device:inode"), or null if
 // it doesn't exist. If the database file is deleted or replaced while the API
-// runs (e.g. a reset with seed:people -- --fresh), SQLite keeps writing to the
+// runs (e.g. a reset with seed -- --fresh), SQLite keeps writing to the
 // old, now invisible file; comparing this value with the one from start-up
 // catches that (see app.js).
 export function databaseFileIdentity(path) {

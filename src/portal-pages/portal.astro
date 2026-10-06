@@ -1,6 +1,7 @@
 ---
-// Student portal: the student's courses, each with its class links and notes
-// (notes can have a file to download and/or a link).
+// Student portal: the student's current courses (active offerings), then past
+// courses (finished ones), each with its class links and notes (notes can have
+// a file to download and/or a link).
 // States: loading → unavailable | not-logged-in | pending | courses | empty.
 // Accounts still waiting for admin approval see only the "pending" message.
 // Faculty and admin who open this page are sent to /faculty/.
@@ -38,7 +39,12 @@ const text = copy.portal;
 					<p>{text.empty}</p>
 				</div>
 				<div data-state="courses" hidden>
-					<ul class="course-list" id="course-list"></ul>
+					<h2 class="course-group">{text.currentCourses}</h2>
+					<ul class="course-list" id="current-courses"></ul>
+					<div id="past-courses-section" hidden>
+						<h2 class="course-group">{text.pastCourses}</h2>
+						<ul class="course-list" id="past-courses"></ul>
+					</div>
 				</div>
 			</PortalPanel>
 		</div>
@@ -51,7 +57,15 @@ const text = copy.portal;
 	import { showState, portalIsAvailable } from '../lib/portal-ui';
 
 	interface Item { id: number; kind: string; title: string; url: string | null; file: { name: string; size: number } | null }
-	interface Course { code: string; title: string; semester: string; resources: Item[] }
+	interface Course {
+		code: string;
+		title: string;
+		programme: string | null;
+		batchYear: number | null;
+		semester: string;
+		contentHidden: boolean;
+		resources: Item[];
+	}
 
 	const text = copy.portal;
 
@@ -101,12 +115,16 @@ const text = copy.portal;
 
 	// Builds the course cards with DOM methods and textContent only, so course
 	// and link titles can never be interpreted as HTML.
-	function renderCourses(courses: Course[]) {
-		const list = document.getElementById('course-list')!;
+	function renderCourses(list: HTMLElement, courses: Course[]) {
 		list.replaceChildren(
 			...courses.map((course) => {
 				const item = element('li', 'course');
-				item.append(element('h2', 'course__title', `${course.code} — ${course.title}`));
+				item.append(element('h3', 'course__title', `${course.code} — ${course.title}`));
+				item.append(element('p', 'course__semester', course.semester));
+				if (course.contentHidden) {
+					item.append(element('p', 'course__none', text.contentHidden));
+					return item;
+				}
 				if (course.resources.length === 0) {
 					item.append(element('p', 'course__none', text.noLinks));
 					return item;
@@ -135,12 +153,15 @@ const text = copy.portal;
 		if (me.data!.user.status === 'pending') return showState('pending');
 		if (me.data!.user.role !== 'student') return void (location.href = portalPages.faculty);
 
-		const result = await api<{ courses: Course[] }>('my-courses');
+		const result = await api<{ current: Course[]; past: Course[] }>('my-courses');
 		if (result.error === 'unavailable') return showState('unavailable');
 		if (result.error === 'not_logged_in') return showState('not-logged-in');
 		if (!result.ok) return showState('not-logged-in');
-		if (result.data!.courses.length === 0) return showState('empty');
-		renderCourses(result.data!.courses);
+		const { current, past } = result.data!;
+		if (current.length === 0 && past.length === 0) return showState('empty');
+		renderCourses(document.getElementById('current-courses')!, current);
+		renderCourses(document.getElementById('past-courses')!, past);
+		document.getElementById('past-courses-section')!.hidden = past.length === 0; // no heading without past courses
 		showState('courses');
 	}
 	start();
@@ -164,6 +185,21 @@ const text = copy.portal;
 	/* The course list needs more room than the login-sized panel. */
 	section :global(.portal-panel) {
 		max-width: 44rem;
+	}
+
+	.course-group {
+		font-size: 1.35rem;
+		margin: 0 0 var(--space-md);
+	}
+
+	#past-courses-section {
+		margin-top: var(--space-lg);
+	}
+
+	:global(.course__semester) {
+		margin: 0 0 var(--space-sm);
+		color: var(--color-text-muted);
+		font-size: 0.92rem;
 	}
 
 	.course-list {

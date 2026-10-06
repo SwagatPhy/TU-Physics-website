@@ -296,3 +296,33 @@ Notes must be uploaded through the portal itself; the PDF is not kept as a publi
 **Data model**: `resources` gains `file_name`, `file_stored_as`, `file_size`, `file_type` (all nullable) and keeps `url` nullable for notes; class links keep `url` required. Migration `005_note_files.sql`.
 
 **Tests** (`server/test/notes.test.js`): wrong type refused (renamed .exe, fake PDF, a ZIP that isn't Office, a docx with `vbaProject.bin`, a macro-enabled content type, `.docm`/`.pptm`/`.xlsm`/`.doc`/`.ppt`, zip bombs); tiny valid fake .docx/.pptx accepted; oversize refused; student A cannot download student B's course file; pending/unenrolled/not-yet-visible downloads refused; faculty cannot upload to another faculty's course; deleting removes the file from disk.
+
+## 19. Batches and course offerings (owner decision, 2026-10-06; built on portal-trial)
+
+**Roll numbers** are a prefix, the 2-digit joining year and a 3-digit serial, nothing in between:
+`PHM` MSc, `PHI` Integrated BSc-MSc, `PHP` PhD (e.g. `PHP22017`). Trimmed and upper-cased;
+anything else is refused. The programme comes from the prefix (`programmes.conf`, the only
+place prefixes are defined). A student's **batch** is programme + joining year
+(`users.batch_year`), stored at sign-up and when an admin corrects the roll number.
+
+**Offerings.** A course (catalogue entry) is taught as offerings: course + batch + semester
+label (e.g. "Autumn 2026") + one teacher, status `active` or `finished`, and elective or not.
+Class links, notes and enrolments belong to the offering, not the course.
+
+| Rule | How it works |
+|---|---|
+| Automatic enrolment | An approved student is enrolled in every **active, non-elective** offering of their batch: when they are approved (by an admin, or at once through the roster), when an admin corrects their roll number, and when such an offering is created, edited or reopened. Never twice. |
+| Electives | Start empty; an admin adds students by roll number or email. |
+| PhD students | Not enrolled automatically (admin adds them) unless `AUTO_ENROL_PHD=true`. |
+| Removing | An admin can remove a student; the row is kept as *removed*, so automatic enrolment never adds them back. Adding them by hand again restores it. |
+| Finished offerings | No automatic enrolment. Enrolled students keep read-only access under **Past courses**, unless the teacher hides the content (toggle on the dashboard); hidden content and its files are not sent at all. |
+| Copying | A teacher can copy all links and notes (each file copied separately) from an earlier offering of the same course they teach. |
+| Isolation | Students see only offerings they are enrolled in (and not removed from); pending accounts see nothing; a teacher manages only their own offerings (admin: all). |
+
+Everything (create, edit, finish, reopen, add, remove, automatic enrolment, hide, copy) is
+audit-logged. Admin tool: `/dphy/admin/offerings/`.
+
+**Migration 007** turns each existing course into one offering (same teacher and semester; no
+batch yet, so nobody is enrolled automatically until an admin sets one), and moves its
+enrolments and links/notes to it. An inactive course becomes a finished offering with its
+content hidden (students could not see it before). Tested on pre-existing data.

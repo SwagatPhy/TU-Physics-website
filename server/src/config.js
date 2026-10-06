@@ -59,6 +59,9 @@ export function loadConfig(env = process.env) {
 		// Uploaded note files, stored under random names. Outside the web root and
 		// git-ignored (inside data/); back it up together with the database.
 		uploadsDir: env.UPLOADS_DIR || 'data/uploads',
+		// Enrol PhD students (roll numbers PHP…) automatically like other batches?
+		// Off: an admin enrols them by hand (REPORT.md section 19).
+		autoEnrolPhd: readBoolean(env.AUTO_ENROL_PHD, false),
 		// Largest note file accepted, in MB (REPORT.md section 18).
 		maxUploadBytes: readNumber(env.MAX_UPLOAD_MB, 20) * 1024 * 1024,
 	};

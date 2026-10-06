@@ -23,6 +23,7 @@ const portalRoutes = {
 	'/portal': './src/portal-pages/portal.astro',
 	'/faculty': './src/portal-pages/faculty.astro',
 	'/admin/approvals': './src/portal-pages/admin/approvals.astro',
+	'/admin/offerings': './src/portal-pages/admin/offerings.astro',
 };
 
 /** @type {import('astro').AstroIntegration} */

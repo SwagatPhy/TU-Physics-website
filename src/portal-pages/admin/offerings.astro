@@ -1,0 +1,537 @@
+---
+// Admin: course offerings — a course taught to one batch (programme + joining
+// year) in one semester by one teacher (REPORT.md section 19).
+// One page: the list of offerings, a form to create or edit one, and, for the
+// offering picked with "Manage students", its students (add by roll number or
+// email, remove). Non-elective offerings enrol their batch automatically.
+// States: loading → unavailable | not-logged-in | not-admin | list.
+// Rows are cloned from the <template>s below and filled with textContent only.
+import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import PortalPanel from '../../components/PortalPanel.astro';
+import { copy } from '../../lib/portal-copy';
+import { portalPages } from '../../lib/api';
+
+const text = copy.offerings;
+const col = text.columns;
+---
+
+<Layout title={text.title} noindex>
+	<PageHeader title={text.title} lead={text.intro} />
+
+	<section class="section">
+		<div class="container">
+			<div class="portal-account" id="portal-account" hidden>
+				<p>{copy.admin.signedInAs} <strong id="portal-name"></strong></p>
+				<div class="btn-row">
+					<a class="btn btn--outline" href={portalPages.approvals}>{text.approvalsLink}</a>
+					<a class="btn btn--outline" href={portalPages.faculty}>{copy.admin.facultyLink}</a>
+					<button class="btn btn--outline" type="button" id="logout-button">{copy.admin.logout}</button>
+				</div>
+			</div>
+
+			<PortalPanel>
+				<div data-state="not-logged-in" hidden>
+					<p>{copy.admin.notLoggedIn}</p>
+					<a class="btn btn--navy" href={portalPages.login}>{copy.admin.loginLink}</a>
+				</div>
+				<div data-state="not-admin" hidden>
+					<p>{copy.admin.notAdmin}</p>
+				</div>
+				<div data-state="list" hidden>
+					<form class="portal-form offering-form" id="offering-form" novalidate>
+						<input type="hidden" name="id" />
+						<div class="offering-form__grid">
+							<label class="portal-field">
+								{text.course}
+								<select name="courseId" id="course-select" required></select>
+							</label>
+							<label class="portal-field">
+								{text.programme}
+								<select name="programme" id="programme-select" required></select>
+							</label>
+							<label class="portal-field">
+								{text.batchYear}
+								<input name="batchYear" type="number" min="2000" max="2099" step="1" required />
+								<span class="portal-field__hint">{text.batchYearHint}</span>
+							</label>
+							<label class="portal-field">
+								{text.semester}
+								<input name="semester" type="text" maxlength="40" required />
+								<span class="portal-field__hint">{text.semesterHint}</span>
+							</label>
+							<label class="portal-field">
+								{text.teacher}
+								<select name="teacherId" id="teacher-select" required></select>
+							</label>
+						</div>
+						<label class="offering-form__check">
+							<input name="isElective" type="checkbox" />
+							<span>
+								<strong>{text.isElective}</strong>
+								<span class="portal-field__hint">{text.isElectiveHint}</span>
+							</span>
+						</label>
+						<div class="btn-row">
+							<button class="btn btn--navy" type="submit" id="offering-submit">{text.create}</button>
+							<button class="btn btn--outline" type="button" id="offering-cancel" hidden>{text.cancel}</button>
+						</div>
+					</form>
+
+					<p class="offerings-none" id="offerings-none" hidden>{text.none}</p>
+					<div class="offerings-table-wrap" id="offerings-table">
+						<table class="offerings-table">
+							<thead>
+								<tr>
+									<th scope="col">{col.course}</th>
+									<th scope="col">{col.batch}</th>
+									<th scope="col">{col.semester}</th>
+									<th scope="col">{col.teacher}</th>
+									<th scope="col">{col.type}</th>
+									<th scope="col">{col.status}</th>
+									<th scope="col">{col.students}</th>
+									<th scope="col">{col.actions}</th>
+								</tr>
+							</thead>
+							<tbody id="offering-rows"></tbody>
+						</table>
+					</div>
+
+					<section class="students" id="students" hidden aria-labelledby="students-heading">
+						<h2 id="students-heading"></h2>
+						<p class="portal-field__hint">{text.removedNote}</p>
+						<form class="students__add" id="student-form" novalidate>
+							<label class="portal-field">
+								{text.studentField}
+								<input name="student" type="text" maxlength="254" required autocomplete="off" />
+							</label>
+							<button class="btn btn--navy" type="submit">{text.addStudent}</button>
+						</form>
+						<p class="offerings-none" id="students-none" hidden>{text.noStudents}</p>
+						<ul class="students__list" id="student-rows"></ul>
+					</section>
+				</div>
+			</PortalPanel>
+		</div>
+	</section>
+
+	<template id="offering-row">
+		<tr>
+			<td data-field="course"></td>
+			<td data-field="batch"></td>
+			<td data-field="semester"></td>
+			<td data-field="teacher"></td>
+			<td data-field="type"></td>
+			<td data-field="status"></td>
+			<td data-field="students"></td>
+			<td class="offerings-actions">
+				<button class="btn btn--outline offerings-button" type="button" data-action="edit">{text.edit}</button>
+				<button class="btn btn--outline offerings-button" type="button" data-action="status"></button>
+				<button class="btn btn--navy offerings-button" type="button" data-action="students">{text.manageStudents}</button>
+			</td>
+		</tr>
+	</template>
+
+	<template id="student-row">
+		<li class="students__item">
+			<span data-field="name"></span>
+			<span class="students__meta" data-field="meta"></span>
+			<button class="btn btn--outline offerings-button" type="button" data-action="remove">{text.remove}</button>
+		</li>
+	</template>
+</Layout>
+
+<script>
+	import { api, portalPages } from '../../lib/api';
+	import { copy, errorMessage } from '../../lib/portal-copy';
+	import { showState, showMessage, portalIsAvailable } from '../../lib/portal-ui';
+
+	interface Offering {
+		id: number;
+		courseId: number;
+		code: string;
+		title: string;
+		programme: string | null;
+		batchYear: number | null;
+		semester: string;
+		teacherId: number | null;
+		teacherName: string | null;
+		status: 'active' | 'finished';
+		isElective: boolean;
+		studentCount: number;
+	}
+	interface Student { id: number; name: string; email: string; rollNumber: string | null; addedBy: string }
+	interface Lists {
+		offerings: Offering[];
+		courses: { id: number; code: string; title: string }[];
+		teachers: { id: number; name: string }[];
+		programmes: string[];
+	}
+
+	const text = copy.offerings;
+	const form = document.getElementById('offering-form') as HTMLFormElement;
+	const submit = document.getElementById('offering-submit')!;
+	const cancel = document.getElementById('offering-cancel')!;
+	const rows = document.getElementById('offering-rows')!;
+	const offeringTemplate = document.getElementById('offering-row') as HTMLTemplateElement;
+	const studentTemplate = document.getElementById('student-row') as HTMLTemplateElement;
+	const studentsSection = document.getElementById('students')!;
+	const studentForm = document.getElementById('student-form') as HTMLFormElement;
+	const field = (root: ParentNode, name: string) => root.querySelector<HTMLElement>(`[data-field="${name}"]`)!;
+	const input = (name: string) => form.elements.namedItem(name) as HTMLInputElement;
+
+	let offerings: Offering[] = [];
+	let shownStudentsOf: number | null = null; // the offering whose students are shown
+
+	const batchOf = (o: Offering) => (o.programme ? `${o.programme} ${o.batchYear ?? ''}`.trim() : '—');
+	const withCount = (message: string, n: number) => message.replace('{n}', String(n));
+
+	function fillSelect(id: string, options: { value: string; label: string }[]) {
+		(document.getElementById(id) as HTMLSelectElement).replaceChildren(...options.map((o) => new Option(o.label, o.value)));
+	}
+
+	function resetForm() {
+		form.reset();
+		input('id').value = '';
+		submit.textContent = text.create;
+		cancel.hidden = true;
+	}
+
+	function startEditing(offering: Offering) {
+		input('id').value = String(offering.id);
+		input('courseId').value = String(offering.courseId);
+		input('programme').value = offering.programme ?? '';
+		input('batchYear').value = offering.batchYear ? String(offering.batchYear) : '';
+		input('semester').value = offering.semester;
+		input('teacherId').value = offering.teacherId ? String(offering.teacherId) : '';
+		input('isElective').checked = offering.isElective;
+		submit.textContent = text.save;
+		cancel.hidden = false;
+		form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		input('semester').focus({ preventScroll: true });
+	}
+
+	// The form's values, as the API expects them.
+	function formBody(base?: Offering) {
+		return {
+			courseId: Number(input('courseId').value),
+			programme: input('programme').value,
+			batchYear: Number(input('batchYear').value),
+			semester: input('semester').value,
+			teacherId: Number(input('teacherId').value),
+			isElective: input('isElective').checked,
+			status: base?.status,
+		};
+	}
+
+	// An offering's current values, with another status (Finish / Reopen).
+	function bodyWithStatus(offering: Offering, status: 'active' | 'finished') {
+		return {
+			courseId: offering.courseId,
+			programme: offering.programme,
+			batchYear: offering.batchYear,
+			semester: offering.semester,
+			teacherId: offering.teacherId,
+			isElective: offering.isElective,
+			status,
+		};
+	}
+
+	function renderRow(offering: Offering): HTMLTableRowElement {
+		const row = (offeringTemplate.content.cloneNode(true) as DocumentFragment).firstElementChild as HTMLTableRowElement;
+		field(row, 'course').textContent = `${offering.code} — ${offering.title}`;
+		field(row, 'batch').textContent = batchOf(offering);
+		field(row, 'semester').textContent = offering.semester;
+		field(row, 'teacher').textContent = offering.teacherName ?? '—';
+		field(row, 'type').textContent = offering.isElective ? text.elective : text.core;
+		field(row, 'status').textContent = offering.status === 'finished' ? text.finished : text.active;
+		field(row, 'students').textContent = String(offering.studentCount);
+		const finishing = offering.status === 'active';
+		const statusButton = row.querySelector<HTMLButtonElement>('[data-action="status"]')!;
+		statusButton.textContent = finishing ? text.finish : text.reopen;
+		row.querySelector('[data-action="edit"]')!.addEventListener('click', () => startEditing(offering));
+		statusButton.addEventListener('click', () =>
+			save(offering.id, bodyWithStatus(offering, finishing ? 'finished' : 'active'), finishing ? text.finishedDone : text.reopened),
+		);
+		row.querySelector('[data-action="students"]')!.addEventListener('click', () => showStudents(offering.id));
+		return row;
+	}
+
+	// Reloads the list (and the open students panel). Returns false if the page can't be shown.
+	async function load(): Promise<boolean> {
+		const result = await api<Lists>('admin/offerings');
+		if (result.error === 'unavailable') return (showState('unavailable'), false);
+		if (result.error === 'not_logged_in') return (showState('not-logged-in'), false);
+		if (!result.ok) return (showState('not-admin'), false);
+		const lists = result.data!;
+		offerings = lists.offerings;
+		if ((document.getElementById('course-select') as HTMLSelectElement).options.length === 0) {
+			fillSelect('course-select', lists.courses.map((c) => ({ value: String(c.id), label: `${c.code} — ${c.title}` })));
+			fillSelect('programme-select', lists.programmes.map((p) => ({ value: p, label: p })));
+			fillSelect('teacher-select', lists.teachers.map((t) => ({ value: String(t.id), label: t.name })));
+		}
+		rows.replaceChildren(...offerings.map(renderRow));
+		document.getElementById('offerings-none')!.hidden = offerings.length > 0;
+		document.getElementById('offerings-table')!.hidden = offerings.length === 0;
+		showState('list');
+		if (shownStudentsOf) await showStudents(shownStudentsOf, { scroll: false });
+		return true;
+	}
+
+	// Creates (no id) or saves an offering, then says how many students were enrolled automatically.
+	async function save(id: number | null, body: object, doneText: string) {
+		const result = id
+			? await api<{ enrolled: number }>(`admin/offerings/${id}`, { method: 'PUT', body })
+			: await api<{ enrolled: number }>('admin/offerings', { method: 'POST', body });
+		if (result.error === 'unavailable') return showState('unavailable');
+		if (!result.ok) return showMessage(errorMessage(result.error!), { error: true });
+		resetForm();
+		await load();
+		const enrolled = result.data!.enrolled;
+		showMessage(enrolled > 0 ? `${doneText} ${withCount(text.enrolled, enrolled)}` : doneText);
+	}
+
+	form.addEventListener('submit', (event) => {
+		event.preventDefault();
+		const id = input('id').value ? Number(input('id').value) : null;
+		const editing = offerings.find((o) => o.id === id);
+		save(id, formBody(editing), id ? text.saved : text.created);
+	});
+	cancel.addEventListener('click', resetForm);
+
+	// ---- Students of one offering ------------------------------------------------
+
+	async function showStudents(offeringId: number, { scroll = true } = {}) {
+		const result = await api<{ offering: Offering; students: Student[] }>(`admin/offerings/${offeringId}`);
+		if (result.error === 'unavailable') return showState('unavailable');
+		if (!result.ok) return showMessage(errorMessage(result.error!), { error: true });
+		const { offering, students } = result.data!;
+		shownStudentsOf = offering.id;
+		document.getElementById('students-heading')!.textContent = text.studentsHeading
+			.replace('{course}', `${offering.code} — ${offering.title}`)
+			.replace('{batch}', batchOf(offering))
+			.replace('{semester}', offering.semester);
+		const list = document.getElementById('student-rows')!;
+		list.replaceChildren(
+			...students.map((student) => {
+				const row = (studentTemplate.content.cloneNode(true) as DocumentFragment).firstElementChild as HTMLElement;
+				field(row, 'name').textContent = student.name;
+				field(row, 'meta').textContent = [student.rollNumber, student.email].filter(Boolean).join(' · ');
+				const remove = row.querySelector<HTMLButtonElement>('[data-action="remove"]')!;
+				remove.setAttribute('aria-label', `${text.remove}: ${student.name}`);
+				remove.addEventListener('click', () => removeStudent(offering.id, student));
+				return row;
+			}),
+		);
+		document.getElementById('students-none')!.hidden = students.length > 0;
+		studentsSection.hidden = false;
+		if (scroll) studentsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+	}
+
+	studentForm.addEventListener('submit', async (event) => {
+		event.preventDefault();
+		if (!shownStudentsOf) return;
+		const student = (studentForm.elements.namedItem('student') as HTMLInputElement).value;
+		const result = await api(`admin/offerings/${shownStudentsOf}/students`, { method: 'POST', body: { student } });
+		if (result.error === 'unavailable') return showState('unavailable');
+		if (!result.ok) return showMessage(errorMessage(result.error!), { error: true });
+		studentForm.reset();
+		await load();
+		showMessage(text.studentAdded);
+	});
+
+	async function removeStudent(offeringId: number, student: Student) {
+		if (!confirm(text.confirmRemove.replace('{name}', student.name))) return;
+		const result = await api(`admin/offerings/${offeringId}/students/${student.id}`, { method: 'DELETE' });
+		if (result.error === 'unavailable') return showState('unavailable');
+		if (!result.ok) return showMessage(errorMessage(result.error!), { error: true });
+		await load();
+		showMessage(text.studentRemoved);
+	}
+
+	document.getElementById('logout-button')!.addEventListener('click', async () => {
+		await api('logout', { method: 'POST' });
+		location.href = portalPages.login;
+	});
+
+	async function start() {
+		if (!(await portalIsAvailable())) return;
+		const me = await api<{ user: { name: string; role: string; mustChangePassword: boolean } }>('me');
+		if (!me.ok) return showState('not-logged-in');
+		if (me.data!.user.mustChangePassword) return void (location.href = portalPages.changePassword);
+		if (me.data!.user.role !== 'admin') return showState('not-admin');
+		document.getElementById('portal-name')!.textContent = me.data!.user.name;
+		document.getElementById('portal-account')!.hidden = false;
+		await load();
+	}
+	start();
+</script>
+
+<style>
+	.portal-account {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-sm);
+		margin: 0 0 var(--space-md);
+	}
+
+	.portal-account p {
+		margin: 0;
+	}
+
+	/* Tables need the full container width, not the login-sized panel. */
+	section :global(.portal-panel) {
+		max-width: none;
+	}
+
+	.offering-form {
+		margin-bottom: var(--space-lg);
+		padding: var(--space-md);
+		border-radius: var(--radius-sm);
+		background: var(--color-bg-soft);
+	}
+
+	.offering-form__grid {
+		display: grid;
+		gap: var(--space-md);
+		grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+	}
+
+	.offering-form label.portal-field {
+		font-weight: 600;
+		color: var(--navy);
+	}
+
+	.offering-form select,
+	.offering-form input[type='number'],
+	.offering-form input[type='text'],
+	.students__add input {
+		width: 100%;
+		min-height: 2.9rem;
+		padding: 0.6rem 0.85rem;
+		border: 1px solid var(--color-border-strong);
+		border-radius: var(--radius-sm);
+		background: var(--color-bg);
+		color: var(--color-text);
+		font: inherit;
+		font-weight: 400;
+	}
+
+	.offering-form__check {
+		display: flex;
+		gap: 0.6rem;
+		align-items: flex-start;
+		color: var(--navy);
+	}
+
+	.offering-form__check input {
+		width: 1.15rem;
+		height: 1.15rem;
+		margin-top: 0.2rem;
+		accent-color: var(--navy);
+	}
+
+	.offering-form__check .portal-field__hint {
+		display: block;
+	}
+
+	.offering-form .btn {
+		width: auto;
+	}
+
+	.offerings-none {
+		color: var(--color-text-muted);
+	}
+
+	/* Wide tables scroll inside their own box on small screens. */
+	.offerings-table-wrap {
+		overflow-x: auto;
+	}
+
+	.offerings-table {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 0.93rem;
+	}
+
+	.offerings-table th {
+		padding: 0.5rem;
+		text-align: left;
+		font-size: 0.78rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--color-text-muted);
+		border-bottom: 1px solid var(--color-border-strong);
+		white-space: nowrap;
+	}
+
+	:global(.offerings-table td) {
+		padding: 0.5rem;
+		border-bottom: 1px solid var(--color-border);
+		vertical-align: middle;
+	}
+
+	:global(.offerings-actions) {
+		white-space: nowrap;
+	}
+
+	:global(.offerings-button) {
+		min-height: 2.3rem;
+		padding: 0.3rem 0.8rem;
+		font-size: 0.88rem;
+	}
+
+	.students {
+		margin-top: var(--space-lg);
+		padding-top: var(--space-lg);
+		border-top: 1px solid var(--color-border);
+	}
+
+	.students h2 {
+		font-size: 1.2rem;
+	}
+
+	.students__add {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-end;
+		gap: var(--space-sm);
+		margin: var(--space-md) 0;
+	}
+
+	.students__add .portal-field {
+		flex: 1 1 16rem;
+		font-weight: 600;
+		color: var(--navy);
+	}
+
+	.students__add .btn {
+		width: auto;
+	}
+
+	.students__list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	:global(.students__item) {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.4rem 0.75rem;
+		padding: 0.5rem 0;
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	:global(.students__meta) {
+		font-size: 0.88rem;
+		color: var(--color-text-muted);
+	}
+
+	:global(.students__item .btn) {
+		margin-left: auto;
+	}
+</style>

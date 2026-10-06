@@ -116,6 +116,8 @@ SESSION_MAX_DAYS=7
 LINK_MINUTES=30
 # Roll-number prefixes (PHM, PHI, PHP) — the file shipped with the code.
 PROGRAMMES_FILE=programmes.conf
+# PhD students are enrolled in courses by an admin; true = automatically, like other batches.
+AUTO_ENROL_PHD=false
 ```
 
 | Setting | What it is | Production value |
@@ -131,6 +133,7 @@ PROGRAMMES_FILE=programmes.conf
 | `MAIL_FROM`, `SMTP_*` | the mail server and login | from IT |
 | `SESSION_IDLE_HOURS`, `SESSION_MAX_DAYS`, `LINK_MINUTES` | time limits | as above |
 | `PROGRAMMES_FILE` | roll-number prefixes | `programmes.conf` |
+| `AUTO_ENROL_PHD` | enrol PhD students automatically | `false` (department's choice) |
 
 **Check the email settings** before going further (sends one email; the password is never shown):
 
@@ -265,7 +268,10 @@ npm run build:portal          # = PUBLIC_PORTAL_ENABLED=true astro build
 ```
 
 This adds *Login* and *Register* to the site header and the portal pages (`/dphy/login/`,
-`/dphy/register/`, `/dphy/portal/`, `/dphy/faculty/`, `/dphy/admin/approvals/`, …). To switch the
+`/dphy/register/`, `/dphy/portal/`, `/dphy/faculty/`, `/dphy/admin/approvals/`,
+`/dphy/admin/offerings/`, …). The administrator then sets up the semester's course offerings
+(course + batch + semester + teacher) on `/dphy/admin/offerings/`; students of each batch are
+enrolled automatically as they are approved. To switch the
 portal off again, upload a normal `npm run build`.
 
 ## 9. Backups (nightly) and a restore test

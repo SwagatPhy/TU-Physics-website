@@ -85,7 +85,7 @@ describe('admin approval of sign-ups', () => {
 		const res = await decide([ids.p1], 'approve');
 		assert.deepEqual(res.body, { decision: 'approve', done: [ids.p1], skipped: [] });
 		assert.equal(statusOf(ids.p1), 'approved');
-		assert.deepEqual((await browsers.p1.request('/my-courses')).body, { courses: [] }); // same session, now allowed
+		assert.deepEqual((await browsers.p1.request('/my-courses')).body, { current: [], past: [] }); // same session, now allowed
 		await app.backgroundWorkDone();
 		assert.deepEqual(app.outbox.map((m) => m.to), ['p1@example.test']);
 		assert.match(app.outbox[0].text, /\/dphy\/login\//);

@@ -2,7 +2,7 @@ import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { startTestServer, client, addUser } from './helpers.js';
+import { startTestServer, client, addUser, addOffering, enrol } from './helpers.js';
 import { toDbTime } from '../src/db.js';
 import { makeZip, fakeDocx, fakePptx, fakeMacroEnabledDocx, FAKE_PDF, FAKE_EXE, FAKE_OLE, upload } from './fake-files.js';
 
@@ -20,12 +20,10 @@ describe('notes with files (REPORT.md section 18)', () => {
 		await addUser(db, { email: 'outsider@example.test' });
 		pendingStudent = await addUser(db, { email: 'pending@example.test', status: 'pending' });
 
-		const addCourse = db.prepare('INSERT INTO courses (code, title, semester, faculty_id, active) VALUES (?, ?, ?, ?, ?)');
-		mine = Number(addCourse.run('MINE', 'My course', 'TRIAL', me, 1).lastInsertRowid);
-		theirs = Number(addCourse.run('THEIRS', 'Their course', 'TRIAL', other, 1).lastInsertRowid);
-		const enroll = db.prepare('INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)');
-		enroll.run(enrolledStudent, mine);
-		enroll.run(pendingStudent, mine);
+		mine = addOffering(db, { code: 'MINE', teacherId: me });
+		theirs = addOffering(db, { code: 'THEIRS', teacherId: other });
+		enrol(db, mine, enrolledStudent);
+		enrol(db, mine, pendingStudent);
 
 		for (const name of ['me', 'other', 'admin', 'student', 'outsider', 'pending']) {
 			browsers[name] = client(app.baseUrl);
@@ -34,7 +32,7 @@ describe('notes with files (REPORT.md section 18)', () => {
 	});
 	after(() => app.close());
 
-	const addNote = (who, body) => browsers[who].request('/notes', { method: 'POST', body: { courseId: mine, title: 'Week 1', ...body } });
+	const addNote = (who, body) => browsers[who].request('/notes', { method: 'POST', body: { offeringId: mine, title: 'Week 1', ...body } });
 	const errorFor = async (name, bytes) => (await addNote('me', { file: upload(name, bytes) })).body.error;
 	const storedFiles = () => readdirSync(app.config.uploadsDir);
 	const storedNameOf = (id) => app.db.prepare('SELECT file_stored_as FROM resources WHERE id = ?').get(id).file_stored_as;
@@ -125,7 +123,7 @@ describe('notes with files (REPORT.md section 18)', () => {
 				await browser.login('me@example.test');
 				const res = await browser.request('/notes', {
 					method: 'POST',
-					body: { courseId: 1, title: 'x', file: upload('big.txt', Buffer.alloc(100 * 1024, 'a')) },
+					body: { offeringId: 1, title: 'x', file: upload('big.txt', Buffer.alloc(100 * 1024, 'a')) },
 				});
 				assert.equal(res.status, 413);
 				assert.equal(res.body.error, 'file_too_large');
@@ -160,7 +158,7 @@ describe('notes with files (REPORT.md section 18)', () => {
 			noteId = (await addNote('me', { title: 'Lecture 1', file: upload('Lecture 1 – notes.pdf', FAKE_PDF) })).body.id;
 			futureNoteId = (await addNote('me', { title: 'Later', file: upload('later.txt', 'soon'), visibleFrom: '2099-01-01' })).body.id;
 			theirNoteId = (
-				await browsers.other.request('/notes', { method: 'POST', body: { courseId: theirs, title: 'Theirs', file: upload('t.txt', 'theirs') } })
+				await browsers.other.request('/notes', { method: 'POST', body: { offeringId: theirs, title: 'Theirs', file: upload('t.txt', 'theirs') } })
 			).body.id;
 		});
 
@@ -175,7 +173,7 @@ describe('notes with files (REPORT.md section 18)', () => {
 		});
 
 		test('the student sees the note in their course list, without the stored file name', async () => {
-			const course = (await browsers.student.request('/my-courses')).body.courses[0];
+			const course = (await browsers.student.request('/my-courses')).body.current[0];
 			const note = course.resources.find((item) => item.id === noteId);
 			assert.deepEqual(note.file, { name: 'Lecture 1 – notes.pdf', size: FAKE_PDF.length });
 			assert.equal(note.url, null);
@@ -203,12 +201,12 @@ describe('notes with files (REPORT.md section 18)', () => {
 				error: 'resource_not_found',
 			});
 			assert.equal((await browsers.other.request(`/notes/${noteId}`, { method: 'DELETE' })).status, 404);
-			assert.equal((await browsers.other.request('/notes', { method: 'POST', body: { courseId: mine, title: 'x', url: 'https://example.com' } })).status, 404);
+			assert.equal((await browsers.other.request('/notes', { method: 'POST', body: { offeringId: mine, title: 'x', url: 'https://example.com' } })).status, 404);
 			assert.equal((await download('student', noteId)).status, 200); // still there
 		});
 
 		test('a class link has no file to download', async () => {
-			const link = await browsers.me.request('/resources', { method: 'POST', body: { courseId: mine, title: 'Class', url: 'https://example.com/c' } });
+			const link = await browsers.me.request('/resources', { method: 'POST', body: { offeringId: mine, title: 'Class', url: 'https://example.com/c' } });
 			assert.equal((await download('me', link.body.id)).status, 404);
 		});
 	});
@@ -255,14 +253,14 @@ describe('notes with files (REPORT.md section 18)', () => {
 		test('notes and class links are separate: /resources does not touch notes', async () => {
 			const id = (await addNote('me', { url: 'https://example.com/n' })).body.id;
 			assert.equal((await browsers.me.request(`/resources/${id}`, { method: 'DELETE' })).status, 404);
-			const link = await browsers.me.request('/resources', { method: 'POST', body: { courseId: mine, title: 'Class', url: 'https://example.com/c' } });
+			const link = await browsers.me.request('/resources', { method: 'POST', body: { offeringId: mine, title: 'Class', url: 'https://example.com/c' } });
 			assert.equal((await browsers.me.request(`/notes/${link.body.id}`, { method: 'DELETE' })).status, 404);
 		});
 
 		test('older "other" items are managed as notes', async () => {
 			const id = Number(
 				app.db
-					.prepare("INSERT INTO resources (course_id, kind, title, url, updated_at) VALUES (?, 'other', 'Old item', 'https://example.com/o', ?)")
+					.prepare("INSERT INTO resources (offering_id, kind, title, url, updated_at) VALUES (?, 'other', 'Old item', 'https://example.com/o', ?)")
 					.run(mine, toDbTime(new Date())).lastInsertRowid,
 			);
 			const res = await browsers.me.request(`/notes/${id}`, { method: 'PUT', body: { title: 'Old item', url: 'https://example.com/o', file: upload('o.txt', 'x') } });

@@ -1,7 +1,8 @@
 // GET /api/files/:id — download the file of a note.
 //
-// Allowed for: an approved student enrolled in the note's course, once the
-// note's show-from date has passed; the course's own faculty member; an admin.
+// Allowed for: an approved student enrolled in the note's offering (and not
+// removed from it), once the note's show-from date has passed and unless the
+// teacher hid a finished offering's content; the offering's teacher; an admin.
 // Everyone else gets the same 404 as for a note that doesn't exist.
 // The file is always sent as a download (attachment) with its checked MIME
 // type and "nosniff", so a browser never displays or runs it as a web page.
@@ -18,19 +19,23 @@ export function filesRoutes({ db, config }) {
 
 	function mayDownload(user, note) {
 		if (user.role === 'admin') return true;
-		if (user.role === 'faculty') return note.faculty_id === user.id;
+		if (user.role === 'faculty') return note.teacher_id === user.id;
 		if (user.role !== 'student') return false;
-		const enrolled = db.prepare('SELECT 1 FROM enrollments WHERE user_id = ? AND course_id = ?').get(user.id, note.course_id);
+		const enrolled = db
+			.prepare('SELECT 1 FROM enrollments WHERE user_id = ? AND offering_id = ? AND removed = 0')
+			.get(user.id, note.offering_id);
 		const visible = note.visible_from === null || note.visible_from <= toDbTime(new Date());
-		return Boolean(enrolled) && visible;
+		const hidden = note.status === 'finished' && Boolean(note.content_hidden);
+		return Boolean(enrolled) && visible && !hidden;
 	}
 
 	router.get('/files/:id', requireLogin, requirePasswordChanged, requireApproved, (req, res) => {
 		const note = db
 			.prepare(
-				`SELECT r.id, r.course_id, r.visible_from, r.file_name, r.file_stored_as, r.file_type, c.faculty_id
-				 FROM resources r JOIN courses c ON c.id = r.course_id
-				 WHERE r.id = ? AND c.active = 1 AND r.file_stored_as IS NOT NULL`,
+				`SELECT r.id, r.offering_id, r.visible_from, r.file_name, r.file_stored_as, r.file_type,
+				        o.teacher_id, o.status, o.content_hidden
+				 FROM resources r JOIN offerings o ON o.id = r.offering_id
+				 WHERE r.id = ? AND r.file_stored_as IS NOT NULL`,
 			)
 			.get(Number(req.params.id));
 		const path = note && mayDownload(req.user, note) ? storedFilePath(config.uploadsDir, note.file_stored_as) : null;

@@ -23,6 +23,7 @@ import { toDbTime } from '../db.js';
 import { hashPassword, checkNewPassword, deleteAllSessionsForUser } from '../auth.js';
 import { checkSignup, checkEmail } from '../validate.js';
 import { readRollNumber } from '../programmes.js';
+import { enrolStudentAutomatically } from '../enrolment.js';
 import { createLinkToken, useLinkToken, cancelUnusedResetLinks, cancelUnusedRegistrationLinks } from '../tokens.js';
 import {
 	registrationEmail,
@@ -159,7 +160,10 @@ export function registerRoutes({ db, config, programmes, mailer, loginLimiter, l
 						readRollNumber(programmes, signup.roll_number)?.batchYear ?? null,
 					).lastInsertRowid,
 			);
-			if (claimed) db.prepare('UPDATE roster SET user_id = ? WHERE id = ?').run(userId, signup.roster_id);
+			if (claimed) {
+				db.prepare('UPDATE roster SET user_id = ? WHERE id = ?').run(userId, signup.roster_id);
+				enrolStudentAutomatically(db, config, userId); // approved at once: into their batch's offerings
+			}
 			logAudit(db, { actorId: userId, action: claimed ? 'registered_from_roster' : 'registered_pending', target: `user:${userId}` });
 			db.exec('COMMIT');
 		} catch {

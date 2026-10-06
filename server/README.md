@@ -98,7 +98,9 @@ The new account is role `admin`, status `approved`, and the creation is audit-lo
 8. **Optional roster:** `npm run roster:import -- people.csv` (columns
    `email,name,roll_number,role`, optional `programme`; whole file checked first, line-numbered
    errors, existing rows never overwritten). Without a roster everyone goes to `pending`.
-9. **Enrolment** in courses is not automatic yet (see REPORT.md §17).
+9. **Enrolment** follows the batch: approved students join their batch's active non-elective
+   course offerings automatically (REPORT.md §19, `src/enrolment.js`); electives and PhD
+   students (`PHP`, unless `AUTO_ENROL_PHD=true`) are added by an admin.
 
 Forgot password works the same way: ask with your email, get a one-time 30-minute link,
 choose a new password. That signs out every existing session.
@@ -121,7 +123,9 @@ choose a new password. That signs out every existing session.
 | `src/routes/auth-routes.js` | `/login`, `/logout`, `/me`, `/change-password` |
 | `src/routes/register-routes.js` | `/register/…`, `/password-reset/…` |
 | `src/routes/student-routes.js` | `/my-courses` |
-| `src/routes/faculty-routes.js` | `/teaching`, `/resources` (class links), `/notes` |
+| `src/routes/faculty-routes.js` | `/teaching`, `/resources` (class links), `/notes`, `/offerings/:id/visibility`, `/offerings/:id/copy` |
+| `src/routes/offerings-routes.js` | `/admin/offerings…` (admin: offerings and their students) |
+| `src/enrolment.js` | Automatic enrolment of a batch in its offerings |
 | `src/routes/files-routes.js` | `/files/:id` (downloading a note's file) |
 | `src/files.js` | Note files: allowed types, content checks, storage under random names |
 | `src/routes/admin-routes.js` | `/admin/signups`, `/admin/users/:id`, `/admin/decisions` |
@@ -149,16 +153,24 @@ All paths are under `/dphy/api` (`BASE_PATH` + `/api`). Requests that change som
 | `PUT /profile` | `{name, phone}` | `200 {user}` (own account; pending allowed) | `400 invalid_name / invalid_phone`, `401` |
 | `POST /password-reset/request` | `{email}` | `202 {status:"check_your_email"}` **always** | `400 invalid_input`, `429 too_many_attempts` |
 | `POST /password-reset/complete` | `{token, password}` | `200 {status:"password_reset"}` | `400 invalid_input / password_too_short / password_too_long / invalid_or_expired_link`, `429` |
-| `GET /my-courses` | — | `200 {courses:[{code,title,semester,resources:[{id,kind,title,url,file:{name,size}\|null}]}]}` | `401 not_logged_in`, `403 password_change_required / approval_pending / students_only` |
+| `GET /my-courses` | — | `200 {current:[…], past:[…]}`, each `{code,title,programme,batchYear,semester,contentHidden,resources:[{id,kind,title,url,file:{name,size}\|null}]}` | `401 not_logged_in`, `403 password_change_required / approval_pending / students_only` |
 
-| `GET /teaching` | — | `200 {courses:[{id,code,title,semester,studentCount,resources:[{id,kind,title,url,file,visibleFrom,updatedAt}]}]}` | `401`, `403 password_change_required / not_allowed` |
-| `POST /resources` (class link) | `{courseId, title, url, visibleFrom?}` | `201 {id}` | `400 invalid_title / invalid_url / invalid_date`, `403 not_allowed`, `404 course_not_found` |
+| `GET /teaching` | — | `200 {offerings:[{id,code,title,programme,batchYear,semester,status,isElective,contentHidden,studentCount,previousOfferings,resources:[…]}]}` | `401`, `403 password_change_required / not_allowed` |
+| `POST /resources` (class link) | `{offeringId, title, url, visibleFrom?}` | `201 {id}` | `400 invalid_title / invalid_url / invalid_date`, `403 not_allowed`, `404 offering_not_found` |
 | `PUT /resources/:id` | `{title, url, visibleFrom?}` | `200 {id}` | as above, `404 resource_not_found` |
 | `DELETE /resources/:id` | — | `204` | `403 not_allowed`, `404 resource_not_found` |
-| `POST /notes` | `{courseId, title, url?, visibleFrom?, file?:{name, data (base64)}}` | `201 {id}` | `400 invalid_title / invalid_url / invalid_date / file_or_link_required / invalid_file / invalid_file_type / file_too_large`, `413 file_too_large`, `404 course_not_found` |
+| `POST /notes` | `{offeringId, title, url?, visibleFrom?, file?:{name, data (base64)}}` | `201 {id}` | `400 invalid_title / invalid_url / invalid_date / file_or_link_required / invalid_file / invalid_file_type / file_too_large`, `413 file_too_large`, `404 offering_not_found` |
 | `PUT /notes/:id` | as POST without `courseId`; `file` object = replace, `null` = remove, left out = keep | `200 {id}` | as above, `404 resource_not_found` |
 | `DELETE /notes/:id` | — | `204` (the stored file is deleted too) | `404 resource_not_found` |
 | `GET /files/:id` | — | `200` the file, as an attachment | `401`, `403 approval_pending`, `404 file_not_found` |
+| `PUT /offerings/:id/visibility` | `{hidden}` | `200` | `400 offering_not_finished`, `404 offering_not_found` |
+| `POST /offerings/:id/copy` | `{fromOfferingId}` | `200 {copied}` | `404 offering_not_found / copy_source_not_found` |
+| `GET /admin/offerings` | — | `200 {offerings, courses, teachers, programmes}` | `403` |
+| `POST /admin/offerings` | `{courseId, programme, batchYear, semester, teacherId, isElective}` | `201 {id, enrolled}` | `400 offering_exists / invalid_programme / invalid_batch_year / invalid_semester / teacher_not_found / course_not_found` |
+| `PUT /admin/offerings/:id` | same, plus `status: "active"\|"finished"` | `200 {id, enrolled}` | as above, `404 offering_not_found` |
+| `GET /admin/offerings/:id` | — | `200 {offering, students}` | `404` |
+| `POST /admin/offerings/:id/students` | `{student: roll number or email}` | `201` | `400 not_a_student / already_enrolled`, `404 student_not_found` |
+| `DELETE /admin/offerings/:id/students/:userId` | — | `204` (kept as removed: never re-added automatically) | `404` |
 | `GET /admin/signups` | — | `200 {signups:[{id,name,email,role,status,rollNumber,programme,phone,createdAt}]}` | `401`, `403 not_allowed` |
 | `PUT /admin/users/:id` | `{name, rollNumber? (students), phone?}` | `200 {user}` | `400 invalid_name / invalid_roll_number / invalid_phone / roll_number_taken`, `403`, `404 user_not_found` |
 | `POST /admin/decisions` | `{userIds:[…], decision:"approve"\|"reject"}` | `200 {decision, done:[ids], skipped:[ids]}` | `400 invalid_decision / invalid_input`, `403` |

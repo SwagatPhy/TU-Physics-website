@@ -12,6 +12,7 @@ import { studentRoutes } from './routes/student-routes.js';
 import { facultyRoutes } from './routes/faculty-routes.js';
 import { adminRoutes } from './routes/admin-routes.js';
 import { filesRoutes } from './routes/files-routes.js';
+import { offeringsRoutes } from './routes/offerings-routes.js';
 import { loadProgrammes } from './programmes.js';
 
 export function createApp({
@@ -121,6 +122,7 @@ export function createApp({
 	api.use(facultyRoutes({ db, config }));
 	api.use(filesRoutes({ db, config }));
 	api.use(adminRoutes({ db, config, programmes, mailer, runInBackground }));
+	api.use(offeringsRoutes({ db, config, programmes }));
 
 	api.use((req, res) => res.status(404).json({ error: 'not_found' }));
 

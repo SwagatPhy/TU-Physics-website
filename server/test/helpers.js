@@ -71,6 +71,33 @@ export async function startTestServer({ limiterOptions = {}, env = {} } = {}) {
 	};
 }
 
+// A course offering (and its course, made on first use of the code). Returns the offering id.
+export function addOffering(
+	db,
+	{ code, teacherId = null, programme = null, batchYear = null, semester = 'Autumn 2026', status = 'active', isElective = false, contentHidden = false },
+) {
+	const course =
+		db.prepare('SELECT id FROM courses WHERE code = ?').get(code)?.id ??
+		db.prepare("INSERT INTO courses (code, title, semester, active) VALUES (?, ?, '-', 1)").run(code, `${code} title`).lastInsertRowid;
+	return Number(
+		db
+			.prepare(
+				`INSERT INTO offerings (course_id, programme, batch_year, semester, teacher_id, status, is_elective, content_hidden, created_at)
+				 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			)
+			.run(course, programme, batchYear, semester, teacherId, status, isElective ? 1 : 0, contentHidden ? 1 : 0, toDbTime(new Date()))
+			.lastInsertRowid,
+	);
+}
+
+export function enrol(db, offeringId, userId) {
+	db.prepare("INSERT INTO enrollments (offering_id, user_id, added_by, removed, created_at) VALUES (?, ?, 'admin', 0, ?)").run(
+		offeringId,
+		userId,
+		toDbTime(new Date()),
+	);
+}
+
 export function addRosterRow(db, { email, name = 'Roster Person', rollNumber = null, role = 'student', programme = null }) {
 	return Number(
 		db

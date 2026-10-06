@@ -65,4 +65,5 @@ export const portalPages = {
 	portal: withBase('/portal'),
 	faculty: withBase('/faculty'),
 	approvals: withBase('/admin/approvals'),
+	offerings: withBase('/admin/offerings'),
 };

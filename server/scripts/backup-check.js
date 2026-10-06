@@ -34,6 +34,6 @@ if (missing.length > 0) fail(`${missing.length} of ${files.length} note file(s) 
 
 console.log(
 	`Backup OK: ${folder}\n` +
-		`  ${count('users')} accounts, ${count('courses')} courses, ${count('resources')} links and notes, ` +
+		`  ${count('users')} accounts, ${count('courses')} courses, ${count('offerings')} offerings, ${count('resources')} links and notes, ` +
 		`${files.length} note files (all present), ${count('audit_log')} log entries.`,
 );

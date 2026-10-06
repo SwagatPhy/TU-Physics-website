@@ -22,6 +22,7 @@ const col = text.columns;
 			<div class="portal-account" id="portal-account" hidden>
 				<p>{text.signedInAs} <strong id="portal-name"></strong></p>
 				<div class="btn-row">
+					<a class="btn btn--outline" href={portalPages.offerings}>{copy.offerings.offeringsLink}</a>
 					<a class="btn btn--outline" href={portalPages.faculty}>{text.facultyLink}</a>
 					<button class="btn btn--outline" type="button" id="logout-button">{text.logout}</button>
 				</div>

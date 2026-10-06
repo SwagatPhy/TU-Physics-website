@@ -5,9 +5,10 @@
 //   npm run seed              (the database must have no users yet)
 //   npm run seed -- --fresh   (deletes the database and data/uploads/ first)
 //
-// 1 admin, 2 faculty, 10 students, 3 courses with fake class links and notes
-// (two with tiny fake files), 4 sign-ups waiting for approval, and a few
-// roster rows. Every account uses SEED_PASSWORD from .env; the approved ones
+// 1 admin, 2 faculty, 10 students in two batches (MSc 2024, Integrated 2023),
+// 3 courses run as 4 offerings (one elective, one finished) with fake class
+// links and notes (two with tiny fake files each), 4 sign-ups waiting for
+// approval, and a few roster rows. Every account uses SEED_PASSWORD from .env; the approved ones
 // must change it at first login. Emails use the reserved ".test" domain, so
 // none can be real. Nothing here comes from real people.
 
@@ -20,6 +21,7 @@ import { hashPassword } from '../src/auth.js';
 import { loadProgrammes, readRollNumber } from '../src/programmes.js';
 import { parseRoster, importRoster } from '../src/roster.js';
 import { storeFile } from '../src/files.js';
+import { enrolBatchAutomatically } from '../src/enrolment.js';
 import { refuseIfApiRunning } from './api-is-running.js';
 
 const SERVER_DIR = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -90,39 +92,50 @@ for (let i = 1; i <= 10; i++) {
 	students.push(addUser(`Test Student ${number}`, `student${number}@example.test`, 'student', rollNumber));
 }
 
-// Codes match the public course catalogue (src/content/courses).
-const addCourse = db.prepare('INSERT INTO courses (code, title, semester, faculty_id, active) VALUES (?, ?, ?, ?, 1)');
-const courses = [
-	{ id: addCourse.run('PHY 101', 'Classical Mechanics', 'DEV', facultyA).lastInsertRowid, code: 'phy101', owner: facultyA },
-	{ id: addCourse.run('PHY 210', 'Electromagnetism', 'DEV', facultyA).lastInsertRowid, code: 'phy210', owner: facultyA },
-	{ id: addCourse.run('PHY 540', 'Computational Physics', 'DEV', facultyB).lastInsertRowid, code: 'phy540', owner: facultyB },
+// Courses (codes match the public catalogue, src/content/courses) and their
+// offerings for two batches. Non-elective offerings take their batch
+// automatically (the same code the API uses); the elective is filled by hand.
+const addCourse = db.prepare("INSERT INTO courses (code, title, semester, active) VALUES (?, ?, '-', 1)");
+const course = {
+	phy101: Number(addCourse.run('PHY 101', 'Classical Mechanics').lastInsertRowid),
+	phy210: Number(addCourse.run('PHY 210', 'Electromagnetism').lastInsertRowid),
+	phy540: Number(addCourse.run('PHY 540', 'Computational Physics').lastInsertRowid),
+};
+const addOffering = db.prepare(
+	`INSERT INTO offerings (course_id, programme, batch_year, semester, teacher_id, status, is_elective, content_hidden, created_at)
+	 VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?)`,
+);
+const offering = (courseId, programme, batchYear, semester, teacher, { status = 'active', elective = false, slug }) => ({
+	id: Number(addOffering.run(courseId, programme, batchYear, semester, teacher, status, elective ? 1 : 0, now).lastInsertRowid),
+	owner: teacher,
+	slug,
+});
+const offerings = [
+	offering(course.phy101, 'MSc', 2024, 'Autumn 2026', facultyA, { slug: 'phy101-msc2024' }),
+	offering(course.phy210, 'Integrated BSc-MSc', 2023, 'Autumn 2026', facultyA, { slug: 'phy210-int2023' }),
+	offering(course.phy540, 'MSc', 2024, 'Autumn 2026', facultyB, { elective: true, slug: 'phy540-msc2024' }),
+	// Last year's PHY 101 for the Integrated batch: finished, so a past course for students 06–10.
+	offering(course.phy101, 'Integrated BSc-MSc', 2023, 'Autumn 2025', facultyA, { status: 'finished', slug: 'phy101-int2023' }),
 ];
 
-// Overlapping groups, so you can check a student only sees their own courses:
-// students 01–06 → PHY 101, 04–10 → PHY 210, 01–03 and 08–10 → PHY 540.
-const enroll = db.prepare('INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)');
-students.slice(0, 6).forEach((id) => enroll.run(id, courses[0].id));
-students.slice(3, 10).forEach((id) => enroll.run(id, courses[1].id));
-[...students.slice(0, 3), ...students.slice(7, 10)].forEach((id) => enroll.run(id, courses[2].id));
-
 const addResource = db.prepare(
-	'INSERT INTO resources (course_id, kind, title, url, created_by, updated_at) VALUES (?, ?, ?, ?, ?, ?)',
+	'INSERT INTO resources (offering_id, kind, title, url, created_by, updated_at) VALUES (?, ?, ?, ?, ?, ?)',
 );
 const addFileNote = db.prepare(
-	`INSERT INTO resources (course_id, kind, title, url, created_by, updated_at, file_name, file_stored_as, file_size, file_type)
+	`INSERT INTO resources (offering_id, kind, title, url, created_by, updated_at, file_name, file_stored_as, file_size, file_type)
 	 VALUES (?, 'notes', ?, NULL, ?, ?, ?, ?, ?, ?)`,
 );
-for (const course of courses) {
-	addResource.run(course.id, 'class_link', 'FAKE class link', `https://example.com/fake-class/${course.code}`, course.owner, now);
-	addResource.run(course.id, 'notes', 'FAKE reading', `https://example.com/fake-notes/${course.code}`, course.owner, now);
-	// Two tiny fake files per course, stored like real uploads.
-	const fakeText = Buffer.from(`FAKE notes for ${course.code}. Made up for development; not course material.\n`);
-	const fakePdf = Buffer.from(`%PDF-1.4\n% FAKE PDF for ${course.code}; made up for development\n%%EOF\n`);
+for (const { id, owner, slug } of offerings) {
+	addResource.run(id, 'class_link', 'FAKE class link', `https://example.com/fake-class/${slug}`, owner, now);
+	addResource.run(id, 'notes', 'FAKE reading', `https://example.com/fake-notes/${slug}`, owner, now);
+	// Two tiny fake files per offering, stored like real uploads.
+	const fakeText = Buffer.from(`FAKE notes for ${slug}. Made up for development; not course material.\n`);
+	const fakePdf = Buffer.from(`%PDF-1.4\n% FAKE PDF for ${slug}; made up for development\n%%EOF\n`);
 	for (const [title, name, bytes, type] of [
 		['FAKE notes (text file)', 'fake-notes.txt', fakeText, 'text/plain; charset=utf-8'],
 		['FAKE notes (PDF file)', 'fake-notes.pdf', fakePdf, 'application/pdf'],
 	]) {
-		addFileNote.run(course.id, title, course.owner, now, name, storeFile(uploadsDir, bytes), bytes.length, type);
+		addFileNote.run(id, title, owner, now, name, storeFile(uploadsDir, bytes), bytes.length, type);
 	}
 }
 
@@ -144,6 +157,13 @@ for (const [name, email, role, rollNumber, phone] of [
 
 db.exec('COMMIT');
 
+// Enrolment: each active non-elective offering takes its whole batch (as when
+// an admin creates it); the elective and last year's offering get students by hand.
+const enrolledAutomatically = offerings.reduce((sum, o) => sum + enrolBatchAutomatically(db, config, o.id), 0);
+const enrolByHand = db.prepare("INSERT INTO enrollments (offering_id, user_id, added_by, removed, created_at) VALUES (?, ?, 'admin', 0, ?)");
+for (const student of students.slice(0, 2)) enrolByHand.run(offerings[2].id, student, now); // PHY 540 elective: students 01–02
+for (const student of students.slice(5, 10)) enrolByHand.run(offerings[3].id, student, now); // finished PHY 101: students 06–10
+
 // Unclaimed roster rows: signing up with a matching email + roll number is approved at once.
 const FAKE_ROSTER = `email,name,roll_number,role
 roster.student01@example.test,Roster Student 01,PHP22911,student
@@ -159,6 +179,8 @@ console.log(`Seeded ${config.databasePath} with FAKE development data:
   admin    admin@example.test
   faculty  faculty.a@example.test, faculty.b@example.test
   students student01@example.test … student10@example.test (01–05 MSc 2024, 06–10 Integrated 2023)
+  offerings PHY 101 MSc 2024, PHY 210 Integrated 2023 (${enrolledAutomatically} students enrolled automatically),
+           PHY 540 MSc 2024 elective (students 01–02), PHY 101 Integrated 2023 Autumn 2025 finished (06–10)
   password SEED_PASSWORD from .env (must be changed on first login)
   pending  pending01–03@example.test, pending.staff@example.test (waiting for approval; same password, no forced change)
   roster   ${rows.length} unclaimed rows, e.g. roster.student01@example.test + PHP22911`);

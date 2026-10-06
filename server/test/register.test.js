@@ -1,6 +1,6 @@
 import { test, describe, before, after, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { startTestServer, client, addUser, addRosterRow, tokenFromEmail, PASSWORD } from './helpers.js';
+import { startTestServer, client, addUser, addRosterRow, addOffering, tokenFromEmail, PASSWORD } from './helpers.js';
 import { toDbTime } from '../src/db.js';
 
 const NEW_PASSWORD = 'my-own-new-password';
@@ -110,12 +110,15 @@ describe('sign-up', () => {
 	});
 
 	test('a student matching an unclaimed roster row is approved straight away', async () => {
+		const batchOffering = addOffering(app.db, { code: 'PHY 101', programme: 'MSc', batchYear: 2024 });
 		const token = await signUp(student({ name: 'Rosa', email: 'LISTED@example.test', rollNumber: 'PHM24001' }));
 		assert.deepEqual((await complete(token)).body, { status: 'registered', approval: 'approved' });
 		const created = user('listed@example.test');
 		assert.equal(created.status, 'approved');
 		const row = app.db.prepare('SELECT claimed, user_id FROM roster WHERE email = ?').get('listed@example.test');
 		assert.deepEqual({ ...row }, { claimed: 1, user_id: created.id });
+		// Approved at once, so already in their batch's offering (MSc 2024).
+		assert.ok(app.db.prepare('SELECT 1 FROM enrollments WHERE offering_id = ? AND user_id = ?').get(batchOffering, created.id));
 	});
 
 	test('a roster email with a different roll number is not auto-approved', async () => {

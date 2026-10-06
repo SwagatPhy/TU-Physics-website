@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { openDatabase, migrate, toDbTime } from '../src/db.js';
 import { storeFile } from '../src/files.js';
+import { addOffering } from './helpers.js';
 
 const SERVER_DIR = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -22,12 +23,12 @@ describe('backups', () => {
 		migrate(db);
 		const now = toDbTime(new Date());
 		const teacher = db.prepare("INSERT INTO users (name, email, password_hash, role, created_at) VALUES ('T', 't@example.test', 'h', 'faculty', ?)").run(now).lastInsertRowid;
-		const course = db.prepare("INSERT INTO courses (code, title, semester, faculty_id, active) VALUES ('PHY 1', 'C', 'S', ?, 1)").run(teacher).lastInsertRowid;
+		const offering = addOffering(db, { code: 'PHY 1', teacherId: teacher });
 		storedAs = storeFile(env.UPLOADS_DIR, Buffer.from('note'));
 		db.prepare(
-			`INSERT INTO resources (course_id, kind, title, created_by, updated_at, file_name, file_stored_as, file_size, file_type)
+			`INSERT INTO resources (offering_id, kind, title, created_by, updated_at, file_name, file_stored_as, file_size, file_type)
 			 VALUES (?, 'notes', 'N', ?, ?, 'n.txt', ?, 4, 'text/plain; charset=utf-8')`,
-		).run(course, teacher, now, storedAs);
+		).run(offering, teacher, now, storedAs);
 	});
 	after(() => {
 		db.close();
@@ -48,7 +49,7 @@ describe('backups', () => {
 		assert.match(name, /^\d{4}-\d{2}-\d{2}T\d{4}$/);
 		const checked = run('backup-check', [join(folder, 'backups', name)]);
 		assert.equal(checked.status, 0, checked.stderr);
-		assert.match(checked.stdout, /Backup OK.*\n.*1 accounts, 1 courses, 1 links and notes, 1 note files \(all present\), 0 log entries/);
+		assert.match(checked.stdout, /Backup OK.*\n.*1 accounts, 1 courses, 1 offerings, 1 links and notes, 1 note files \(all present\), 0 log entries/);
 	});
 
 	test('the check fails when a note file is missing from the backup', () => {

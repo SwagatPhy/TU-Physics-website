@@ -1,10 +1,12 @@
 ---
-// Faculty dashboard: the courses I teach (admin: all courses), each with two
-// sections — "Class links" (title + URL) and "Notes" (title + an uploaded
-// file and/or a link) — to add, edit and delete.
+// Faculty dashboard: the offerings I teach (a course for one batch in one
+// semester; admin: all offerings), each with two sections — "Class links"
+// (title + URL) and "Notes" (title + an uploaded file and/or a link) — to add,
+// edit and delete; plus, per offering, copying links and notes from an earlier
+// offering, and hiding a finished offering's content from students.
 // States: loading → unavailable | not-logged-in | pending | courses | empty.
 // Students who open this page are sent to /portal/.
-// Course cards are cloned from the <template>s below; every value from the
+// Offering cards are cloned from the <template>s below; every value from the
 // database is set with textContent, never as HTML.
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
@@ -50,9 +52,24 @@ const acceptedFiles = '.pdf,.txt,.md,.csv,.docx,.pptx';
 
 	<template id="course-template">
 		<li class="fcourse">
-			<h2 class="fcourse__title" data-field="title"></h2>
+			<h2 class="fcourse__title">
+				<span data-field="title"></span>
+				<span class="badge fcourse__badge" data-field="finished" hidden>{text.finished}</span>
+			</h2>
+			<p class="fcourse__meta" data-field="batch"></p>
 			<p class="fcourse__meta" data-field="students"></p>
 			<p class="portal-message" role="status" aria-live="polite" data-field="status" hidden></p>
+			<div class="fcourse__tools">
+				<button class="btn btn--outline flink__button" type="button" data-field="visibility" hidden></button>
+				<div class="fcourse__copy">
+					<label class="portal-field">
+						{text.copyLabel}
+						<select data-field="copyFrom"></select>
+					</label>
+					<button class="btn btn--outline flink__button" type="button" data-field="copyButton">{text.copyButton}</button>
+					<p class="fcourse__none" data-field="copyNone" hidden>{text.noPreviousOfferings}</p>
+				</div>
+			</div>
 
 			<h3 class="fcourse__heading">{text.classLinks}</h3>
 			<p class="fcourse__none" data-field="noLinks">{text.noLinks}</p>
@@ -138,7 +155,20 @@ const acceptedFiles = '.pdf,.txt,.md,.csv,.docx,.pptx';
 		file: { name: string; size: number } | null;
 		visibleFrom: string | null;
 	}
-	interface Course { id: number; code: string; title: string; semester: string; studentCount: number; resources: Item[] }
+	interface PreviousOffering { id: number; programme: string | null; batchYear: number | null; semester: string; itemCount: number }
+	interface Offering {
+		id: number;
+		code: string;
+		title: string;
+		programme: string | null;
+		batchYear: number | null;
+		semester: string;
+		status: 'active' | 'finished';
+		contentHidden: boolean;
+		studentCount: number;
+		previousOfferings: PreviousOffering[];
+		resources: Item[];
+	}
 
 	// Same limit as the API (MAX_UPLOAD_MB). Checked here only so a too-large
 	// file is refused before it is read and sent; the API checks again.
@@ -195,7 +225,7 @@ const acceptedFiles = '.pdf,.txt,.md,.csv,.docx,.pptx';
 
 	// One class link or note: its title (a link if it has a URL), a download
 	// link if it has a file, the show-from date, and Edit/Delete.
-	function renderItem(course: Course, item: Item, form: HTMLFormElement): HTMLElement {
+	function renderItem(offering: Offering, item: Item, form: HTMLFormElement): HTMLElement {
 		const row = (itemTemplate.content.cloneNode(true) as DocumentFragment).firstElementChild as HTMLElement;
 		if (item.url) {
 			const link = field(row, 'link') as HTMLAnchorElement;
@@ -214,73 +244,123 @@ const acceptedFiles = '.pdf,.txt,.md,.csv,.docx,.pptx';
 		}
 		field(row, 'note').textContent = item.visibleFrom ? `${text.visibleFromNote} ${item.visibleFrom.slice(0, 10)}` : '';
 		row.querySelector('[data-action="edit"]')!.addEventListener('click', () => startEditing(form, item));
-		row.querySelector('[data-action="delete"]')!.addEventListener('click', () => deleteItem(course.id, item));
+		row.querySelector('[data-action="delete"]')!.addEventListener('click', () => deleteItem(offering.id, item));
 		return row;
 	}
 
-	function renderCourse(course: Course): HTMLElement {
+	function renderOffering(offering: Offering): HTMLElement {
 		const element = (courseTemplate.content.cloneNode(true) as DocumentFragment).firstElementChild as HTMLElement;
-		element.dataset.courseId = String(course.id);
-		field(element, 'title').textContent = `${course.code} — ${course.title}`;
-		field(element, 'students').textContent = course.studentCount ? `${text.students} ${course.studentCount}` : text.noStudents;
+		element.dataset.offeringId = String(offering.id);
+		field(element, 'title').textContent = `${offering.code} — ${offering.title}`;
+		field(element, 'batch').textContent = batchLine(offering);
+		field(element, 'finished').hidden = offering.status !== 'finished';
+		setUpOfferingTools(element, offering);
+		field(element, 'students').textContent = offering.studentCount ? `${text.students} ${offering.studentCount}` : text.noStudents;
 
 		const linkForm = element.querySelector<HTMLFormElement>('[data-form="link"]')!;
 		const noteForm = element.querySelector<HTMLFormElement>('[data-form="note"]')!;
-		const links = course.resources.filter((item) => !isNote(item));
-		const notes = course.resources.filter(isNote);
+		const links = offering.resources.filter((item) => !isNote(item));
+		const notes = offering.resources.filter(isNote);
 		field(element, 'noLinks').hidden = links.length > 0;
 		field(element, 'noNotes').hidden = notes.length > 0;
-		field(element, 'links').append(...links.map((item) => renderItem(course, item, linkForm)));
-		field(element, 'notes').append(...notes.map((item) => renderItem(course, item, noteForm)));
+		field(element, 'links').append(...links.map((item) => renderItem(offering, item, linkForm)));
+		field(element, 'notes').append(...notes.map((item) => renderItem(offering, item, noteForm)));
 
 		for (const form of [linkForm, noteForm]) {
 			form.querySelector('[data-action="cancel"]')!.addEventListener('click', () => resetForm(form));
 		}
 		linkForm.addEventListener('submit', (event) => {
 			event.preventDefault();
-			saveLink(course.id, linkForm);
+			saveLink(offering.id, linkForm);
 		});
 		noteForm.addEventListener('submit', (event) => {
 			event.preventDefault();
-			saveNote(course.id, noteForm);
+			saveNote(offering.id, noteForm);
 		});
 		return element;
 	}
 
+	// "Batch: MSc 2024 · Autumn 2026" (offerings carried over from before have no batch yet).
+	function batchLine(offering: { programme: string | null; batchYear: number | null; semester: string }) {
+		return text.batchLine
+			.replace('{programme}', offering.programme ?? '—')
+			.replace('{year}', offering.batchYear ? String(offering.batchYear) : '')
+			.replace('{semester}', offering.semester);
+	}
+
+	// Finished offerings: hide or show their content. Every offering: copy from an earlier one.
+	function setUpOfferingTools(element: HTMLElement, offering: Offering) {
+		const visibility = field(element, 'visibility') as HTMLButtonElement;
+		visibility.hidden = offering.status !== 'finished';
+		visibility.textContent = offering.contentHidden ? text.showContent : text.hideContent;
+		visibility.addEventListener('click', () => setContentHidden(offering, !offering.contentHidden));
+
+		const select = field(element, 'copyFrom') as HTMLSelectElement;
+		const copyButton = field(element, 'copyButton') as HTMLButtonElement;
+		const noneText = field(element, 'copyNone');
+		const sources = offering.previousOfferings.filter((source) => source.itemCount > 0);
+		select.replaceChildren(
+			...sources.map((source) => new Option(`${batchLine(source)} (${source.itemCount})`, String(source.id))),
+		);
+		// Nothing to copy from: show only the short note instead of an empty list.
+		select.closest('label')!.hidden = copyButton.hidden = sources.length === 0;
+		noneText.hidden = sources.length > 0;
+		copyButton.addEventListener('click', () => {
+			const source = sources.find((candidate) => String(candidate.id) === select.value);
+			if (source) copyFrom(offering, source);
+		});
+	}
+
+	async function setContentHidden(offering: Offering, hidden: boolean) {
+		const result = await api(`offerings/${offering.id}/visibility`, { method: 'PUT', body: { hidden } });
+		if (result.error === 'unavailable') return showState('unavailable');
+		if (!result.ok) return load({ offeringId: offering.id, text: errorMessage(result.error!), isError: true });
+		await load({ offeringId: offering.id, text: hidden ? text.contentHiddenDone : text.contentShownDone });
+	}
+
+	async function copyFrom(offering: Offering, source: PreviousOffering) {
+		const question = text.confirmCopy.replace('{n}', String(source.itemCount)).replace('{offering}', batchLine(source));
+		if (!confirm(question)) return;
+		const result = await api<{ copied: number }>(`offerings/${offering.id}/copy`, { method: 'POST', body: { fromOfferingId: source.id } });
+		if (result.error === 'unavailable') return showState('unavailable');
+		if (!result.ok) return load({ offeringId: offering.id, text: errorMessage(result.error!), isError: true });
+		await load({ offeringId: offering.id, text: text.copied.replace('{n}', String(result.data!.copied)) });
+	}
+
 	// Reloads every course and, optionally, shows a message on one of them.
-	async function load(message?: { courseId: number; text: string; isError?: boolean }) {
-		const result = await api<{ courses: Course[] }>('teaching');
+	async function load(message?: { offeringId: number; text: string; isError?: boolean }) {
+		const result = await api<{ offerings: Offering[] }>('teaching');
 		if (result.error === 'unavailable') return showState('unavailable');
 		if (result.error === 'not_logged_in') return showState('not-logged-in');
 		if (!result.ok) return showState('not-logged-in');
-		if (result.data!.courses.length === 0) return showState('empty');
+		if (result.data!.offerings.length === 0) return showState('empty');
 
-		list.replaceChildren(...result.data!.courses.map(renderCourse));
+		list.replaceChildren(...result.data!.offerings.map(renderOffering));
 		showState('courses');
 		if (message) {
-			const element = list.querySelector(`[data-course-id="${message.courseId}"]`);
+			const element = list.querySelector(`[data-offering-id="${message.offeringId}"]`);
 			if (element) setStatus(element, message.text, message.isError);
 		}
 	}
 
 	// Sends a form's request with its button disabled; on success reloads and shows doneText.
-	async function send(courseId: number, form: HTMLFormElement, request: () => Promise<{ ok: boolean; error?: string }>, doneText: string) {
+	async function send(offeringId: number, form: HTMLFormElement, request: () => Promise<{ ok: boolean; error?: string }>, doneText: string) {
 		const button = field(form, 'submit') as HTMLButtonElement;
 		button.disabled = true;
 		const result = await request();
 		button.disabled = false;
 		if (result.error === 'unavailable') return showState('unavailable');
 		if (!result.ok) return setStatus(form.closest('.fcourse')!, errorMessage(result.error!), true);
-		await load({ courseId, text: doneText });
+		await load({ offeringId, text: doneText });
 	}
 
-	function saveLink(courseId: number, form: HTMLFormElement) {
+	function saveLink(offeringId: number, form: HTMLFormElement) {
 		const id = input(form, 'id').value;
 		const body = { title: input(form, 'title').value, url: input(form, 'url').value, visibleFrom: input(form, 'visibleFrom').value || null };
 		return send(
-			courseId,
+			offeringId,
 			form,
-			() => (id ? api(`resources/${id}`, { method: 'PUT', body }) : api('resources', { method: 'POST', body: { courseId, ...body } })),
+			() => (id ? api(`resources/${id}`, { method: 'PUT', body }) : api('resources', { method: 'POST', body: { offeringId, ...body } })),
 			id ? text.saved : text.added,
 		);
 	}
@@ -296,7 +376,7 @@ const acceptedFiles = '.pdf,.txt,.md,.csv,.docx,.pptx';
 	}
 
 	// Without a newly chosen file, an edited note keeps the file it has.
-	async function saveNote(courseId: number, form: HTMLFormElement) {
+	async function saveNote(offeringId: number, form: HTMLFormElement) {
 		const courseElement = form.closest('.fcourse')!;
 		const id = input(form, 'id').value;
 		const chosen = input(form, 'file').files?.[0];
@@ -317,20 +397,20 @@ const acceptedFiles = '.pdf,.txt,.md,.csv,.docx,.pptx';
 			}
 		}
 		return send(
-			courseId,
+			offeringId,
 			form,
-			() => (id ? api(`notes/${id}`, { method: 'PUT', body }) : api('notes', { method: 'POST', body: { courseId, ...body } })),
+			() => (id ? api(`notes/${id}`, { method: 'PUT', body }) : api('notes', { method: 'POST', body: { offeringId, ...body } })),
 			id ? text.saved : text.noteAdded,
 		);
 	}
 
-	async function deleteItem(courseId: number, item: Item) {
+	async function deleteItem(offeringId: number, item: Item) {
 		const note = isNote(item);
 		if (!confirm(note ? text.confirmDeleteNote : text.confirmDelete)) return;
 		const result = await api(`${note ? 'notes' : 'resources'}/${item.id}`, { method: 'DELETE' });
 		if (result.error === 'unavailable') return showState('unavailable');
-		if (!result.ok) return load({ courseId, text: errorMessage(result.error!), isError: true });
-		await load({ courseId, text: note ? text.noteDeleted : text.deleted });
+		if (!result.ok) return load({ offeringId, text: errorMessage(result.error!), isError: true });
+		await load({ offeringId, text: note ? text.noteDeleted : text.deleted });
 	}
 
 	document.getElementById('logout-button')!.addEventListener('click', async () => {
@@ -393,6 +473,35 @@ const acceptedFiles = '.pdf,.txt,.md,.csv,.docx,.pptx';
 	:global(.fcourse__heading) {
 		font-size: 1.05rem;
 		margin: var(--space-md) 0 var(--space-sm);
+	}
+
+	:global(.fcourse__badge) {
+		margin-left: 0.5rem;
+		font-size: 0.8rem;
+		vertical-align: middle;
+	}
+
+	:global(.fcourse__tools) {
+		display: grid;
+		gap: var(--space-sm);
+		margin-bottom: var(--space-md);
+	}
+
+	:global(.fcourse__copy) {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-end;
+		gap: var(--space-sm);
+	}
+
+	:global(.fcourse__copy .portal-field) {
+		flex: 1 1 16rem;
+		margin: 0;
+	}
+
+	:global(.fcourse__tools .btn) {
+		width: auto;
+		justify-self: start;
 	}
 
 	:global(.fcourse__meta),

@@ -6,14 +6,15 @@
 // Admin only. Every change is written to the audit log, and each decision sends
 // the person an email ("approved" / "not approved").
 //
-// Enrolling approved students in courses stays a separate, manual step for now:
-// courses have no programme/semester to match against (see REPORT.md §17).
+// Approving a student enrols them in their batch's current non-elective
+// offerings (enrolment.js; offerings are managed in offerings-routes.js).
 
 import { Router } from 'express';
 import { logAudit } from '../audit.js';
 import { requireLogin, requirePasswordChanged, requireApproved, requireRole, deleteAllSessionsForUser } from '../auth.js';
 import { checkName, checkPhone, checkRollNumber } from '../validate.js';
 import { approvedEmail, notApprovedEmail } from '../mail-templates.js';
+import { enrolStudentAutomatically } from '../enrolment.js';
 
 function summary(user) {
 	return {
@@ -72,6 +73,8 @@ export function adminRoutes({ db, config, programmes, mailer, runInBackground })
 			user.id,
 		);
 		logAudit(db, { actorId: req.user.id, action: 'user_edited', target: `user:${user.id}` });
+		// A corrected roll number can mean another batch: enrol in its offerings too.
+		if (user.status === 'approved') enrolStudentAutomatically(db, config, user.id);
 		res.json({ user: summary(db.prepare('SELECT * FROM users WHERE id = ?').get(user.id)) });
 	});
 
@@ -99,6 +102,7 @@ export function adminRoutes({ db, config, programmes, mailer, runInBackground })
 				db.prepare('UPDATE users SET status = ? WHERE id = ?').run(status, user.id);
 				if (status === 'rejected') deleteAllSessionsForUser(db, user.id);
 				logAudit(db, { actorId: req.user.id, action: `user_${status}`, target: `user:${user.id}` });
+				if (status === 'approved') enrolStudentAutomatically(db, config, user.id);
 				done.push(user.id);
 				notify.push(user);
 			}

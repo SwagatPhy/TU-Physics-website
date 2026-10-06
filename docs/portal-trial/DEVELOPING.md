@@ -31,10 +31,11 @@ changed it). Approved accounts must choose a new password at first login.
 
 | Who | Login | What you see |
 |---|---|---|
-| Admin | `admin@example.test` | *Approve Sign-Ups* with four people waiting; *Manage course links* |
-| Teacher | `faculty.a@example.test` | PHY 101 and PHY 210: class links and notes to add, edit, delete |
-| Teacher | `faculty.b@example.test` | PHY 540 |
-| Students | `student01@example.test` … `student10@example.test` | their courses, links and notes (with *Download*) |
+| Admin | `admin@example.test` | *Approve Sign-Ups* with four people waiting; *Manage Course Offerings* (`/dphy/admin/offerings/`) |
+| Teacher | `faculty.a@example.test` | PHY 101 (MSc 2024), PHY 210 (Integrated 2023), last year's PHY 101 (finished) |
+| Teacher | `faculty.b@example.test` | PHY 540 (MSc 2024, elective) |
+| Students | `student01@example.test` … `student05@example.test` | MSc 2024: PHY 101 (01–02 also the PHY 540 elective) |
+| Students | `student06@example.test` … `student10@example.test` | Integrated 2023: PHY 210, and PHY 101 under *Past courses* |
 | Waiting for approval | `pending01@example.test` … `pending03@example.test`, `pending.staff@example.test` | only "Your sign-up is pending" |
 
 ## Things to try
@@ -47,7 +48,11 @@ changed it). Approved accounts must choose a new password at first login.
    `.docm`) are refused. Log in as `student01@example.test` again: the new items are there.
 3. **Admin:** log in as `admin@example.test`. Correct a name or roll number, then approve or
    reject one sign-up, or tick several and use *Approve selected* / *Reject selected*.
-4. **Sign up as a new person:** on the login page choose *create your account*. A student needs
+4. **Offerings (admin):** on *Manage Course Offerings*, create an offering for a batch (e.g.
+   PHY 540, MSc, 2024, "Spring 2027", not elective): the batch's students are enrolled at once.
+   *Manage students* adds or removes students by hand; *Finish* moves it to the students'
+   *Past courses*, where the teacher can hide its links and notes.
+5. **Sign up as a new person:** on the login page choose *create your account*. A student needs
    a roll number like `PHM24123` (MSc), `PHI23005` (Integrated BSc-MSc) or `PHP22017` (PhD):
    prefix, 2-digit joining year, 3-digit number. Use any email ending in `.test`. Instead of an
    email, the link is saved as a text file: open the newest file in `server/data/outbox/`, copy
@@ -86,14 +91,15 @@ SELECT name, email, role, status, roll_number, programme, batch_year FROM users 
 -- Sign-ups waiting for approval
 SELECT name, email, roll_number, programme, phone, created_at FROM users WHERE status = 'pending';
 
--- Courses, teachers, links and notes
-SELECT c.code, t.name AS teacher, r.kind, r.title, r.url, r.file_name
-FROM courses c LEFT JOIN users t ON t.id = c.faculty_id LEFT JOIN resources r ON r.course_id = c.id
-ORDER BY c.code;
+-- Offerings, teachers, links and notes
+SELECT c.code, o.programme, o.batch_year, o.semester, t.name AS teacher, r.kind, r.title, r.url, r.file_name
+FROM offerings o JOIN courses c ON c.id = o.course_id LEFT JOIN users t ON t.id = o.teacher_id
+LEFT JOIN resources r ON r.offering_id = o.id ORDER BY c.code, o.batch_year;
 
--- Who is enrolled where
-SELECT c.code, u.name FROM enrollments e
-JOIN courses c ON c.id = e.course_id JOIN users u ON u.id = e.user_id ORDER BY c.code, u.name;
+-- Offerings and who is enrolled (removed = 1: taken out by an admin)
+SELECT c.code, o.programme, o.batch_year, o.semester, o.status, u.name, e.added_by, e.removed
+FROM enrollments e JOIN offerings o ON o.id = e.offering_id JOIN courses c ON c.id = o.course_id
+JOIN users u ON u.id = e.user_id ORDER BY c.code, o.batch_year, u.name;
 
 -- The last 20 things that happened
 SELECT a.at, u.name AS who, a.action, a.target

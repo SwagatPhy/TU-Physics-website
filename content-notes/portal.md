@@ -62,27 +62,57 @@
 - **"Class links"** — for course materials
 - **"Notes"** — for study notes
 
-### Upload Instructions
-"Upload a file (PDF or text, up to 20 MB)"
+### Form Fields (Notes)
 
-### Optional Link Field
-"An article or reference (optional)"
+**Note title field label:** "Note title"
+
+**Upload field label:** "Upload a file (PDF, Word, PowerPoint, or text; up to 20 MB)"
+**Supported formats:** .pdf .txt .md .csv .docx .pptx (macro-enabled and old formats not supported)
+
+**Optional Link field label:** "An article or reference (optional)"
 
 ### Validation
 **Required:** "A note needs a file or a link"
 
-### Error Messages (Notes)
-- `invalid_file_type`: "File must be PDF or text (TXT, MD, RTF). Other types are not supported."
-- `file_too_large`: "File is too large. Maximum size is 20 MB."
+### Form Actions (Notes)
+- "Add note"
+- "Save changes"
+- "Cancel"
+- "Edit" (per note)
+- "Delete" (per note)
 
-### Confirmations
-- Replace: "Replace this file?"
-- Delete: "Delete this note?"
+### Status Messages (Notes)
+**While uploading:** "Uploading the file…"
+
+### Success Messages (Notes)
+- "Note added."
+- "Note deleted."
+- "Changes saved." (reused for edits)
+
+### Delete Confirmation (Notes)
+"Delete this note?"
+
+### Editing a Note
+**When a file is attached:** "Current file: [filename]"
+
+### Error Messages (Notes)
+- `invalid_file_type`: "File type not supported. Allowed formats: PDF, Word (.docx), PowerPoint (.pptx), text (.txt, .md, .csv). Macro-enabled and old .doc/.ppt files are not accepted."
+- `file_too_large`: "File is too large. Maximum size is 20 MB."
+- `invalid_file`: "The file could not be read. Try uploading it again."
+- `noCourses`: "You have no courses assigned yet. Contact [PLACEHOLDER: department office] to get started."
 
 ### Student View
 - **Download button label:** "Download"
-- **Empty state (no notes/links):** "No class links or notes yet."
+- **Empty state (no notes):** "No notes yet."
+- **Empty state (no class links):** "No class links yet."
 - Link display: title + download icon (or external-link icon if URL only)
+
+### Notes Section Confirmation
+- Replace: "Replace this file?"
+- Delete: "Delete this note?"
+
+### Students Enrolled Confirmation
+**"Students enrolled:" is followed by the number.** ✓ (OK as-is)
 
 ---
 

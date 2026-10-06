@@ -276,6 +276,145 @@ Department of Physics
 
 ---
 
+## PRIORITY 5: Course Offerings (Admin & Faculty)
+
+### Admin: Offerings Management Page
+
+**Page title:** "Manage Course Offerings"
+
+**Intro:** "Create and manage course offerings. An offering is a course run for a specific batch in a semester."
+
+**Table columns:**
+- Course
+- Batch (e.g. MSc 2024)
+- Semester
+- Teacher
+- Type (Elective / Core)
+- Status (Active / Finished)
+- Students
+- Actions
+
+**Empty state:** "No offerings yet."
+
+### Admin: Create Offering Form
+
+**Form fields and labels:**
+- **Course:** "Course"
+- **Programme:** "Programme"
+- **Joining year:** "Joining year"
+  - **Help text:** "e.g. 2024"
+- **Semester label:** "Semester"
+  - **Help text:** "e.g. Autumn 2026"
+- **Teacher:** "Teacher"
+- **Elective checkbox:** "Elective"
+  - **Help text:** "Electives start empty; add students by hand. Non-elective offerings enroll matching students automatically."
+
+**Button:** "Create offering"
+
+### Admin: Offering Actions
+
+- "Edit"
+- "Save"
+- "Cancel"
+- "Finish"
+- "Reopen"
+- "Manage students"
+
+### Admin: Offering Success Messages
+
+- "Offering created."
+- "Offering saved."
+- "Offering finished."
+- "Offering reopened."
+- "{n} students enrolled automatically."
+
+### Admin: Offering Error Messages
+
+| Code | Message |
+|------|---------|
+| `offering_exists` | "This course, batch, and semester combination already exists." |
+| `invalid_programme` | "Please select a valid programme." |
+| `invalid_batch_year` | "Please enter a valid joining year." |
+| `invalid_semester` | "Please enter a semester label." |
+| `teacher_not_found` | "Teacher not found." |
+| `offering_not_found` | "Offering not found." |
+
+### Admin: Manage Students Page
+
+**Heading pattern:** "Students in {course} · {batch} · {semester}"
+
+**Add student form:**
+- **Field label:** "Roll number or email"
+- **Button:** "Add student"
+
+**Actions per student:**
+- "Remove"
+
+**Remove confirmation:** "Remove {name} from this offering?"
+
+**Success messages:**
+- "Student added."
+- "Student removed."
+
+**Notes to students:**
+- "Removed students are not re-added automatically."
+
+**Error messages:**
+- `student_not_found`: "Student not found."
+- `not_a_student`: "This person is not a student."
+- `already_enrolled`: "This student is already enrolled in this offering."
+
+**Empty state:** "No students yet."
+
+### Faculty Dashboard: Offering Cards (Updated)
+
+**Card header line:** "Batch: {programme} {year} · {semester}"
+
+**Status badge:** "Finished" (shown for finished offerings)
+
+**Actions for finished offerings:**
+- Toggle: "Hide links and notes from students" / "Show them again"
+
+**Success messages (finished offerings):**
+- "Hidden from students."
+- "Visible to students again."
+
+### Faculty Dashboard: Copy Links and Notes
+
+**Feature label:** "Copy links and notes from a previous offering"
+
+**Form:**
+- **Select dropdown:** (list of earlier offerings for this course)
+- **Button:** "Copy"
+
+**Confirmation:** "Copy {n} items from {offering}?"
+
+**Success message:** "{n} items copied."
+
+**Error messages:**
+- `no_previous_offerings`: "No previous offerings to copy from."
+- `copy_source_not_found`: "Source offering not found."
+
+**Empty state (no offerings):** "You have no offerings yet. Wait for an admin to create one, or contact [PLACEHOLDER: department office]."
+
+### Student Portal: Course Sections (Updated)
+
+**Heading:** "Current courses"
+
+**Heading:** "Past courses"
+
+**Past course with hidden content:** "The teacher has hidden this course's links and notes."
+
+**Empty state (no past courses):** (Heading not shown if no past courses)
+
+### Portal Header: Navigation Buttons
+
+**Login button text:** "Login"
+
+**Register button text:** "Register"
+
+---
+
 ## PRIORITY 4: Privacy Notice
 
 ### Short Privacy Notice (Footer or Policy Page)

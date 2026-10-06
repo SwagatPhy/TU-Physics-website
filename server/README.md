@@ -48,6 +48,19 @@ with one of these email + roll number pairs is approved immediately.
 
 To start again, delete `data/` and run `npm run seed`.
 
+## The first administrator (real servers)
+
+```sh
+npm run admin:create                    # asks name, email, password (twice, hidden)
+npm run admin:create -- --force-change  # same, but they must choose a new password at first login
+```
+
+Works in production (unlike the seeds) and only on the database in `DATABASE_PATH`. The
+password is never a command-line argument and is never printed or logged; it follows the same
+rule as everywhere else (10–200 characters). An email that already has an account is refused.
+The new account is role `admin`, status `approved`, and the creation is audit-logged
+(`admin_created`). It is safe to run while the API is running.
+
 ## Sign-up and approval
 
 1. **Sign up** (`/register`): a *student* gives name, email, roll number and contact number; a
@@ -107,7 +120,7 @@ choose a new password. That signs out every existing session.
 | `programmes.conf` | Roll-number prefixes (TEMPORARY placeholders) |
 | `sample-roster.csv` | Fake roster used by the seed; also an example of the CSV format |
 | `migrations/` | Numbered SQL files (see its README for SQLite vs MySQL) |
-| `scripts/` | `migrate`, `seed`, `roster:import` |
+| `scripts/` | `migrate`, `admin:create`, `seed`, `roster:import` |
 | `test/` | `node:test` tests |
 
 ## API

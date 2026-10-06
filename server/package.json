@@ -10,6 +10,7 @@
   "scripts": {
     "start": "node --disable-warning=ExperimentalWarning src/server.js",
     "migrate": "node --disable-warning=ExperimentalWarning scripts/migrate.js",
+    "admin:create": "node --disable-warning=ExperimentalWarning scripts/create-admin.js",
     "seed": "node --disable-warning=ExperimentalWarning scripts/seed.js",
     "seed:people": "node --disable-warning=ExperimentalWarning scripts/seed-people.js",
     "roster:import": "node --disable-warning=ExperimentalWarning scripts/import-roster.js",

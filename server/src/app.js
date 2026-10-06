@@ -50,6 +50,26 @@ export function createApp({
 		next();
 	});
 
+	// Development check: the dev proxy passes on the address the browser used
+	// (Host). If that isn't SITE_URL, links in emails would open the wrong
+	// place, so say so in the log. (Links are never built from Host itself:
+	// a forged Host header could otherwise redirect someone's reset link.)
+	if (config.isDevelopment) {
+		let warned = false;
+		const expectedHost = new URL(config.siteUrl).host;
+		app.use((req, res, next) => {
+			const usedHost = req.get('host');
+			if (!warned && usedHost && usedHost !== expectedHost && !usedHost.endsWith(`:${config.port}`)) {
+				warned = true;
+				console.warn(
+					`[config] The website is being used at http://${usedHost} but SITE_URL is ${config.siteUrl}. ` +
+						'Links in emails will point to the wrong place: set SITE_URL in server/.env and restart the API.',
+				);
+			}
+			next();
+		});
+	}
+
 	const api = express.Router();
 	api.use(express.json({ limit: '10kb' }));
 	api.use(requireJson);

@@ -22,4 +22,5 @@ if (config.isProduction && !config.cookieSecure) {
 
 createApp({ db, config }).listen(config.port, () => {
 	console.log(`Portal API listening on http://localhost:${config.port}${config.basePath}/api`);
+	console.log(`Links in emails will open ${config.siteUrl}${config.basePath}/… (SITE_URL in server/.env)`);
 });

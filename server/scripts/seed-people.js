@@ -217,6 +217,7 @@ db.exec('COMMIT');
 const count = (filter) => created.filter(filter).length;
 console.log(`Trial database ready: ${config.databasePath}
 Password for every account: SEED_PASSWORD from server/.env (no forced change).
+Links in emails will open ${config.siteUrl}${config.basePath}/… — run the website there (npm run dev:portal).
 
 Accounts (login email = <website id>@trial.test):
   admin            admin@example.test

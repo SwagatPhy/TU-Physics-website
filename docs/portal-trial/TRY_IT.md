@@ -58,8 +58,12 @@ folder:
 
 ```sh
 cd server && npm start                       # terminal 1: the portal API
-npx astro dev --port 4331                    # terminal 2: the website
+npm run dev:portal                           # terminal 2: the website, on port 4331
 ```
+
+Emailed links (sign-up, password reset) open the address in `SITE_URL` in `server/.env`,
+which is `http://localhost:4331`. If you run the website on another port, change `SITE_URL`
+to match and restart terminal 1; the API's log warns you if the two don't match.
 
 **Start again with clean data:** stop terminal 1 (Ctrl+C), then
 `cd server && npm run seed:people -- --fresh`, then start terminal 1 again.
@@ -104,7 +108,7 @@ FROM audit_log a LEFT JOIN users u ON u.id = a.actor_id ORDER BY a.id DESC LIMIT
 ## For developers
 
 - First-time setup: `npm install`, then `cd server && npm install && cp .env.example .env`.
-  `SITE_URL` in `server/.env` must match the website address (here `http://localhost:4331`)
-  so the links in the outbox emails open the right place.
+  `SITE_URL` in `server/.env` must match the website address (`npm run dev:portal` →
+  `http://localhost:4331`) so the links in the outbox emails open the right place.
 - Checks: `cd server && npm test`; then `npm run build && npm run check-links && node scripts/contrast-check.js`.
 - More detail on the API, sign-up rules and security: [server/README.md](../../server/README.md).

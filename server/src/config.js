@@ -15,6 +15,7 @@ export function loadConfig(env = process.env) {
 	const isProduction = env.NODE_ENV === 'production';
 	return {
 		isProduction,
+		isDevelopment: env.NODE_ENV === 'development', // as set in .env.example
 		port: readNumber(env.PORT, 4400),
 		// Path of the SQLite database file (":memory:" for tests).
 		databasePath: env.DATABASE_PATH || 'data/portal.sqlite',
@@ -31,7 +32,7 @@ export function loadConfig(env = process.env) {
 		programmesFile: env.PROGRAMMES_FILE || 'programmes.conf',
 		// Address of the public website, used to build the links in emails
 		// (e.g. https://www.tezu.ernet.in); basePath is added after it.
-		siteUrl: (env.SITE_URL || 'http://localhost:4321').replace(/\/+$/, ''),
+		siteUrl: (env.SITE_URL || 'http://localhost:4331').replace(/\/+$/, ''),
 		// Registration and password-reset links stop working after this long.
 		linkMinutes: readNumber(env.LINK_MINUTES, 30),
 		// "outbox": write emails to files in outboxDir (development; no SMTP needed).

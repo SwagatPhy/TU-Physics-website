@@ -35,11 +35,24 @@ export function loadConfig(env = process.env) {
 		siteUrl: (env.SITE_URL || 'http://localhost:4331').replace(/\/+$/, ''),
 		// Registration and password-reset links stop working after this long.
 		linkMinutes: readNumber(env.LINK_MINUTES, 30),
-		// "outbox": write emails to files in outboxDir (development; no SMTP needed).
-		// "smtp": real sending — not built yet; needs the university's SMTP details.
+		// "outbox": write emails to files in outboxDir (development; nothing is sent).
+		// "smtp": send through the university's mail server (settings below).
 		mailMode: env.MAIL_MODE || 'outbox',
 		outboxDir: env.OUTBOX_DIR || 'data/outbox',
 		mailFrom: env.MAIL_FROM || 'portal@example.test',
+		smtp: {
+			host: env.SMTP_HOST || '',
+			port: readNumber(env.SMTP_PORT, 587),
+			// "starttls" (default): connect, then require an upgrade to TLS before logging in.
+			// "tls": TLS from the first byte (usually port 465).
+			// "none": no encryption at all — only if IT explicitly says so (e.g. a relay on localhost).
+			security: (env.SMTP_SECURE || 'starttls').toLowerCase(),
+			user: env.SMTP_USER || '',
+			password: env.SMTP_PASS || '',
+			// Optional: a PEM file with the CA that signed the mail server's certificate,
+			// if it isn't one the system already trusts (e.g. a university-internal CA).
+			caFile: env.SMTP_CA_FILE || '',
+		},
 		// Uploaded note files, stored under random names. Outside the web root and
 		// git-ignored (inside data/); back it up together with the database.
 		uploadsDir: env.UPLOADS_DIR || 'data/uploads',

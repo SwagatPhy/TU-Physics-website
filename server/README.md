@@ -43,7 +43,16 @@ waiting for approval).
 approved immediately.
 
 **Emails** aren't sent in development: each one is written as a text file to `data/outbox/`
-(`MAIL_MODE=outbox`). Open the newest file to find the registration or reset link.
+(`MAIL_MODE=outbox`, the default). Open the newest file to find the registration or reset link.
+
+**Real email** (`MAIL_MODE=smtp`) goes through the university's mail server: `SMTP_HOST`,
+`SMTP_PORT` (587), `SMTP_SECURE` (`starttls` by default; `tls` for port 465; `none` only on
+purpose), `SMTP_USER` + `SMTP_PASS` (or neither), optional `SMTP_CA_FILE`, and `MAIL_FROM`.
+The connection must be encrypted and the certificate valid unless `SMTP_SECURE=none` is set.
+The API checks these settings and logs in to the mail server when it starts, and refuses to
+start with a clear message if something is wrong. `npm run mail:test -- you@example.org` sends
+one test email. The SMTP password is never logged. Tests only ever use a fake SMTP server on
+127.0.0.1 (`test/fake-smtp-server.js`).
 
 ## The first administrator (real servers)
 
@@ -106,7 +115,7 @@ choose a new password. That signs out every existing session.
 | `src/tokens.js` | One-time links for registration and password reset |
 | `src/roster.js` | Reading, checking and importing roster CSV files |
 | `src/programmes.js` | Reads `programmes.conf` (roll-number prefix → programme) |
-| `src/mail.js`, `src/mail-templates.js` | Sending email (outbox files for now) and its wording |
+| `src/mail.js`, `src/mail-templates.js` | Sending email (outbox files in development, SMTP on a server) and its wording |
 | `src/rate-limit.js` | Attempt limits for logins and link requests |
 | `src/audit.js` | Writes to `audit_log` |
 | `src/routes/auth-routes.js` | `/login`, `/logout`, `/me`, `/change-password` |
@@ -119,7 +128,7 @@ choose a new password. That signs out every existing session.
 | `src/validate.js` | Input checks shared by routes (links must be http/https) |
 | `programmes.conf` | Roll-number prefixes: `PHM` MSc, `PHI` Integrated BSc-MSc, `PHP` PhD |
 | `migrations/` | Numbered SQL files (see its README for SQLite vs MySQL) |
-| `scripts/` | `migrate`, `admin:create`, `roster:import` (all usable in production) |
+| `scripts/` | `migrate`, `admin:create`, `mail:test`, `roster:import` (all usable in production) |
 | `dev/` | **Development only:** `seed` (fake data) and its check that the API isn't running |
 | `test/` | `node:test` tests |
 

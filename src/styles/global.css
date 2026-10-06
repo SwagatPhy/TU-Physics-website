@@ -345,6 +345,7 @@ hr {
 	color: var(--color-text);
 	text-decoration: none;
 	border-radius: var(--radius-sm);
+	white-space: nowrap;
 	transition: color 0.2s var(--ease), background-color 0.2s var(--ease);
 }
 
@@ -396,6 +397,69 @@ hr {
 	display: block;
 }
 
+/* Login / Register (only when the portal is switched on, see src/lib/portal-enabled.ts) */
+.site-nav {
+	display: flex;
+	align-items: center;
+	gap: var(--space-sm);
+}
+
+.site-nav ul.site-nav__portal {
+	gap: 0.4rem;
+}
+
+.site-nav a.site-nav__button {
+	display: flex; /* .site-nav a sets block; keep the button centring */
+	align-items: center;
+	justify-content: center;
+	min-height: 2.5rem;
+	padding: 0.45rem 1rem;
+	font-size: 0.92rem;
+	font-weight: 600;
+	border-radius: var(--radius-pill);
+}
+
+/* With the two buttons the bar is fuller: tighter links on desktop. */
+@media (min-width: 70.01rem) {
+	.site-header--portal .site-nav a:not(.site-nav__button) {
+		padding-inline: 0.5rem;
+	}
+
+	.site-header--portal .site-nav a[aria-current='page']::after {
+		left: 0.5rem;
+		right: 0.5rem;
+	}
+}
+
+@media (min-width: 70.01rem) and (max-width: 80rem) {
+	.site-header--portal .brand__name {
+		font-size: 1.05rem;
+	}
+
+	.site-header--portal .site-nav a:not(.site-nav__button) {
+		padding-inline: 0.4rem;
+		font-size: 0.9rem;
+	}
+
+	.site-header--portal .site-nav a.site-nav__button {
+		padding-inline: 0.8rem;
+	}
+}
+
+/* A navy edge: the default light border is too faint on white for a control. */
+.site-nav a.site-nav__button.btn--outline {
+	border-color: var(--navy);
+	color: var(--navy);
+}
+
+.site-nav a.site-nav__button.btn--navy {
+	color: var(--color-on-dark);
+}
+
+.site-nav a.site-nav__button.btn--navy:hover {
+	background: #0a3466;
+}
+
 /* Below ~1120px the nav collapses into a drop-down panel */
 @media (max-width: 70rem) {
 	.nav-toggle {
@@ -418,11 +482,36 @@ hr {
 		display: none;
 	}
 
+	.site-nav {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 0;
+	}
+
+	.site-nav ul.site-nav__portal {
+		flex-direction: row;
+		gap: var(--space-sm);
+		padding-top: 0;
+	}
+
+	.site-nav ul.site-nav__portal li {
+		flex: 1;
+	}
+
+	.site-nav a.site-nav__button {
+		justify-content: center;
+		min-height: 2.9rem;
+		padding: 0.7rem 1rem;
+		border: 1.5px solid transparent;
+		border-radius: var(--radius-pill);
+	}
+
 	.site-nav ul {
 		flex-direction: column;
 		align-items: stretch;
 		gap: 0;
 		padding: var(--space-xs) var(--space-md) var(--space-md);
+		width: 100%;
 		max-width: var(--max-width);
 		margin-inline: auto;
 	}

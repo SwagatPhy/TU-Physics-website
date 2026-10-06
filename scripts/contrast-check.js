@@ -72,7 +72,8 @@ const combinations = [
 
 	// Buttons
 	{ text: '--navy', bg: '--amber', name: 'Primary button (navy on amber)' },
-	{ text: '--color-bg', bg: '--navy', name: 'Navy button, active tab, footer links' },
+	{ text: '--color-bg', bg: '--navy', name: 'Navy button, active tab, footer links, header Register' },
+	{ text: '--navy', bg: '--color-bg', name: 'Header Login button text and border, focus ring on white' },
 
 	// Navy sections and footer
 	{ text: '--ice', bg: '--navy', name: 'Body text on navy sections/footer' },

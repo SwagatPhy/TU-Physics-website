@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Icon from '../components/Icon.astro';
 import { withBase } from '../lib/url';
+import { portalEnabled } from '../lib/portal-enabled';
 
 interface Props {
 	title: string;
@@ -53,7 +54,7 @@ const pageTitle = title === 'Home' ? 'Department of Physics | Tezpur University'
 	<body>
 		<a class="skip-link" href="#main">Skip to content</a>
 
-		<header class="site-header">
+		<header class={portalEnabled ? 'site-header site-header--portal' : 'site-header'}>
 			<div class="container site-header__inner">
 				<a class="brand" href={withBase('/')} aria-label="Department of Physics, Tezpur University — home">
 					<svg class="brand__mark" viewBox="0 0 48 48" aria-hidden="true">
@@ -87,6 +88,12 @@ const pageTitle = title === 'Home' ? 'Department of Physics | Tezpur University'
 							</li>
 						))}
 					</ul>
+					{portalEnabled && (
+						<ul class="site-nav__portal" aria-label="Student and faculty portal">
+							<li><a class="btn btn--outline site-nav__button" href={withBase('/login')}>Login</a></li>
+							<li><a class="btn btn--navy site-nav__button" href={withBase('/register')}>Register</a></li>
+						</ul>
+					)}
 				</nav>
 			</div>
 		</header>

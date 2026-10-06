@@ -7,8 +7,9 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "dev:portal": "astro dev --port 4331",
+    "dev:portal": "PUBLIC_PORTAL_ENABLED=true astro dev --port 4331",
     "build": "astro build",
+    "build:portal": "PUBLIC_PORTAL_ENABLED=true astro build",
     "preview": "astro preview",
     "check-links": "node scripts/check-links.js",
     "astro": "astro"

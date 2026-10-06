@@ -15,6 +15,12 @@ npm run preview     # serve the last build at http://localhost:4321/dphy/
 npm run check-links # after a build: every internal link must start with /dphy/ and exist
 ```
 
+The Student/Faculty Portal (Login, Register and the portal pages) is **off** in these builds.
+It is switched on by one build-time setting, `PUBLIC_PORTAL_ENABLED=true`:
+`npm run dev:portal` and `npm run build:portal` set it. Only build with it once the portal
+API is running on the server ([docs/portal-trial/DEPLOY_API.md](docs/portal-trial/DEPLOY_API.md));
+developing the portal: [docs/portal-trial/DEVELOPING.md](docs/portal-trial/DEVELOPING.md).
+
 The site lives in a subfolder, **https://www.tezu.ernet.in/dphy/**, so every page and
 file URL starts with `/dphy/` (set by `base` in `astro.config.mjs`). In code, write
 internal links as site paths wrapped in `withBase()` from `src/lib/url.ts`, e.g.

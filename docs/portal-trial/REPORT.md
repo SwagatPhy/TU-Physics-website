@@ -269,3 +269,28 @@ Owner decision: no typed-in roster required. The sign-up itself becomes the stud
 2. when a student is approved, enrol them in every active course whose `programme` equals theirs and whose `semester` is the current one (one "current semester" setting);
 3. the admin can still add or remove individual enrolments.
 Open questions for the owner: is "programme + current semester" enough (or do batches/years matter, e.g. MSc 1st vs 2nd year)? Until decided, enrolment stays a manual admin step.
+
+---
+
+## 18. Notes with file upload (owner request, 2026-10-06)
+
+**Two separate sections per course**, on the faculty dashboard and on the student portal:
+
+1. **Class links**: title + URL (required) + optional "show from" date. No file.
+2. **Notes**: title + optional file upload + optional URL (an article, a reference). A note needs at least one of file or URL, and may have both. Optional "show from" date.
+
+Notes must be uploaded through the portal itself; the PDF is not kept as a public file on the site.
+
+**Proposed rules (owner to confirm or change)**
+- Allowed files: PDF and plain text (`.pdf`, `.txt`, `.md`, `.csv`). Office files (`.docx`, `.pptx`) and images are left out for now; they can be added to one allow-list later.
+- Max size 20 MB per file (one setting); optional per-course storage cap.
+- Files are stored on the server outside the web root (`server/uploads/`, git-ignored), under random names; the original filename is kept only in the database for display and download.
+- Type is checked by content (PDF must start with `%PDF-`; text must be valid UTF-8 without binary bytes), not by the extension the browser claims.
+- No direct file URL exists. A file is served only through an authenticated endpoint that checks: logged in, approved, student enrolled in that course (or the course's own faculty, or admin), and `visible_from` has passed. Sent with `Content-Disposition: attachment` and `X-Content-Type-Options: nosniff`; text files as `text/plain`.
+- Faculty may replace or delete a file; deleting a note deletes its file. Audit-logged.
+- Backups must include `server/uploads/` as well as the database (the handbook says so).
+- No antivirus scan in the trial. For production, ask IT whether the server has one.
+
+**Data model**: `resources` gains `file_name`, `file_stored_as`, `file_size`, `file_type` (all nullable) and keeps `url` nullable for notes; class links keep `url` required. Migration `00N_note_files.sql`.
+
+**Tests**: wrong type refused (renamed .exe, fake PDF); oversize refused; student A cannot download student B's course file; pending/unenrolled/not-yet-visible downloads refused; faculty cannot upload to another faculty's course; deleting removes the file from disk.

@@ -12,6 +12,7 @@ import { readFileSync } from 'node:fs';
 import { hashPassword } from '../src/auth.js';
 import { loadProgrammes } from '../src/programmes.js';
 import { parseRoster, importRoster } from '../src/roster.js';
+import { refuseIfApiRunning } from './api-is-running.js';
 
 try {
 	process.loadEnvFile('.env');
@@ -30,6 +31,7 @@ if (!seedPassword || seedPassword.length < 10) {
 	process.exit(1);
 }
 
+await refuseIfApiRunning(config.port); // the API would keep using a deleted file
 const db = openDatabase(config.databasePath);
 migrate(db);
 if (db.prepare('SELECT COUNT(*) AS n FROM users').get().n > 0) {

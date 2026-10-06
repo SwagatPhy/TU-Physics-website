@@ -20,7 +20,8 @@
 // Every account uses SEED_PASSWORD and can log in straight away (no forced change).
 //
 // Safety: development only (refuses NODE_ENV=production), only writes a
-// database inside server/data/, and only with MAIL_MODE=outbox.
+// database inside server/data/, only with MAIL_MODE=outbox, and never while
+// the API is running (stop it first, start it again afterwards).
 // At the end it prints every data problem found in the JSON so it can be fixed there.
 
 import { readFileSync, readdirSync, rmSync } from 'node:fs';
@@ -29,6 +30,7 @@ import { fileURLToPath } from 'node:url';
 import { loadConfig } from '../src/config.js';
 import { openDatabase, migrate, toDbTime } from '../src/db.js';
 import { hashPassword } from '../src/auth.js';
+import { refuseIfApiRunning } from './api-is-running.js';
 
 const SERVER_DIR = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const REPO_DIR = resolve(SERVER_DIR, '..');
@@ -57,6 +59,9 @@ if (!databaseFile.startsWith(join(SERVER_DIR, 'data') + '/')) {
 }
 const seedPassword = process.env.SEED_PASSWORD;
 if (!seedPassword || seedPassword.length < 10) refuse('set SEED_PASSWORD (at least 10 characters) in server/.env first.');
+
+// The API must not be running: it would keep using the old (deleted) file.
+await refuseIfApiRunning(config.port);
 
 if (process.argv.includes('--fresh')) {
 	for (const suffix of ['', '-wal', '-shm']) rmSync(databaseFile + suffix, { force: true });

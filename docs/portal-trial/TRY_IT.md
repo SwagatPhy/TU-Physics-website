@@ -65,10 +65,19 @@ Emailed links (sign-up, password reset) open the address in `SITE_URL` in `serve
 which is `http://localhost:4331`. If you run the website on another port, change `SITE_URL`
 to match and restart terminal 1; the API's log warns you if the two don't match.
 
-**Start again with clean data:** stop terminal 1 (Ctrl+C), then
-`cd server && npm run seed:people -- --fresh`, then start terminal 1 again.
-The command also lists problems it found in the website's people files (for example two
-people sharing one email), so they can be fixed there.
+**Start again with clean data:**
+
+1. Stop terminal 1 (Ctrl+C) — the API must not be running during a reset.
+2. `cd server && npm run seed:people -- --fresh`
+3. Start terminal 1 again (`npm start`). **Always restart the API after any reset**, also
+   after deleting or replacing `server/data/portal.sqlite` by hand.
+
+If you forget step 1, the reset command refuses and tells you to stop the API. If the
+database file is replaced while the API runs anyway, the API notices, stops, and the pages
+show "portal not available" until you start it again — so nothing is saved to the old file.
+
+The reset command also lists problems it found in the website's people files (for example
+two people sharing one email), so they can be fixed there.
 
 (`npm run seed` instead creates an older set of purely fake accounts, used by the developers.)
 

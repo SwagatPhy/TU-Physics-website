@@ -7,7 +7,7 @@
 // shape) and the small dialect notes in migrations/README.md.
 
 import { DatabaseSync } from 'node:sqlite';
-import { readdirSync, readFileSync, mkdirSync } from 'node:fs';
+import { readdirSync, readFileSync, mkdirSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -47,6 +47,21 @@ export function migrate(db) {
 		applied.push(file);
 	}
 	return applied;
+}
+
+// Which file on disk a path currently points to ("device:inode"), or null if
+// it doesn't exist. If the database file is deleted or replaced while the API
+// runs (e.g. a reset with seed:people -- --fresh), SQLite keeps writing to the
+// old, now invisible file; comparing this value with the one from start-up
+// catches that (see app.js).
+export function databaseFileIdentity(path) {
+	if (path === ':memory:') return 'memory';
+	try {
+		const { dev, ino } = statSync(path);
+		return `${dev}:${ino}`;
+	} catch {
+		return null;
+	}
 }
 
 // Dates are stored as UTC text "YYYY-MM-DD HH:MM:SS", which works in SQLite

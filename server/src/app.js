@@ -3,6 +3,7 @@
 
 import express from 'express';
 import { loadSession, requireJson } from './auth.js';
+import { databaseFileIdentity } from './db.js';
 import { createLoginLimiter } from './rate-limit.js';
 import { createMailer } from './mail.js';
 import { authRoutes } from './routes/auth-routes.js';
@@ -20,9 +21,30 @@ export function createApp({
 	linkRequestLimiter = createLoginLimiter({ maxFailuresPerAccount: 3 }),
 	mailer = createMailer(config),
 	programmes = loadProgrammes(config.programmesFile), // roll-number prefix -> programme
+	// Called when the database file is found deleted or replaced (see below).
+	onDatabaseReplaced = () => process.exit(1),
 }) {
 	const app = express();
 	app.disable('x-powered-by');
+
+	// If the database file is deleted or replaced while the API runs (a reset,
+	// a restore), SQLite would keep writing to the old file nobody can see any
+	// more. Check on every request; if it changed, refuse the request, say why,
+	// and stop the API so it is restarted on the right file.
+	const startupIdentity = databaseFileIdentity(config.databasePath);
+	let replaced = false;
+	app.use((req, res, next) => {
+		if (!replaced && databaseFileIdentity(config.databasePath) === startupIdentity) return next();
+		if (!replaced) {
+			replaced = true;
+			console.error(
+				`[database] ${config.databasePath} was deleted or replaced while the API was running. ` +
+					'Stopping now so no data goes to the old file. Start the API again (npm start).',
+			);
+		}
+		res.on('finish', onDatabaseReplaced);
+		res.status(503).json({ error: 'database_replaced' });
+	});
 	if (config.trustProxy) app.set('trust proxy', 1);
 
 	// Work done after the response has been sent (roster lookups and emails, so

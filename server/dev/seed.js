@@ -42,7 +42,7 @@ const seedPassword = process.env.SEED_PASSWORD;
 if (!seedPassword || seedPassword.length < 10) refuse('set SEED_PASSWORD (at least 10 characters) in server/.env first.');
 
 // The API must not be running: it would keep using a deleted file.
-await refuseIfApiRunning(config.port);
+await refuseIfApiRunning(config.port, config.host);
 
 const fresh = process.argv.includes('--fresh');
 const uploadsDir = resolve(SERVER_DIR, config.uploadsDir);

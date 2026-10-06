@@ -43,7 +43,7 @@ const db = openDatabase(config.databasePath);
 const applied = migrate(db);
 if (applied.length > 0) console.log(`Applied migrations: ${applied.join(', ')}`);
 
-createApp({ db, config, mailer }).listen(config.port, () => {
-	console.log(`Portal API listening on http://localhost:${config.port}${config.basePath}/api`);
+createApp({ db, config, mailer }).listen(config.port, config.host, () => {
+	console.log(`Portal API listening on http://${config.host}:${config.port}${config.basePath}/api`);
 	console.log(`Links in emails will open ${config.siteUrl}${config.basePath}/… (SITE_URL in server/.env)`);
 });

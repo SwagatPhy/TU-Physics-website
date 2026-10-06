@@ -12,6 +12,8 @@
     "migrate": "node --disable-warning=ExperimentalWarning scripts/migrate.js",
     "admin:create": "node --disable-warning=ExperimentalWarning scripts/create-admin.js",
     "mail:test": "node --disable-warning=ExperimentalWarning scripts/mail-test.js",
+    "backup": "node --disable-warning=ExperimentalWarning scripts/backup.js",
+    "backup:check": "node --disable-warning=ExperimentalWarning scripts/backup-check.js",
     "seed": "node --disable-warning=ExperimentalWarning dev/seed.js",
     "roster:import": "node --disable-warning=ExperimentalWarning scripts/import-roster.js",
     "test": "node --disable-warning=ExperimentalWarning --test \"test/**/*.test.js\""

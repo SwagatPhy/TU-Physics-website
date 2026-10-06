@@ -16,6 +16,9 @@ export function loadConfig(env = process.env) {
 	return {
 		isProduction,
 		isDevelopment: env.NODE_ENV === 'development', // as set in .env.example
+		// The API only listens on this computer by default; the web server (Apache/nginx)
+		// forwards /dphy/api/ to it. Don't change HOST unless IT asks for it.
+		host: env.HOST || '127.0.0.1',
 		port: readNumber(env.PORT, 4400),
 		// Path of the SQLite database file (":memory:" for tests).
 		databasePath: env.DATABASE_PATH || 'data/portal.sqlite',

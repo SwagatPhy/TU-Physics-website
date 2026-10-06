@@ -5,8 +5,8 @@
 
 import { request as httpRequest } from 'node:http';
 
-// Must match PORT in server/.env.
-const PORTAL_API = { host: 'localhost', port: 4400 };
+// Must match HOST and PORT in server/.env.
+const PORTAL_API = { host: '127.0.0.1', port: 4400 };
 
 function forwardToPortalApi(req, res, next) {
 	if (!req.url?.startsWith('/dphy/api/')) return next();

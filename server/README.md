@@ -22,7 +22,7 @@ cd server
 npm install
 cp .env.example .env          # local settings; never commit .env
 npm run seed                  # data/portal.sqlite with FAKE users, courses, notes and roster rows
-npm start                     # http://localhost:4400/dphy/api/health
+npm start                     # http://127.0.0.1:4400/dphy/api/health
 npm test                      # automated tests (in-memory database, temporary upload folder)
 ```
 
@@ -128,7 +128,7 @@ choose a new password. That signs out every existing session.
 | `src/validate.js` | Input checks shared by routes (links must be http/https) |
 | `programmes.conf` | Roll-number prefixes: `PHM` MSc, `PHI` Integrated BSc-MSc, `PHP` PhD |
 | `migrations/` | Numbered SQL files (see its README for SQLite vs MySQL) |
-| `scripts/` | `migrate`, `admin:create`, `mail:test`, `roster:import` (all usable in production) |
+| `scripts/` | `migrate`, `admin:create`, `mail:test`, `backup`, `backup:check`, `roster:import` (all usable in production) |
 | `dev/` | **Development only:** `seed` (fake data) and its check that the API isn't running |
 | `test/` | `node:test` tests |
 

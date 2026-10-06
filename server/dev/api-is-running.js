@@ -17,8 +17,8 @@ export function apiIsRunning(port, host = '127.0.0.1') {
 	});
 }
 
-export async function refuseIfApiRunning(port) {
-	if (await apiIsRunning(port)) {
+export async function refuseIfApiRunning(port, host = '127.0.0.1') {
+	if (await apiIsRunning(port, host)) {
 		console.error(
 			`Refusing to seed: the portal API is running on port ${port}.\n` +
 				'Stop it first (Ctrl+C in its terminal), run this command again, then start the API again (npm start).',

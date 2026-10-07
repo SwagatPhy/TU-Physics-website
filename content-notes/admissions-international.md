@@ -1,6 +1,6 @@
 # Admissions — International Students
 
-Four programs available: **Integrated BSc-MSc**, **Integrated BSc-BEd**, **MSc**, **PhD**
+Three programs available: **Integrated BSc-MSc**, **MSc**, **PhD**
 
 **Note:** Existing src/content/admissions/*.md text is starter copy only, not verified facts. This document reflects the restructured programs for international students.
 
@@ -45,49 +45,7 @@ Four programs available: **Integrated BSc-MSc**, **Integrated BSc-BEd**, **MSc**
 
 ---
 
-## Program 2: Integrated BSc-BEd (5 years)
-
-**Tagline:** [PLACEHOLDER — e.g. "Teacher-education pathway: earn B.Sc. and B.Ed. in Physics while training to teach globally"]
-
-**Duration:** [PLACEHOLDER — 5 years / 10 semesters]
-
-**Seats (International):** [PLACEHOLDER — XX seats]
-
-### International Eligibility
-- [PLACEHOLDER — Secondary education equivalent to 10+2 / High School Diploma]
-- [PLACEHOLDER — minimum XX% marks / GPA]
-- [PLACEHOLDER — English proficiency test (TOEFL/IELTS/Duolingo) if education was not in English]
-- [PLACEHOLDER — pass teacher-aptitude assessment or equivalent evaluation]
-- [PLACEHOLDER — Medical fitness certificate with teacher-specific health requirements]
-
-### Visa & Immigration
-- **Student Visa (Category D):** Required for full 5-year program
-- [PLACEHOLDER — Admission Letter for visa application]
-- **FRRO Registration:** Within 14 days of arrival
-- **Financial proof:** Funds for 5 years (tuition + living expenses)
-- [PLACEHOLDER — Teaching practice may involve school placements; coordinate with international office for visa implications]
-
-### How to Apply
-1. Visit [PLACEHOLDER Tezpur University International Admissions Portal]
-2. Select "Integrated BSc-BEd Physics (International)"
-3. Complete application form
-4. Upload required documents (passport, academic certificates, English proficiency score, financial proof, medical fitness with teacher requirements, police clearance, statement of interest in teaching)
-5. Pay application fee: [PLACEHOLDER amount in USD/INR]
-6. Submit and save receipt
-
-**Selection:** [PLACEHOLDER — Entrance exam with teaching-aptitude component / Merit-based]
-
-### Key Dates
-- **Application Opens:** [PLACEHOLDER Month DD] (earlier for visa processing)
-- **Deadline:** [PLACEHOLDER Month DD]
-- **Entrance Exam:** [PLACEHOLDER Month DD]
-- **Selection Result:** [PLACEHOLDER Month DD]
-- **Admission Letter Issued:** [PLACEHOLDER Month DD]
-- **Semester Starts:** [PLACEHOLDER Month DD]
-
----
-
-## Program 3: Master of Science (MSc Physics) (2 years)
+## Program 2: Master of Science (MSc Physics) (2 years)
 
 **Tagline:** [PLACEHOLDER — e.g. "Advanced study in physics with research focus; for B.Sc. Physics graduates from recognized universities"]
 
@@ -127,7 +85,7 @@ Four programs available: **Integrated BSc-MSc**, **Integrated BSc-BEd**, **MSc**
 
 ---
 
-## Program 4: Doctor of Philosophy (PhD)
+## Program 3: Doctor of Philosophy (PhD)
 
 **Tagline:** [PLACEHOLDER — e.g. "Doctoral research in physics; conduct original research, publish, and contribute to the global scientific community"]
 
@@ -214,19 +172,6 @@ Four programs available: **Integrated BSc-MSc**, **Integrated BSc-BEd**, **MSc**
 - Tuition fee per semester (USD / INR)
 - Scholarships/financial aid available for international students
 - Housing availability and cost
-
-**Integrated BSc-BEd (International):**
-- Exact seat allocation (international)
-- Confirmed duration and structure
-- Eligibility criteria (GPA, English proficiency)
-- Teacher-aptitude assessment details and requirements
-- Medical fitness requirements specific to teacher-education
-- Entrance exam details (written + aptitude component)
-- Application window and deadline dates
-- Selection method details
-- Tuition fee per semester (USD / INR)
-- Scholarships available
-- Teaching practice / school placement implications for international students
 
 **MSc Physics (International):**
 - Exact seat allocation (international)

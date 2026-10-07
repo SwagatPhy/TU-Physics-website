@@ -18,7 +18,7 @@ const admissions = defineCollection({
 	loader: glob({ pattern: '**/*.md', base: './src/content/admissions' }),
 	schema: z.object({
 		title: z.string(),
-		program: z.enum(['integrated-bsc-msc', 'integrated-bsc-bed', 'msc', 'phd']),
+		program: z.enum(['integrated-bsc-msc', 'msc', 'phd']),
 		tagline: z.string(),
 		duration: z.string(),
 		eligibility: z.array(z.string()),

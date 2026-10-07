@@ -1,6 +1,6 @@
 # Admissions — National (Indian Students)
 
-Four programs available: **Integrated BSc-MSc**, **Integrated BSc-BEd**, **MSc**, **PhD**
+Three programs available: **Integrated BSc-MSc**, **MSc**, **PhD**
 
 **Note:** Existing src/content/admissions/*.md text is starter copy only, not verified facts. This document reflects the restructured programs.
 
@@ -37,40 +37,7 @@ Four programs available: **Integrated BSc-MSc**, **Integrated BSc-BEd**, **MSc**
 
 ---
 
-## Program 2: Integrated BSc-BEd (5 years)
-
-**Tagline:** [PLACEHOLDER — e.g. "Teacher-education pathway: earn B.Sc. and B.Ed. in Physics while training to teach at secondary level"]
-
-**Duration:** [PLACEHOLDER — 5 years / 10 semesters]
-
-**Seats:** [PLACEHOLDER — XX national seats]
-
-### Eligibility
-- [PLACEHOLDER — 10+2 / Higher Secondary with Physics, Chemistry, Mathematics]
-- [PLACEHOLDER — minimum XX% marks / CGPA requirement]
-- [PLACEHOLDER — pass teacher-aptitude assessment (if required)]
-- [PLACEHOLDER — health/fitness requirements for teaching profession]
-
-### How to Apply
-1. Visit [PLACEHOLDER Tezpur University Admissions Portal]
-2. Select "Integrated BSc-BEd Physics (National)"
-3. Complete application form
-4. Upload required documents
-5. Pay application fee: [PLACEHOLDER amount in INR]
-6. Submit and save receipt
-
-**Selection:** [PLACEHOLDER — Entrance exam with teaching-aptitude component / Merit-based]
-
-### Key Dates
-- **Application Opens:** [PLACEHOLDER Month DD]
-- **Deadline:** [PLACEHOLDER Month DD]
-- **Entrance Exam:** [PLACEHOLDER Month DD]
-- **Selection Result:** [PLACEHOLDER Month DD]
-- **Semester Starts:** [PLACEHOLDER Month DD]
-
----
-
-## Program 3: Master of Science (MSc Physics) (2 years)
+## Program 2: Master of Science (MSc Physics) (2 years)
 
 **Tagline:** [PLACEHOLDER — e.g. "Advanced study in physics with research focus; for B.Sc. Physics graduates"]
 
@@ -102,7 +69,7 @@ Four programs available: **Integrated BSc-MSc**, **Integrated BSc-BEd**, **MSc**
 
 ---
 
-## Program 4: Doctor of Philosophy (PhD)
+## Program 3: Doctor of Philosophy (PhD)
 
 **Tagline:** [PLACEHOLDER — e.g. "Doctoral research in physics; develop expertise, conduct original research, and contribute to the field"]
 
@@ -164,18 +131,6 @@ Four programs available: **Integrated BSc-MSc**, **Integrated BSc-BEd**, **MSc**
 - Confirmed duration (years/semesters)
 - Eligibility criteria (subjects required, minimum percentage/GPA)
 - Entrance exam: yes/no? (if yes: format, date, syllabus)
-- Application window and deadline dates
-- Selection method details
-- Per-semester tuition fee
-- Scholarships/financial aid available
-
-**Integrated BSc-BEd:**
-- Exact seat allocation (national)
-- Confirmed duration (years/semesters)
-- Eligibility criteria (subjects, minimum percentage/GPA)
-- Teacher-aptitude assessment: format, scoring, pass requirement?
-- Health/fitness requirements for teacher-education program
-- Entrance exam details (written + aptitude component format/date)
 - Application window and deadline dates
 - Selection method details
 - Per-semester tuition fee
